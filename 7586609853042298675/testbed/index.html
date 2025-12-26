@@ -59,17 +59,17 @@
         <div class="container mx-auto px-4 py-4 flex justify-between items-center relative">
             <div class="flex items-center space-x-8">
                 <a target="_blank" href="https://www.example.com" class="text-2xl font-bold">UBAC</a>
-                <nav id="mainNav" class="hidden md:flex space-x-8">
-                    <div>
-                        <a href="https://www.example.com" data-submenu="femme" class="text-gray-700 hover:text-primary transition-colors" aria-expanded="false" aria-controls="mainSubmenu">FEMME</a>
-                    </div>
-                    <div>
-                        <a href="https://www.example.com" data-submenu="homme" class="text-gray-700 hover:text-primary transition-colors" aria-expanded="false" aria-controls="mainSubmenu">HOMME</a>
-                    </div>
-                     <a href="https://www.example.com" class="text-gray-700 hover:text-primary transition-colors">VISION</a>
-                </nav>
-             </div>
-             <div class="flex items-center space-x-6">
+            </div>
+            <nav id="mainNav" class="hidden md:flex space-x-8 absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 items-center">
+                <div>
+                    <a href="https://www.example.com" data-submenu="femme" class="text-gray-700 hover:text-primary transition-colors" aria-expanded="false" aria-controls="mainSubmenu">FEMME</a>
+                </div>
+                <div>
+                    <a href="https://www.example.com" data-submenu="homme" class="text-gray-700 hover:text-primary transition-colors" aria-expanded="false" aria-controls="mainSubmenu">HOMME</a>
+                </div>
+                <a href="https://www.example.com" class="text-gray-700 hover:text-primary transition-colors">VISION</a>
+            </nav>
+            <div class="flex items-center space-x-6">
                 <a target="_blank" href="https://www.example.com" class="text-gray-700 hover:text-primary transition-colors">
                     <i data-lucide="user"></i>
                 </a>
@@ -83,25 +83,44 @@
             <div id="mainSubmenu" class="hidden md:block opacity-0 invisible z-50 submenu-content absolute left-0 top-[88%] w-full bg-white shadow-lg transition-all duration-300 transform translate-y-2" role="menu" aria-hidden="true">
                 <!-- 模板内容：仅作为数据源，由 script.js 注入到 #mainSubmenu -->
                 <template id="tmpl-femme">
-                    <div class="px-4 py-6 flex items-center justify-items-start">
-                        <div class="w-[200px] h-[200px]">
-                            <img class="w-full h-full" src="https://fastly.picsum.photos/id/134/600/400.jpg?hmac=GYoZSDKT34ygtDjRhJTsRrgtjso3oino2e4RPQyUG5s" alt="" srcset="">
+                    <div class="px-6 py-6 flex items-start gap-8">
+                        <div class="flex-shrink-0">
+                            <div class="w-[260px] ">
+                                <img class="w-full h-full object-cover" src="https://images.unsplash.com/photo-1549298916-b41d501d3772?w=600&h=800&fit=crop" alt="Preview Femme">
+                            </div>
                         </div>
-                        <div class="flex-1 grid grid-cols-2 gap-4 px-4 ">
+                        <div class="flex-1 flex items-start gap-12">
                             <div>
-                                <h3 class="font-semibold mb-2">Collections</h3>
-                                <ul class="space-y-2">
-                                    <li class="submenu-item"><a target="_blank" href="https://www.example.com" class="text-sm text-gray-600 hover:text-primary transition-colors inline-block relative">AXOLO LIN<span class="submenu-progress"></span></a></li>
-                                    <li class="submenu-item"><a target="_blank" href="https://www.example.com" class="text-sm text-gray-600 hover:text-primary transition-colors inline-block relative">VOLKAN KNIT<span class="submenu-progress"></span></a></li>
-                                    <li class="submenu-item"><a target="_blank" href="https://www.example.com" class="text-sm text-gray-600 hover:text-primary transition-colors inline-block relative">KOTO KNIT<span class="submenu-progress"></span></a></li>
+                                <h3 class="text-sm font-semibold mb-3">Baskets</h3>
+                                <ul class="space-y-1">
+                                    <li class="submenu-item"><a target="_blank" href="https://www.example.com" class="text-sm inline-block relative"><span class="font-semibold text-gray-900">KOTO KNIT</span> <span class="text-gray-500">— Coton biologique et tencel</span><span class="submenu-progress"></span></a></li>
+                                    <li class="submenu-item"><a target="_blank" href="https://www.example.com" class="text-sm inline-block relative"><span class="font-semibold text-gray-900">VOLKAN LAINE</span> <span class="text-gray-500">— Laine recyclée</span><span class="submenu-progress"></span></a></li>
+                                    <li class="submenu-item"><a target="_blank" href="https://www.example.com" class="text-sm inline-block relative"><span class="font-semibold text-gray-900">VOLKAN MESCLAT</span> <span class="text-gray-500">— Chanvre</span><span class="submenu-progress"></span></a></li>
+                                    <li class="submenu-item"><a target="_blank" href="https://www.example.com" class="text-sm inline-block relative"><span class="font-semibold text-gray-900">VOLKAN KNIT</span> <span class="text-gray-500">— Coton biologique et tencel</span><span class="submenu-progress"></span></a></li>
+                                    <li class="submenu-item"><a target="_blank" href="https://www.example.com" class="text-sm inline-block relative"><span class="font-semibold text-gray-900">AXOLO R‑SKIN</span> <span class="text-gray-500">— Caoutchouc recyclé</span><span class="submenu-progress"></span></a></li>
+                                    <li class="submenu-item"><a target="_blank" href="https://www.example.com" class="text-sm inline-block relative"><span class="font-semibold text-gray-900">KOTO</span> <span class="text-gray-500">— Coton recyclé</span><span class="submenu-progress"></span></a></li>
+                                    <li class="submenu-item"><a target="_blank" href="https://www.example.com" class="text-sm inline-block relative"><span class="font-semibold text-gray-900">VOLA</span> <span class="text-gray-500">— Laine recyclée</span><span class="submenu-progress"></span></a></li>
+                                    <li class="submenu-item"><a target="_blank" href="https://www.example.com" class="text-sm inline-block relative"><span class="font-semibold text-gray-900">KOTO DENIM</span> <span class="text-gray-500">— Denim recyclé</span><span class="submenu-progress"></span></a></li>
+                                    <li class="submenu-item"><a target="_blank" href="https://www.example.com" class="text-sm inline-block relative"><span class="font-semibold text-gray-900">MID KOTO DENIM</span> <span class="text-gray-500">— Denim recyclé</span><span class="submenu-progress"></span></a></li>
+                                    <li class="submenu-item"><a target="_blank" href="https://www.example.com" class="text-sm inline-block relative"><span class="font-semibold text-gray-900">AXOLO LIN</span> <span class="text-gray-500">— Lin</span><span class="submenu-progress"></span></a></li>
+                                    <li class="submenu-item"><a target="_blank" href="https://www.example.com" class="text-sm inline-block relative"><span class="font-semibold text-gray-900">AXOLO R‑SKIN MONOCHROME</span> <span class="text-gray-500">— Caoutchouc recyclé</span><span class="submenu-progress"></span></a></li>
+                                    <li class="submenu-item"><a target="_blank" href="https://www.example.com" class="text-sm inline-block relative"><span class="font-semibold text-gray-900">TERRA‑E</span> <span class="text-gray-500">— Laine recyclée</span><span class="submenu-progress"></span></a></li>
+                                    <li class="submenu-item"><a target="_blank" href="https://www.example.com" class="text-sm inline-block relative"><span class="font-semibold text-gray-900">MID TERRA‑E</span> <span class="text-gray-500">— Laine recyclée</span><span class="submenu-progress"></span></a></li>
+                                    <li class="submenu-item"><a target="_blank" href="https://www.example.com" class="text-sm inline-block relative"><span class="font-semibold text-gray-900">AXOLO VELOURS</span> <span class="text-gray-500">— Coton recyclé</span><span class="submenu-progress"></span></a></li>
+                                    <li class="submenu-item"><a target="_blank" href="https://www.example.com" class="text-sm inline-block relative"><span class="font-semibold text-gray-900">KOTO VELOURS</span> <span class="text-gray-500">— Coton recyclé</span><span class="submenu-progress"></span></a></li>
+                                    <li class="submenu-item"><a target="_blank" href="https://www.example.com" class="text-sm inline-block relative"><span class="font-semibold text-gray-900">MID KOTO VELOURS</span> <span class="text-gray-500">— Coton recyclé</span><span class="submenu-progress"></span></a></li>
                                 </ul>
                             </div>
                             <div>
-                                <h3 class="font-semibold mb-2">Styles</h3>
-                                <ul class="space-y-2">
-                                    <li class="submenu-item"><a target="_blank" href="https://www.example.com" class="text-sm text-gray-600 hover:text-primary transition-colors inline-block relative">Baskets<span class="submenu-progress"></span></a></li>
-                                    <li class="submenu-item"><a target="_blank" href="https://www.example.com" class="text-sm text-gray-600 hover:text-primary transition-colors inline-block relative">Chaussures de running<span class="submenu-progress"></span></a></li>
-                                    <li class="submenu-item"><a target="_blank" href="https://www.example.com" class="text-sm text-gray-600 hover:text-primary transition-colors inline-block relative">Chaussures de ville<span class="submenu-progress"></span></a></li>
+                                <h3 class="text-sm font-semibold mb-3">Accessoires</h3>
+                                <ul class="space-y-1">
+                                    <li class="submenu-item"><a target="_blank" href="https://www.example.com" class="text-sm inline-block relative"><span class="font-semibold text-gray-900">Chaussette laine</span><span class="submenu-progress"></span></a></li>
+                                    <li class="submenu-item"><a target="_blank" href="https://www.example.com" class="text-sm inline-block relative"><span class="font-semibold text-gray-900">Chaussette coton</span><span class="submenu-progress"></span></a></li>
+                                    <li class="submenu-item"><a target="_blank" href="https://www.example.com" class="text-sm inline-block relative"><span class="font-semibold text-gray-900">Bonnet</span><span class="submenu-progress"></span></a></li>
+                                    <li class="submenu-item"><a target="_blank" href="https://www.example.com" class="text-sm inline-block relative"><span class="font-semibold text-gray-900">Écharpe</span><span class="submenu-progress"></span></a></li>
+                                    <li class="submenu-item"><a target="_blank" href="https://www.example.com" class="text-sm inline-block relative"><span class="font-semibold text-gray-900">Ceinture coton</span><span class="submenu-progress"></span></a></li>
+                                    <li class="submenu-item"><a target="_blank" href="https://www.example.com" class="text-sm inline-block relative"><span class="font-semibold text-gray-900">Casquette coton</span><span class="submenu-progress"></span></a></li>
+                                    <li class="submenu-item"><a target="_blank" href="https://www.example.com" class="text-sm inline-block relative"><span class="font-semibold text-gray-900">Carte Cadeau Digital</span><span class="submenu-progress"></span></a></li>
                                 </ul>
                             </div>
                         </div>
@@ -117,16 +136,21 @@
                             <div>
                                 <h3 class="font-semibold mb-2">Collections Homme</h3>
                                 <ul class="space-y-2">
-                                    <li class="submenu-item"><a target="_blank" href="https://www.example.com" class="text-sm text-gray-600 hover:text-primary transition-colors inline-block relative">VOLKAN WOOL<span class="submenu-progress"></span></a></li>
-                                    <li class="submenu-item"><a target="_blank" href="https://www.example.com" class="text-sm text-gray-600 hover:text-primary transition-colors inline-block relative">AXOLO MESCLAT<span class="submenu-progress"></span></a></li>
-                                    <li class="submenu-item"><a target="_blank" href="https://www.example.com" class="text-sm text-gray-600 hover:text-primary transition-colors inline-block relative">KOTO<span class="submenu-progress"></span></a></li>
+                                    <li class="submenu-item">
+                                        <a target="_blank" href="https://www.example.com" class="text-sm text-gray-500 hover:text-gray-900 transition-colors inline-block relative">
+                                            VOLKAN WOOL
+                                            <span class="submenu-progress"></span>
+                                        </a>
+                                    </li>
+                                    <li class="submenu-item"><a target="_blank" href="https://www.example.com" class="text-sm text-gray-500 hover:text-gray-900 transition-colors inline-block relative">AXOLO MESCLAT<span class="submenu-progress"></span></a></li>
+                                    <li class="submenu-item"><a target="_blank" href="https://www.example.com" class="text-sm text-gray-500 hover:text-gray-900 transition-colors inline-block relative">KOTO<span class="submenu-progress"></span></a></li>
                                 </ul>
                             </div>
                             <div>
                                 <h3 class="font-semibold mb-2">Accessories</h3>
                                 <ul class="space-y-2">
-                                    <li class="submenu-item"><a target="_blank" href="https://www.example.com" class="text-sm text-gray-600 hover:text-primary transition-colors inline-block relative">Socks<span class="submenu-progress"></span></a></li>
-                                    <li class="submenu-item"><a target="_blank" href="https://www.example.com" class="text-sm text-gray-600 hover:text-primary transition-colors inline-block relative">Scarf<span class="submenu-progress"></span></a></li>
+                                    <li class="submenu-item"><a target="_blank" href="https://www.example.com" class="text-sm text-gray-500 hover:text-gray-900 transition-colors inline-block relative">Socks<span class="submenu-progress"></span></a></li>
+                                    <li class="submenu-item"><a target="_blank" href="https://www.example.com" class="text-sm text-gray-500 hover:text-gray-900 transition-colors inline-block relative">Scarf<span class="submenu-progress"></span></a></li>
                                 </ul>
                             </div>
                         </div>
