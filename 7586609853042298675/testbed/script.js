@@ -83,8 +83,40 @@ const productData = {
 (function(){ 
     const nav = document.getElementById('mainNav'); 
     const submenu = document.getElementById('mainSubmenu'); 
+    const header = document.getElementById('mainHeader');
     if (!nav || !submenu) return; 
- 
+
+    // 新增：切换 Header 样式（白色/透明 + 文字颜色反转）
+    function updateHeaderStyle(isWhite) {
+        if (!header) return;
+        
+        // 1. 切换背景色
+        if (isWhite) {
+            header.classList.add('bg-white');
+            header.classList.remove('backdrop-blur-md');
+        } else {
+            header.classList.remove('bg-white');
+            header.classList.add('backdrop-blur-md');
+        }
+
+        // 2. 切换文字/图标颜色
+        // 选取 header 内的所有链接，排除掉语言切换按钮（因为它有特定的背景色）
+        // 语言切换按钮有 .rounded-full 类，以此区分
+        const links = header.querySelectorAll('a:not(.rounded-full)');
+        
+        links.forEach(link => {
+            if (isWhite) {
+                // 变黑
+                link.classList.remove('text-white', 'hover:text-gray-200');
+                link.classList.add('text-gray-700', 'hover:text-primary');
+            } else {
+                // 变白
+                link.classList.remove('text-gray-700', 'hover:text-primary');
+                link.classList.add('text-white', 'hover:text-gray-200');
+            }
+        });
+    }
+
     const TRIGGER_SELECTOR = 'a[data-submenu]'; 
     const CLOSE_DELAY = 150; 
     let closeTimer = null; 
@@ -156,11 +188,14 @@ const productData = {
         // 标记触发元素 aria 
         document.querySelectorAll(TRIGGER_SELECTOR).forEach(a => a.setAttribute('aria-expanded','false')); 
         if (trigger) trigger.setAttribute('aria-expanded','true'); 
- 
+
+        // 切换 Header 样式为白色背景 + 黑色文字
+        updateHeaderStyle(true);
+
         submenu.classList.remove('translate-y-2','opacity-0','invisible'); 
         submenu.classList.add('translate-y-0','opacity-100','visible'); 
         submenu.setAttribute('aria-hidden','false'); 
- 
+
         // 初始显示一张随机测试图（如果模板里含图） 
         const previewImg = submenu.querySelector('img'); 
         if (previewImg) { 
@@ -172,11 +207,15 @@ const productData = {
             } 
         } 
     } 
- 
+
     function close(){ 
         openTrigger = null; 
         currentName = null; 
         document.querySelectorAll(TRIGGER_SELECTOR).forEach(a => a.setAttribute('aria-expanded','false')); 
+
+        // 恢复 Header 样式为透明背景 + 白色文字
+        updateHeaderStyle(false);
+
         submenu.classList.remove('translate-y-0','opacity-100','visible'); 
         submenu.classList.add('translate-y-2','opacity-0','invisible'); 
         submenu.setAttribute('aria-hidden','true'); 
@@ -225,13 +264,170 @@ const productData = {
         if (closeTimer) clearTimeout(closeTimer); 
         closeTimer = setTimeout(close, CLOSE_DELAY); 
     }); 
- 
+
+    // 新增：监听 VISION 及图标等非 submenu 触发器的悬停事件，直接关闭 submenu
+    document.querySelectorAll('.nav-close-trigger').forEach(el => {
+        el.addEventListener('mouseenter', () => {
+             // 立即关闭，或稍微延时关闭以防误触，这里采用立即关闭以符合“划入即隐藏”的要求
+             if (closeTimer) clearTimeout(closeTimer);
+             close();
+        });
+    });
+
     // keyboard: ESC 关闭 
     document.addEventListener('keydown', (e) => { 
-        if (e.key === 'Escape') close(); 
+        if (e.key === 'Escape') {
+            close(); 
+            closeCart();
+        }
     }); 
 })(); 
- 
+
+    // 2.5 购物车抽屉逻辑
+(function() {
+    // 修改选择器以支持多个触发器（桌面端+移动端）
+    const cartTriggers = document.querySelectorAll('#cartTrigger, #cartTrigger2');
+    const cartDrawer = document.getElementById('cartDrawer');
+    const cartOverlay = document.getElementById('cartOverlay');
+    const cartCloseBtn = document.getElementById('cartCloseBtn');
+
+    if (cartTriggers.length === 0 || !cartDrawer || !cartOverlay || !cartCloseBtn) return;
+
+    function openCart() {
+        // 打开抽屉：移除 translate-x-full，设置为 translate-x-0
+        cartDrawer.classList.remove('translate-x-full');
+        cartDrawer.classList.add('translate-x-0');
+
+        // 显示遮罩：设置为 visible, opacity-100
+        cartOverlay.classList.remove('invisible', 'opacity-0');
+        cartOverlay.classList.add('visible', 'opacity-100');
+
+        // 锁定 body 滚动
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeCart() {
+        // 关闭抽屉：恢复 translate-x-full
+        cartDrawer.classList.remove('translate-x-0');
+        cartDrawer.classList.add('translate-x-full');
+
+        // 隐藏遮罩：恢复 invisible, opacity-0
+        cartOverlay.classList.remove('visible', 'opacity-100');
+        cartOverlay.classList.add('invisible', 'opacity-0');
+
+        // 恢复 body 滚动
+        document.body.style.overflow = '';
+    }
+
+    // 绑定事件
+    cartTriggers.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            openCart();
+        });
+    });
+
+    cartCloseBtn.addEventListener('click', closeCart);
+    cartOverlay.addEventListener('click', closeCart);
+
+    // 暴露给全局以便 ESC 键关闭
+    window.closeCart = closeCart;
+
+    // 购物车删除交互：左滑确认
+    // 使用事件委托处理（因为商品可能是动态生成的）
+    if (cartDrawer) {
+        cartDrawer.addEventListener('click', (e) => {
+            const trigger = e.target.closest('.btn-delete-trigger');
+            const confirmBtn = e.target.closest('.btn-delete-confirm');
+            
+            // 数量加减
+            const minusBtn = e.target.closest('.btn-quantity-minus');
+            const plusBtn = e.target.closest('.btn-quantity-plus');
+
+            if (minusBtn) {
+                const input = minusBtn.parentElement.querySelector('.input-quantity');
+                if (input) {
+                    let val = parseInt(input.value) || 1;
+                    if (val > 1) {
+                        input.value = val - 1;
+                    }
+                }
+            } else if (plusBtn) {
+                const input = plusBtn.parentElement.querySelector('.input-quantity');
+                if (input) {
+                    let val = parseInt(input.value) || 1;
+                    input.value = val + 1;
+                }
+            } else if (trigger) {
+                // 点击删除文字 -> 显示确认按钮
+                const wrapper = trigger.closest('.relative');
+                if (wrapper) {
+                    const confirm = wrapper.querySelector('.btn-delete-confirm');
+                    if (confirm) {
+                        confirm.classList.remove('translate-x-full');
+                        confirm.classList.add('translate-x-0');
+                    }
+                }
+            } else if (confirmBtn) {
+                // 点击确认按钮 -> 执行删除（此处仅隐藏商品作为演示）
+                const itemRow = confirmBtn.closest('.flex-col'); // 找到最外层的 item 容器
+                if (itemRow) {
+                    // 添加淡出动画
+                    itemRow.style.transition = 'opacity 0.3s ease, height 0.3s ease';
+                    itemRow.style.opacity = '0';
+                    setTimeout(() => {
+                        itemRow.remove();
+                    }, 300);
+                }
+            } else {
+                // 点击其他区域 -> 隐藏所有已打开的确认按钮
+                // 排除点击确认按钮本身的情况（上面已经处理）
+                cartDrawer.querySelectorAll('.btn-delete-confirm.translate-x-0').forEach(btn => {
+                    // 检查点击是否发生在当前按钮的 wrapper 内，如果是则不关闭（防止误关）
+                    // 但实际上点击 wrapper 内除了 trigger 和 confirmBtn 的地方也应该关闭吗？
+                    // 简单起见，点击非 trigger 非 confirmBtn 的地方都关闭
+                    btn.classList.remove('translate-x-0');
+                    btn.classList.add('translate-x-full');
+                });
+            }
+        });
+    }
+})();
+
+// 2.6 移动端菜单逻辑
+(function() {
+    const menuBtn = document.getElementById('mobileMenuBtn');
+    const menuDrawer = document.getElementById('mobileMenuDrawer');
+    const menuOverlay = document.getElementById('mobileMenuOverlay');
+    const menuCloseBtn = document.getElementById('mobileMenuCloseBtn');
+
+    if (!menuBtn || !menuDrawer || !menuOverlay || !menuCloseBtn) return;
+
+    function openMenu() {
+        menuDrawer.classList.remove('-translate-x-full');
+        menuDrawer.classList.add('translate-x-0');
+        menuOverlay.classList.remove('invisible', 'opacity-0');
+        menuOverlay.classList.add('visible', 'opacity-100');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeMenu() {
+        menuDrawer.classList.remove('translate-x-0');
+        menuDrawer.classList.add('-translate-x-full');
+        menuOverlay.classList.remove('visible', 'opacity-100');
+        menuOverlay.classList.add('invisible', 'opacity-0');
+        document.body.style.overflow = '';
+    }
+
+    menuBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        openMenu();
+    });
+
+    menuCloseBtn.addEventListener('click', closeMenu);
+    menuOverlay.addEventListener('click', closeMenu);
+})();
+
 // 3. 商品轮播：Women/Men Tab 切换 + 左右滚动 
 document.addEventListener('DOMContentLoaded', function(){ 
     const track = document.getElementById('productTrack'); 
@@ -526,10 +722,10 @@ if(subContainer) {
 } 
  
 // 7. 移动端菜单切换：展开/收起导航 
-const menuBtn = document.querySelector('button.md\\\\:hidden'); 
+const menuBtn = document.querySelector('button.md:hidden'); 
 if (menuBtn) { 
     menuBtn.addEventListener('click', () => { 
-        const nav = document.querySelector('nav.hidden.md\\\\:flex'); 
+        const nav = document.querySelector('nav.hidden.md:flex'); 
         if (nav) { 
             nav.classList.toggle('hidden'); 
             nav.classList.toggle('flex'); 
@@ -549,12 +745,13 @@ if (menuBtn) {
 const newsletterForm = document.querySelector('form'); 
 if (newsletterForm) { 
     newsletterForm.addEventListener('submit', (e) => { 
-        e.preventDefault(); 
+        // 允许默认提交行为以打开新链接
         const emailInput = newsletterForm.querySelector('input[type="email"]'); 
         if (emailInput.value) { 
             // 这里可以添加实际的订阅逻辑 
             alert('Merci pour votre abonnement !'); 
-            emailInput.value = ''; 
+            // 如果希望保留输入内容以便提交到目标页面，则不清除 value
+            // emailInput.value = ''; 
         } 
     }); 
 } 
