@@ -1,0 +1,176 @@
+      
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>文本转 JSON（不改文本）</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --panel: #111827;
+      --accent: #22c55e;
+      --text: #e5e7eb;
+      --muted: #9ca3af;
+      --border: #1f2937;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; padding: 24px; background: var(--bg); color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+        Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", Arial,
+        "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol",
+        "Noto Color Emoji", sans-serif;
+    }
+    .container { max-width: 980px; margin: 0 auto; }
+    .card {
+      background: linear-gradient(180deg, #0b1220, #0f172a 30%, #0b1220);
+      border: 1px solid var(--border);
+      border-radius: 14px; padding: 18px; box-shadow: 0 6px 24px rgba(0,0,0,.35);
+    }
+    h1 { font-size: 22px; margin: 0 0 12px; }
+    .desc { color: var(--muted); font-size: 14px; margin-bottom: 16px; }
+    .row { display: grid; grid-template-columns: 1fr; gap: 12px; }
+    .field { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+    label { font-size: 13px; color: var(--muted); }
+    input[type="text"] {
+      flex: 1; min-width: 220px; background: #0b1220; color: var(--text);
+      border: 1px solid var(--border); border-radius: 10px; padding: 8px 10px;
+      outline: none; transition: border .2s ease;
+    }
+    input[type="text"]:focus { border-color: #334155; }
+    .modes { display: flex; gap: 14px; align-items: center; }
+    .modes label { cursor: pointer; }
+    textarea {
+      width: 100%; min-height: 180px; resize: vertical; border-radius: 12px;
+      background: #0b1220; color: #e5e7eb; border: 1px solid var(--border);
+      padding: 12px; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco,
+        Consolas, "Liberation Mono", "Courier New", monospace; font-size: 13px;
+      line-height: 1.55;
+    }
+    .btns { display: flex; gap: 10px; flex-wrap: wrap; }
+    button {
+      appearance: none; border: none; border-radius: 10px; padding: 10px 14px;
+      background: #16a34a; color: #fff; font-weight: 600; cursor: pointer;
+      box-shadow: 0 4px 16px rgba(22, 163, 74, .35);
+    }
+    button.secondary { background: #334155; box-shadow: none; }
+    .info { display: flex; gap: 16px; color: var(--muted); font-size: 12px; }
+    .success { color: #86efac; }
+    .error { color: #fca5a5; }
+    .footer { margin-top: 10px; color: var(--muted); font-size: 12px; }
+    .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    @media (max-width: 900px) { .grid2 { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="card">
+      <h1>文本转 JSON（不修改原文本）</h1>
+      <p class="desc">将任意文本安全地封装为 JSON 格式：不改变文本内容，仅做必要的转义；可选择只输出字符串或以键名包裹为对象；支持一键复制。</p>
+
+      <div class="row">
+        <div class="field">
+          <label for="keyInput">键名（包裹为对象时使用）：</label>
+          <input id="keyInput" type="text" placeholder="如：content" value="content" />
+          <div class="modes" role="radiogroup" aria-label="输出模式">
+            <label><input type="radio" name="mode" value="object" checked /> 输出对象</label>
+            <label><input type="radio" name="mode" value="string" /> 仅输出字符串</label>
+          </div>
+        </div>
+
+        <div>
+          <label>输入原始文本：</label>
+          <textarea id="rawInput" placeholder="在此粘贴文本（例如 HTML、Markdown、任意内容）。不会修改你的文本，仅做 JSON 转义。"></textarea>
+          <div class="info" id="inputInfo"></div>
+        </div>
+
+        <div class="btns">
+          <button id="convertBtn">转换为 JSON</button>
+          <button id="copyBtn" class="secondary">复制输出</button>
+        </div>
+
+        <div>
+          <label>转换结果（JSON）：</label>
+          <textarea id="output" readonly placeholder="点击“转换为 JSON”生成结果"></textarea>
+          <div class="info" id="outputInfo"></div>
+        </div>
+
+        <div class="footer">提示：转换使用 JSON.stringify 对原文本进行安全转义；不会删除空格、换行或更改任何字符。</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const $ = (s) => document.querySelector(s);
+    const rawInput = $('#rawInput');
+    const keyInput = $('#keyInput');
+    const output = $('#output');
+    const inputInfo = $('#inputInfo');
+    const outputInfo = $('#outputInfo');
+    const convertBtn = $('#convertBtn');
+    const copyBtn = $('#copyBtn');
+
+    function updateCounters() {
+      const text = rawInput.value || '';
+      inputInfo.textContent = `输入长度：${text.length} 字符`;
+    }
+
+    rawInput.addEventListener('input', updateCounters);
+    updateCounters();
+
+    function convert() {
+      try {
+        const text = rawInput.value; // 不修改原文本
+        const mode = document.querySelector('input[name="mode"]:checked').value; // object | string
+        const key = (keyInput.value || 'content').trim();
+
+        let jsonStr = '';
+        if (mode === 'string') {
+          // 仅输出字符串："..."
+          jsonStr = JSON.stringify(text);
+        } else {
+          // 包裹为对象：{"key": "..."}
+          const obj = { [key || 'content']: text };
+          jsonStr = JSON.stringify(obj, null, 2);
+        }
+
+        const cleaned = (jsonStr || '').trim();
+        const withoutBraces = cleaned.startsWith('{') && cleaned.endsWith('}') ? cleaned.slice(1, -1).trim() : cleaned;
+        output.value = withoutBraces;
+        outputInfo.innerHTML = `输出长度：${withoutBraces.length} 字符`;
+      } catch (err) {
+        output.value = '';
+        outputInfo.innerHTML = `<span class="error">转换失败：${err?.message || err}</span>`;
+      }
+    }
+
+    function copyOutput() {
+      const txt = output.value || '';
+      if (!txt) {
+        outputInfo.innerHTML = `<span class="error">暂无输出可复制</span>`;
+        return;
+      }
+      if (navigator.clipboard?.writeText) {
+        navigator.clipboard.writeText(txt)
+          .then(() => { outputInfo.innerHTML = `<span class="success">已复制到剪贴板</span>`; })
+          .catch((e) => { outputInfo.innerHTML = `<span class="error">复制失败：${e?.message || e}</span>`; });
+      } else {
+        // 兼容旧环境
+        try {
+          output.select();
+          document.execCommand('copy');
+          outputInfo.innerHTML = `<span class="success">已复制到剪贴板</span>`;
+        } catch (e) {
+          outputInfo.innerHTML = `<span class="error">复制失败：${e?.message || e}</span>`;
+        }
+      }
+    }
+
+    convertBtn.addEventListener('click', convert);
+    copyBtn.addEventListener('click', copyOutput);
+  </script>
+</body>
+</html>
+
+    

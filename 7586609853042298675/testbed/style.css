@@ -1,0 +1,50 @@
+/* 全局样式重置 */ 
+* { 
+    margin: 0; 
+    padding: 0; 
+    box-sizing: border-box; 
+} 
+ 
+/* 平滑滚动 */ 
+html { 
+    scroll-behavior: smooth; 
+    scroll-padding-top: 80px; /* 为固定导航栏预留空间 */ 
+} 
+ 
+/* 子菜单内 li 的底部进度条（进度条放在 a 内以匹配文本宽度） */ 
+.submenu-content .submenu-item { 
+    position: relative; 
+    padding-bottom: 6px; /* 给进度条留出空间 */ 
+} 
+.submenu-content .submenu-item > a { 
+    display: inline-block; /* 宽度随文本自适应 */ 
+    position: relative;    /* 进度条基于 a 定位 */ 
+    padding-bottom: 6px;   /* 给进度条留出空间 */ 
+    text-decoration: none; 
+} 
+.submenu-content .submenu-progress { 
+    position: absolute; 
+    left: 0; 
+    bottom: 2px; 
+    height: 2px; 
+    background: #333333; /* 使用 tailwind primary 颜色 */ 
+    width: 0; 
+    transition: width 300ms ease; 
+    border-radius: 2px; 
+} 
+/* hover 时展开到 100%（基于 a 的宽度） */ 
+.submenu-content .submenu-item:hover > a .submenu-progress, 
+.submenu-content .submenu-item:focus-within > a .submenu-progress { 
+    width: 100%; 
+}
+.underline-anim {
+    background-image: linear-gradient(currentColor, currentColor);
+    background-repeat: no-repeat;
+    background-position: left bottom;
+    background-size: 100% 2px;
+    transition: background-size 300ms ease, background-position 300ms ease;
+}
+.underline-anim:hover {
+    background-position: right bottom;
+    background-size: 0% 2px;
+}

@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ubac - Eco-friendly sneakers</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="style.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#165DFF',
+                        'rock-gray': '#333333',
+                        'earth-beige': '#F5F1E9',
+                        'natural-green': '#2D5A3D',
+                        'accent-red': '#FF4757',
+                    },
+                    fontFamily: {
+                        inter: ['Inter', 'sans-serif'],
+                    },
+                },
+            },
+            plugins: [
+                function({ addUtilities }) {
+                    addUtilities({
+                        '.scrollbar-hide': {
+                            '-ms-overflow-style': 'none',
+                            'scrollbar-width': 'none',
+                            '&::-webkit-scrollbar': {
+                                display: 'none'
+                            }
+                        }
+                    })
+                }
+            ]
+        }
+    </script>
+</head>
+<body class="font-inter overflow-x-hidden">
+    <!-- 顶部公告区 -->
+    <div id="topNotice" class="fixed inset-x-0 top-0 z-50 bg-rock-gray text-white py-3 text-center text-sm">
+         <div class="container mx-auto px-4 flex items-center justify-center relative">
+             <div class="truncate">LIVRAISON OFFERTE DÈS 120€ & RETOURS GRATUITS SOUS 60 JOURS</div>
+             <button id="topNoticeClose" aria-label="Close notice" class="absolute right-4 top-1/2 -translate-y-1/2 text-white hover:text-gray-200 focus:outline-none">
+                 <!-- 关闭图标（SVG） -->
+                 <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                     <line x1="18" y1="6" x2="6" y2="18"></line>
+                     <line x1="6" y1="6" x2="18" y2="18"></line>
+                 </svg>
+             </button>
+         </div>
+     </div>
+
+    <!-- 导航栏 -->
+    <header id="mainHeader" class=" fixed top-12 left-0 right-0 z-40 bg-white backdrop-blur-md transition-all duration-300">
+        <div class="container mx-auto px-4 py-4 flex justify-between items-center relative">
+            <div class="flex items-center space-x-8">
+                <a target="_blank" href="https://www.example.com" class="text-2xl font-bold">UBAC</a>
+                <nav id="mainNav" class="hidden md:flex space-x-8">
+                    <div>
+                        <a href="https://www.example.com" data-submenu="femme" class="text-gray-700 hover:text-primary transition-colors" aria-expanded="false" aria-controls="mainSubmenu">FEMME</a>
+                    </div>
+                    <div>
+                        <a href="https://www.example.com" data-submenu="homme" class="text-gray-700 hover:text-primary transition-colors" aria-expanded="false" aria-controls="mainSubmenu">HOMME</a>
+                    </div>
+                     <a href="https://www.example.com" class="text-gray-700 hover:text-primary transition-colors">VISION</a>
+                </nav>
+             </div>
+             <div class="flex items-center space-x-6">
+                <a target="_blank" href="https://www.example.com" class="text-gray-700 hover:text-primary transition-colors">
+                    <i data-lucide="user"></i>
+                </a>
+                <a target="_blank" href="https://www.example.com" class="text-gray-700 hover:text-primary transition-colors">
+                    <i data-lucide="shopping-bag"></i>
+                </a>
+                <button class="md:hidden text-gray-700 hover:text-primary transition-colors">
+                    <i data-lucide="menu"></i>
+                </button>
+            </div>
+            <div id="mainSubmenu" class="hidden md:block opacity-0 invisible z-50 submenu-content absolute left-0 top-[88%] w-full bg-white shadow-lg transition-all duration-300 transform translate-y-2" role="menu" aria-hidden="true">
+                <!-- 模板内容：仅作为数据源，由 script.js 注入到 #mainSubmenu -->
+                <template id="tmpl-femme">
+                    <div class="px-4 py-6 flex items-center justify-items-start">
+                        <div class="w-[200px] h-[200px]">
+                            <img class="w-full h-full" src="https://fastly.picsum.photos/id/134/600/400.jpg?hmac=GYoZSDKT34ygtDjRhJTsRrgtjso3oino2e4RPQyUG5s" alt="" srcset="">
+                        </div>
+                        <div class="flex-1 grid grid-cols-2 gap-4 px-4 ">
+                            <div>
+                                <h3 class="font-semibold mb-2">Collections</h3>
+                                <ul class="space-y-2">
+                                    <li class="submenu-item"><a target="_blank" href="https://www.example.com" class="text-sm text-gray-600 hover:text-primary transition-colors inline-block relative">AXOLO LIN<span class="submenu-progress"></span></a></li>
+                                    <li class="submenu-item"><a target="_blank" href="https://www.example.com" class="text-sm text-gray-600 hover:text-primary transition-colors inline-block relative">VOLKAN KNIT<span class="submenu-progress"></span></a></li>
+                                    <li class="submenu-item"><a target="_blank" href="https://www.example.com" class="text-sm text-gray-600 hover:text-primary transition-colors inline-block relative">KOTO KNIT<span class="submenu-progress"></span></a></li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h3 class="font-semibold mb-2">Styles</h3>
+                                <ul class="space-y-2">
+                                    <li class="submenu-item"><a target="_blank" href="https://www.example.com" class="text-sm text-gray-600 hover:text-primary transition-colors inline-block relative">Baskets<span class="submenu-progress"></span></a></li>
+                                    <li class="submenu-item"><a target="_blank" href="https://www.example.com" class="text-sm text-gray-600 hover:text-primary transition-colors inline-block relative">Chaussures de running<span class="submenu-progress"></span></a></li>
+                                    <li class="submenu-item"><a target="_blank" href="https://www.example.com" class="text-sm text-gray-600 hover:text-primary transition-colors inline-block relative">Chaussures de ville<span class="submenu-progress"></span></a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </template>
+
+                <template id="tmpl-homme">
+                    <div class="px-4 py-6 flex items-center justify-items-start">
+                        <div class="w-[200px] h-[200px]">
+                            <img class="w-full h-full" src="https://fastly.picsum.photos/id/134/600/400.jpg?hmac=GYoZSDKT34ygtDjRhJTsRrgtjso3oino2e4RPQyUG5s" alt="" srcset="">
+                        </div>
+                        <div class="flex-1 grid grid-cols-2 gap-4 px-4 py-6">
+                            <div>
+                                <h3 class="font-semibold mb-2">Collections Homme</h3>
+                                <ul class="space-y-2">
+                                    <li class="submenu-item"><a target="_blank" href="https://www.example.com" class="text-sm text-gray-600 hover:text-primary transition-colors inline-block relative">VOLKAN WOOL<span class="submenu-progress"></span></a></li>
+                                    <li class="submenu-item"><a target="_blank" href="https://www.example.com" class="text-sm text-gray-600 hover:text-primary transition-colors inline-block relative">AXOLO MESCLAT<span class="submenu-progress"></span></a></li>
+                                    <li class="submenu-item"><a target="_blank" href="https://www.example.com" class="text-sm text-gray-600 hover:text-primary transition-colors inline-block relative">KOTO<span class="submenu-progress"></span></a></li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h3 class="font-semibold mb-2">Accessories</h3>
+                                <ul class="space-y-2">
+                                    <li class="submenu-item"><a target="_blank" href="https://www.example.com" class="text-sm text-gray-600 hover:text-primary transition-colors inline-block relative">Socks<span class="submenu-progress"></span></a></li>
+                                    <li class="submenu-item"><a target="_blank" href="https://www.example.com" class="text-sm text-gray-600 hover:text-primary transition-colors inline-block relative">Scarf<span class="submenu-progress"></span></a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </template>
+
+               
+            </div>
+        </div>
+    </header>
+
+    <!-- 全屏品牌剧场 -->
+     <section class="h-screen flex items-center justify-center bg-black text-white relative overflow-hidden">
+        <div class="container mx-auto px-4 text-center z-10 ">
+             <p class="text-[clamp(.6rem,1vw,.9rem)] mb-4 font-semibold">
+                JUSQU'A-40%
+            </p>
+            <h1 class="text-[clamp(1.5rem,4vw,3rem)] font-bold mb-4 leading-tight">
+                LE GRAND 
+            </h1>
+            <h1 class="text-[clamp(1.5rem,4vw,3rem)] font-bold  leading-tight">
+                DESTOCKAGE
+            </h1>
+            <div class="flex flex-col sm:flex-row justify-center gap-12 absolute bottom-[8rem] left-1/2 -translate-x-1/2">
+                <a href="https://www.example.com" class="bg-transparent text-white py-1 text-2xl font-medium transition-all duration-300 transform underline-anim">
+                    Femme
+                </a>
+                <a href="https://www.example.com" class="bg-transparent text-white py-1 text-2xl font-medium transition-all duration-300 transform underline-anim">
+                    Homme
+                </a>
+            </div>
+        </div>
+        <div class="absolute inset-0 opacity-80">
+            <img src="https://images.prismic.io/ubac/Zv5Rm7VsGrYSwU4L_sliderethomeoct24-4-.png?auto=format%2Ccompress&rect=0%2C0%2C4320%2C2400&w=1920&q=80" alt="Ubac Sneaker" class="w-full h-full object-cover">
+        </div>
+    </section>
+
+    <!-- 商品轮播系列 -->
+    <section id="productCarouselSection" class="py-24 bg-earth-beige relative overflow-hidden">
+        <div class="container mx-auto px-4">
+            <!-- Tabs -->
+            <div class="flex items-center space-x-12 border-b border-gray-300 mb-12 relative max-w-[90vw]">
+                <button class="tab-btn text-2xl font-medium pb-4 border-b-2 border-black transition-all" data-tab="women">Women</button>
+                <button class="tab-btn text-2xl font-medium pb-4 border-b-2 border-transparent text-gray-400 hover:text-black transition-all" data-tab="men">Men</button>
+            </div>
+
+            <!-- Carousel Area -->
+            <div class="relative">
+                <!-- Navigation Buttons (Desktop: Left aligned or Sides) - 仿照图示放在左侧或两侧，这里采用常规两侧布局适配响应式，并在左侧增加额外的控制组以致敬图示 -->
+                <div class="hidden lg:flex flex-col gap-4 absolute -left-16 top-1/2 -translate-y-1/2 z-10">
+                    <button id="carouselPrev" class="p-2 rounded-full hover:bg-white/50 transition-colors">
+                        <i data-lucide="chevron-left" class="w-8 h-8"></i>
+                    </button>
+                    <button id="carouselNext" class="p-2 rounded-full hover:bg-white/50 transition-colors">
+                        <i data-lucide="chevron-right" class="w-8 h-8"></i>
+                    </button>
+                </div>
+
+                <!-- Mobile Nav Buttons -->
+                <button id="carouselPrevMobile" class="lg:hidden absolute left-0 top-1/3 z-10 p-2 bg-white/80 rounded-full shadow-md">
+                    <i data-lucide="chevron-left" class="w-6 h-6"></i>
+                </button>
+                <button id="carouselNextMobile" class="lg:hidden absolute right-0 top-1/3 z-10 p-2 bg-white/80 rounded-full shadow-md">
+                    <i data-lucide="chevron-right" class="w-6 h-6"></i>
+                </button>
+
+                <!-- Scroll Container -->
+                <div id="productTrack" class="flex overflow-x-auto snap-x snap-mandatory scrollbar-hide gap-6 pb-8 scroll-smooth">
+                    <!-- Products will be injected here -->
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Brand Series Block 1: NEWS -->
+    <section class="group relative w-full h-[70vh] min-h-[500px] flex flex-col md:flex-row overflow-hidden">
+        <div class="relative w-full md:w-1/2 h-1/2 md:h-full overflow-hidden animate-on-scroll opacity-0 translate-y-8 transition-all duration-700 ease-out">
+            <img src="https://images.unsplash.com/photo-1549298916-b41d501d3772?w=600&h=800&fit=crop" alt="News Left" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" loading="lazy">
+            <div class="absolute top-3/4 right-8 z-20">
+                 <a target="_blank" href="https://www.example.com" class="text-white text-xl font-medium relative inline-block pb-0.5 after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-0 after:h-[2px] after:bg-white after:transition-all after:duration-300 after:ease-out hover:after:w-full transition-colors">Women</a>
+            </div>
+        </div>
+        <div class="relative w-full md:w-1/2 h-1/2 md:h-full overflow-hidden animate-on-scroll opacity-0 translate-y-8 transition-all duration-700 ease-out">
+            <img src="https://images.unsplash.com/photo-1605348532760-6753d2c43329?w=600&h=800&fit=crop" alt="News Right" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" loading="lazy">
+            <div class="absolute top-3/4 left-8 z-20">
+                 <a target="_blank" href="https://www.example.com" class="text-white text-xl font-medium relative inline-block pb-0.5 after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-0 after:h-[2px] after:bg-white after:transition-all after:duration-300 after:ease-out hover:after:w-full transition-colors">Men</a>
+            </div>
+        </div>
+        <div class="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 z-30 pointer-events-none mix-blend-difference text-center w-full">
+            <h2 class="text-4xl md:text-6xl font-bold text-white tracking-widest uppercase drop-shadow-lg">NEWS</h2>
+        </div>
+    </section>
+
+    <!-- Brand Series Block 2: VELVET CAPSULE -->
+    <section class="group relative w-full h-[70vh] min-h-[500px] flex flex-col md:flex-row overflow-hidden">
+        <div class="relative w-full md:w-1/2 h-1/2 md:h-full overflow-hidden animate-on-scroll opacity-0 translate-y-8 transition-all duration-700 ease-out">
+            <img src="https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77?w=600&h=800&fit=crop" alt="Velvet Left" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" loading="lazy">
+            <div class="absolute top-3/4 right-8 z-20">
+                 <a target="_blank" href="https://www.example.com" class="text-white text-xl font-medium relative inline-block pb-0.5 after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-0 after:h-[2px] after:bg-white after:transition-all after:duration-300 after:ease-out hover:after:w-full transition-colors">Women</a>
+            </div>
+        </div>
+        <div class="relative w-full md:w-1/2 h-1/2 md:h-full overflow-hidden animate-on-scroll opacity-0 translate-y-8 transition-all duration-700 ease-out">
+            <img src="https://images.unsplash.com/photo-1543508282-6319a3e2621f?w=600&h=800&fit=crop" alt="Velvet Right" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" loading="lazy">
+            <div class="absolute top-3/4 left-8 z-20">
+                 <a target="_blank" href="https://www.example.com" class="text-white text-xl font-medium relative inline-block pb-0.5 after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-0 after:h-[2px] after:bg-white after:transition-all after:duration-300 after:ease-out hover:after:w-full transition-colors">Men</a>
+            </div>
+        </div>
+        <div class="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 z-30 pointer-events-none mix-blend-difference text-center w-full">
+            <h2 class="text-4xl md:text-6xl font-bold text-white tracking-widest uppercase drop-shadow-lg">VELVET CAPSULE</h2>
+        </div>
+    </section>
+
+    <!-- Brand Series Block 3: VOLKAN LAINE -->
+    <section class="group relative w-full h-[70vh] min-h-[500px] flex flex-col md:flex-row overflow-hidden">
+        <div class="relative w-full md:w-1/2 h-1/2 md:h-full overflow-hidden animate-on-scroll opacity-0 translate-y-8 transition-all duration-700 ease-out">
+            <img src="https://images.unsplash.com/photo-1608231387042-66d1773070a5?w=600&h=800&fit=crop" alt="Volkan Laine Left" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" loading="lazy">
+            <div class="absolute top-3/4 right-8 z-20">
+                 <a target="_blank" href="https://www.example.com" class="text-white text-xl font-medium relative inline-block pb-0.5 after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-0 after:h-[2px] after:bg-white after:transition-all after:duration-300 after:ease-out hover:after:w-full transition-colors">Women</a>
+            </div>
+        </div>
+        <div class="relative w-full md:w-1/2 h-1/2 md:h-full overflow-hidden animate-on-scroll opacity-0 translate-y-8 transition-all duration-700 ease-out">
+            <img src="https://images.unsplash.com/photo-1584735175315-9d5df23860e6?w=600&h=800&fit=crop" alt="Volkan Laine Right" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" loading="lazy">
+            <div class="absolute top-3/4 left-8 z-20">
+                 <a target="_blank" href="https://www.example.com" class="text-white text-xl font-medium relative inline-block pb-0.5 after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-0 after:h-[2px] after:bg-white after:transition-all after:duration-300 after:ease-out hover:after:w-full transition-colors">Men</a>
+            </div>
+        </div>
+        <div class="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 z-30 pointer-events-none mix-blend-difference text-center w-full">
+            <h2 class="text-4xl md:text-6xl font-bold text-white tracking-widest uppercase drop-shadow-lg">VOLKAN LAINE</h2>
+        </div>
+    </section>
+
+    <!-- Brand Series Block 4: Accessories -->
+    <section class="group relative w-full h-[70vh] min-h-[500px] flex flex-col md:flex-row overflow-hidden">
+        <div class="relative w-full md:w-1/2 h-1/2 md:h-full overflow-hidden animate-on-scroll opacity-0 translate-y-8 transition-all duration-700 ease-out">
+            <img src="https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=600&h=800&fit=crop" alt="Accessories Left" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" loading="lazy">
+            <div class="absolute top-3/4 right-8 z-20">
+                 <a target="_blank" href="https://www.example.com" class="text-white text-xl font-medium relative inline-block pb-0.5 after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-0 after:h-[2px] after:bg-white after:transition-all after:duration-300 after:ease-out hover:after:w-full transition-colors">Women</a>
+            </div>
+        </div>
+        <div class="relative w-full md:w-1/2 h-1/2 md:h-full overflow-hidden animate-on-scroll opacity-0 translate-y-8 transition-all duration-700 ease-out">
+            <img src="https://images.unsplash.com/photo-1512374382149-233c42b6a83b?w=600&h=800&fit=crop" alt="Accessories Right" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" loading="lazy">
+            <div class="absolute top-3/4 left-8 z-20">
+                 <a target="_blank" href="https://www.example.com" class="text-white text-xl font-medium relative inline-block pb-0.5 after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-0 after:h-[2px] after:bg-white after:transition-all after:duration-300 after:ease-out hover:after:w-full transition-colors">Men</a>
+            </div>
+        </div>
+        <div class="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 z-30 pointer-events-none mix-blend-difference text-center w-full">
+            <h2 class="text-4xl md:text-6xl font-bold text-white tracking-widest uppercase drop-shadow-lg">Accessories</h2>
+        </div>
+    </section>
+
+    <!-- Brand Series Block 5: UBAC VISION -->
+    <section class="group relative w-full h-[70vh] min-h-[500px] flex flex-col md:flex-row overflow-hidden">
+        <div class="relative w-full md:w-1/2 h-1/2 md:h-full overflow-hidden animate-on-scroll opacity-0 translate-y-8 transition-all duration-700 ease-out">
+            <img src="https://images.unsplash.com/photo-1600185365483-26d7a4cc7519?w=600&h=800&fit=crop" alt="Vision Left" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" loading="lazy">
+        </div>
+        <div class="relative w-full md:w-1/2 h-1/2 md:h-full overflow-hidden animate-on-scroll opacity-0 translate-y-8 transition-all duration-700 ease-out">
+            <img src="https://images.unsplash.com/photo-1605348532760-6753d2c43329?w=600&h=800&fit=crop" alt="Vision Right" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" loading="lazy">
+        </div>
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-30 text-center w-full px-4 animate-on-scroll opacity-0 translate-y-8 transition-all duration-700 ease-out">
+            <h2 class="text-4xl md:text-6xl font-bold text-white tracking-widest uppercase mb-6 drop-shadow-lg">UBAC VISION</h2>
+            <a target="_blank" href="https://www.example.com" class="inline-block px-8 py-3 border-2 border-white text-white font-medium hover:bg-white hover:text-black transition-all duration-300">Discover Our Story</a>
+        </div>
+    </section>
+    <!-- 品牌介绍 -->
+    <section class="py-24 bg-white">
+        <div class="h-px bg-[#212322]/25 mx-12"></div>
+        <div class="container mx-auto px-4 text-center py-12">
+            <h2 class="text-[48px] font-bold text-[#212322] mb-6">
+                "INSPIRED BY NATURE, DESIGNED FOR FUTURE."
+            </h2>
+            <p class="text-[24px] text-[#212322] leading-relaxed max-w-4xl mx-auto">
+                We create sneakers that connect natural materials to a bold design by prioritizing local manufacturing of components to assembly, promising a minimal impact on the environment.
+            </p>
+        </div>
+        <div class="h-px bg-[#212322]/25 mx-12"></div>
+    </section>
+
+    <!--商品区，轮播图展示 What makes ubac unique -->
+    <section id="uniqueCarousel" class="py-24 bg-earth-beige">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl md:text-4xl font-bold uppercase mb-8">WHAT MAKES UBAC UNIQUE</h2>
+            <div class="relative">
+                <!-- 左侧竖排导航按钮 -->
+                <div class="hidden lg:flex flex-col gap-4 absolute -left-16 top-1/2 -translate-y-1/2 z-10">
+                    <button id="uniquePrev" class="p-2 rounded-full hover:bg-white/50 transition-colors">
+                        <i data-lucide="chevron-left" class="w-8 h-8"></i>
+                    </button>
+                    <button id="uniqueNext" class="p-2 rounded-full hover:bg-white/50 transition-colors">
+                        <i data-lucide="chevron-right" class="w-8 h-8"></i>
+                    </button>
+                </div>
+                <!-- 滚动容器 -->
+                <div id="uniqueTrack" class="flex overflow-x-auto snap-x snap-mandatory gap-6 pb-4 scroll-smooth scrollbar-hide">
+                    <!-- Cards will be injected by script.js -->
+                </div>
+                <!-- Mobile Nav Buttons for Unique Carousel -->
+                <button id="uniquePrevMobile" class="lg:hidden absolute left-0 top-1/2 -translate-y-1/2 z-10 p-2 bg-white/80 rounded-full shadow-md">
+                    <i data-lucide="chevron-left" class="w-6 h-6"></i>
+                </button>
+                <button id="uniqueNextMobile" class="lg:hidden absolute right-0 top-1/2 -translate-y-1/2 z-10 p-2 bg-white/80 rounded-full shadow-md">
+                    <i data-lucide="chevron-right" class="w-6 h-6"></i>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- 订阅区 -->
+    <section class="py-24 bg-earth-beige animate-on-scroll opacity-0 translate-y-8 transition-all duration-700 ease-out">
+        <div class="container mx-auto px-4 text-center">
+            <h2 class="text-[clamp(2rem,4vw,3rem)] font-bold mb-4">NEWSLETTER</h2>
+            <p class="text-lg mb-10 text-gray-700">
+                Découvrez en premier nos nouvelles collections et actions, et bénéficiez de 10€ de réduction sur votre premier achat.
+            </p>
+            <form class="max-w-md mx-auto flex flex-col sm:flex-row gap-4">
+                <input type="email" placeholder="Votre adresse email" class="flex-1 px-6 py-4 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-300">
+                <button type="submit" class="bg-rock-gray text-white px-8 py-4 rounded-lg font-medium hover:bg-primary transition-all duration-300 transform hover:scale-105 whitespace-nowrap">
+                    S'abonner
+                </button>
+            </form>
+        </div>
+    </section>
+
+    <!-- 页脚 -->
+    <footer class="bg-rock-gray text-white py-16">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
+                <div>
+                    <h3 class="text-xl font-bold mb-6">UBAC</h3>
+                    <p class="mb-6 text-gray-400">
+                        La basket responsable en laine recyclée, inspirée par la nature et conçue pour le futur.
+                    </p>
+                    <div class="flex space-x-4">
+                        <a target="_blank" href="https://www.example.com" class="text-gray-400 hover:text-white transition-colors">
+                            <i data-lucide="facebook"></i>
+                        </a>
+                        <a target="_blank" href="https://www.example.com" class="text-gray-400 hover:text-white transition-colors">
+                            <i data-lucide="instagram"></i>
+                        </a>
+                        <a target="_blank" href="https://www.example.com" class="text-gray-400 hover:text-white transition-colors">
+                            <i data-lucide="twitter"></i>
+                        </a>
+                        <a target="_blank" href="https://www.example.com" class="text-gray-400 hover:text-white transition-colors">
+                            <i data-lucide="pinterest"></i>
+                        </a>
+                    </div>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold mb-6">Shop</h4>
+                    <ul class="space-y-3">
+                        <li><a target="_blank" href="https://www.example.com" class="text-gray-400 hover:text-white transition-colors">Femme</a></li>
+                        <li><a target="_blank" href="https://www.example.com" class="text-gray-400 hover:text-white transition-colors">Homme</a></li>
+                        <li><a target="_blank" href="https://www.example.com" class="text-gray-400 hover:text-white transition-colors">Collections</a></li>
+                        <li><a target="_blank" href="https://www.example.com" class="text-gray-400 hover:text-white transition-colors">Nouveautés</a></li>
+                        <li><a target="_blank" href="https://www.example.com" class="text-gray-400 hover:text-white transition-colors">Soldes</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold mb-6">Aide</h4>
+                    <ul class="space-y-3">
+                        <li><a target="_blank" href="https://www.example.com" class="text-gray-400 hover:text-white transition-colors">Contact</a></li>
+                        <li><a target="_blank" href="https://www.example.com" class="text-gray-400 hover:text-white transition-colors">FAQ</a></li>
+                        <li><a target="_blank" href="https://www.example.com" class="text-gray-400 hover:text-white transition-colors">Livraison</a></li>
+                        <li><a target="_blank" href="https://www.example.com" class="text-gray-400 hover:text-white transition-colors">Retours</a></li>
+                        <li><a target="_blank" href="https://www.example.com" class="text-gray-400 hover:text-white transition-colors">Paiement sécurisé</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold mb-6">Notre Engagement</h4>
+                    <ul class="space-y-3">
+                        <li><a target="_blank" href="https://www.example.com" class="text-gray-400 hover:text-white transition-colors">Sustainable Development</a></li>
+                        <li><a target="_blank" href="https://www.example.com" class="text-gray-400 hover:text-white transition-colors">Fabrication Locale</a></li>
+                        <li><a target="_blank" href="https://www.example.com" class="text-gray-400 hover:text-white transition-colors">Matériaux Naturels</a></li>
+                        <li><a target="_blank" href="https://www.example.com" class="text-gray-400 hover:text-white transition-colors">1% For The Planet</a></li>
+                        <li><a target="_blank" href="https://www.example.com" class="text-gray-400 hover:text-white transition-colors">BirdLife International</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 mt-12 pt-8 text-center text-gray-400">
+                <p>© 2024 Ubac. Tous droits réservés.</p>
+                <div class="mt-4 flex justify-center space-x-6">
+                    <span>Paiement sécurisé</span>
+                    <span>Retours simplifiés</span>
+                    <span>1% des revenus versés à BirdLife</span>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

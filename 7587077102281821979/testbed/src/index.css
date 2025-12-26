@@ -1,0 +1,62 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+  .torn-edge {
+    clip-path: polygon(0 0, 100% 0, 100% 85%, 95% 100%, 90% 85%, 85% 100%, 80% 85%, 75% 100%, 70% 85%, 65% 100%, 60% 85%, 55% 100%, 50% 85%, 45% 100%, 40% 85%, 35% 100%, 30% 85%, 25% 100%, 20% 85%, 15% 100%, 10% 85%, 5% 100%, 0 85%);
+  }
+  
+  .torn-edge-top {
+    clip-path: polygon(0 15%, 5% 0, 10% 15%, 15% 0, 20% 15%, 25% 0, 30% 15%, 35% 0, 40% 15%, 45% 0, 50% 15%, 55% 0, 60% 15%, 65% 0, 70% 15%, 75% 0, 80% 15%, 85% 0, 90% 15%, 95% 0, 100% 15%, 100% 100%, 0 100%);
+  }
+  
+  .paper-shadow {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.06);
+  }
+  
+  .text-shadow {
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .magnetic {
+    transition: transform 0.2s ease;
+  }
+  
+  .magnetic:hover {
+    transform: scale(1.05);
+  }
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  overflow-x: hidden;
+  background-color: #ffffff;
+  color: #000000;
+  background-image: url('https://da-festival.hr/wp-content/themes/da2025/assets/paper-white.png');
+  background-repeat: repeat;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
