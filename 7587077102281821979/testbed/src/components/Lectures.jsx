@@ -86,7 +86,7 @@ const Lectures = () => {
       biography: "Klasja Habjan je ilustratorica i grafička dizajnerica, poznata po svom jedinstvenom vizualnom jeziku.",
       capacity: "15 OSOBA",
       equipment: "PRIBOR ZA CRTANJE, LAPTOP",
-      registrationLink: "https://example.com/apply"
+      registrationLink: "https://www.example.com"
     },
     {
       id: 888,

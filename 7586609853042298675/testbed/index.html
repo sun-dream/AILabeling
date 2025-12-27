@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -24,7 +25,7 @@
                 },
             },
             plugins: [
-                function({ addUtilities }) {
+                function ({ addUtilities }) {
                     addUtilities({
                         '.scrollbar-hide': {
                             '-ms-overflow-style': 'none',
@@ -39,20 +40,24 @@
         }
     </script>
 </head>
+
 <body class="font-inter overflow-x-hidden">
     <!-- 顶部公告区 -->
     <div id="topNotice" class="fixed inset-x-0 top-0 z-50 bg-rock-gray text-white py-3 text-center text-sm">
-         <div class="container mx-auto px-4 flex items-center justify-center relative">
-             <div class="truncate">LIVRAISON OFFERTE DÈS 120€ & RETOURS GRATUITS SOUS 60 JOURS</div>
-             <button id="topNoticeClose" aria-label="Close notice" class="absolute right-4 top-1/2 -translate-y-1/2 text-white hover:text-gray-200 focus:outline-none">
-                 <!-- 关闭图标（SVG） -->
-                 <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                     <line x1="18" y1="6" x2="6" y2="18"></line>
-                     <line x1="6" y1="6" x2="18" y2="18"></line>
-                 </svg>
-             </button>
-         </div>
-     </div>
+        <div class="container mx-auto px-4 flex items-center justify-center relative">
+            <div class="truncate">LIVRAISON OFFERTE DÈS 120€ & RETOURS GRATUITS SOUS 60 JOURS</div>
+            <button id="topNoticeClose" aria-label="Close notice"
+                class="absolute right-4 top-1/2 -translate-y-1/2 text-white hover:text-gray-200 focus:outline-none">
+                <!-- 关闭图标（SVG） -->
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    aria-hidden="true">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+        </div>
+    </div>
 
     <!-- 导航栏 -->
     <header id="mainHeader" class=" fixed top-12 left-0 right-0 z-40  backdrop-blur-md transition-all duration-300">
@@ -60,77 +65,176 @@
             <div class="flex items-center space-x-8">
                 <a target="_blank" href="https://www.example.com" class="text-2xl font-bold text-white">UBAC</a>
             </div>
-            <nav id="mainNav" class="hidden md:flex space-x-8 absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 items-center">
+            <nav id="mainNav"
+                class="hidden md:flex space-x-8 absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 items-center">
                 <div>
-                    <a href="https://www.example.com" data-submenu="femme" class="text-white hover:text-gray-200 transition-colors" aria-expanded="false" aria-controls="mainSubmenu">FEMME</a>
+                    <a href="https://www.example.com" data-submenu="femme"
+                        class="text-white hover:text-gray-200 transition-colors" aria-expanded="false"
+                        aria-controls="mainSubmenu">FEMME</a>
                 </div>
                 <div>
-                    <a href="https://www.example.com" data-submenu="homme" class="text-white hover:text-gray-200 transition-colors" aria-expanded="false" aria-controls="mainSubmenu">HOMME</a>
+                    <a href="https://www.example.com" data-submenu="homme"
+                        class="text-white hover:text-gray-200 transition-colors" aria-expanded="false"
+                        aria-controls="mainSubmenu">HOMME</a>
                 </div>
-                <a href="https://www.example.com" class="text-white hover:text-gray-200 transition-colors nav-close-trigger">VISION</a>
-                 
+                <a href="https://www.example.com"
+                    class="text-white hover:text-gray-200 transition-colors nav-close-trigger">VISION</a>
+
                 <button id="cartTrigger" class="text-white hover:text-gray-200 transition-colors nav-close-trigger">
                     <i data-lucide="shopping-bag" width="16" height="16"></i>
                 </button>
-                <a target="_blank" href="https://www.example.com" class=" text-white hover:text-gray-200 transition-colors nav-close-trigger">
+                <a target="_blank" href="https://www.example.com"
+                    class=" text-white hover:text-gray-200 transition-colors nav-close-trigger">
                     <i data-lucide="user" width="16" height="16"></i>
                 </a>
             </nav>
             <div class="flex items-center space-x-6">
-                <a target="_blank" href="https://www.example.com" class="hidden md:inline-block w-[40px] h-[40px] rounded-full bg-white text-sm text-gray-900 text-center leading-[40px]">
-                  EN
+                <a target="_blank" href="https://www.example.com"
+                    class="hidden md:inline-block w-[40px] h-[40px] rounded-full bg-white text-sm text-gray-900 text-center leading-[40px]">
+                    EN
                 </a>
-                <a target="_blank" href="https://www.example.com" class="md:hidden text-white hover:text-gray-200 transition-colors nav-close-trigger">
+                <a target="_blank" href="https://www.example.com"
+                    class="md:hidden text-white hover:text-gray-200 transition-colors nav-close-trigger">
                     <i data-lucide="user" width="16" height="16"></i>
                 </a>
-                <button id="cartTrigger2" class="md:hidden text-white hover:text-gray-200 transition-colors nav-close-trigger">
+                <button id="cartTrigger2"
+                    class="md:hidden text-white hover:text-gray-200 transition-colors nav-close-trigger">
                     <i data-lucide="shopping-bag" width="16" height="16"></i>
                 </button>
                 <button id="mobileMenuBtn" class="md:hidden text-white hover:text-white transition-colors">
                     <i data-lucide="menu" fill="white"></i>
                 </button>
             </div>
-            <div id="mainSubmenu" class="hidden md:block opacity-0 invisible z-50 submenu-content absolute left-0 top-[88%] w-full bg-white shadow-lg transition-all duration-300 transform translate-y-2" role="menu" aria-hidden="true">
+            <div id="mainSubmenu"
+                class="hidden md:block opacity-0 invisible z-50 submenu-content absolute left-0 top-[88%] w-full bg-white shadow-lg transition-all duration-300 transform translate-y-2"
+                role="menu" aria-hidden="true">
                 <!-- 模板内容：仅作为数据源，由 script.js 注入到 #mainSubmenu -->
                 <template id="tmpl-femme">
                     <div class="px-6 py-6 flex items-start gap-8">
                         <div class="flex-shrink-0">
                             <div class="w-[260px] ">
-                                <img class="w-full h-full object-cover" src="https://images.unsplash.com/photo-1549298916-b41d501d3772?w=600&h=800&fit=crop" alt="Preview Femme">
+                                <img class="w-full h-full object-cover"
+                                    src="https://images.unsplash.com/photo-1549298916-b41d501d3772?w=600&h=800&fit=crop"
+                                    alt="Preview Femme">
                             </div>
                         </div>
                         <div class="flex-1 flex items-start gap-12">
                             <div>
                                 <h3 class="text-sm font-semibold mb-3">Baskets</h3>
                                 <ul class="space-y-1">
-                                    <li class="submenu-item"><a target="_blank" href="https://www.example.com" class="text-sm inline-block relative"><span class="font-semibold text-gray-900">KOTO KNIT</span> <span class="text-gray-500">— Coton biologique et tencel</span><span class="submenu-progress"></span></a></li>
-                                    <li class="submenu-item"><a target="_blank" href="https://www.example.com" class="text-sm inline-block relative"><span class="font-semibold text-gray-900">VOLKAN LAINE</span> <span class="text-gray-500">— Laine recyclée</span><span class="submenu-progress"></span></a></li>
-                                    <li class="submenu-item"><a target="_blank" href="https://www.example.com" class="text-sm inline-block relative"><span class="font-semibold text-gray-900">VOLKAN MESCLAT</span> <span class="text-gray-500">— Chanvre</span><span class="submenu-progress"></span></a></li>
-                                    <li class="submenu-item"><a target="_blank" href="https://www.example.com" class="text-sm inline-block relative"><span class="font-semibold text-gray-900">VOLKAN KNIT</span> <span class="text-gray-500">— Coton biologique et tencel</span><span class="submenu-progress"></span></a></li>
-                                    <li class="submenu-item"><a target="_blank" href="https://www.example.com" class="text-sm inline-block relative"><span class="font-semibold text-gray-900">AXOLO R‑SKIN</span> <span class="text-gray-500">— Caoutchouc recyclé</span><span class="submenu-progress"></span></a></li>
-                                    <li class="submenu-item"><a target="_blank" href="https://www.example.com" class="text-sm inline-block relative"><span class="font-semibold text-gray-900">KOTO</span> <span class="text-gray-500">— Coton recyclé</span><span class="submenu-progress"></span></a></li>
-                                    <li class="submenu-item"><a target="_blank" href="https://www.example.com" class="text-sm inline-block relative"><span class="font-semibold text-gray-900">VOLA</span> <span class="text-gray-500">— Laine recyclée</span><span class="submenu-progress"></span></a></li>
-                                    <li class="submenu-item"><a target="_blank" href="https://www.example.com" class="text-sm inline-block relative"><span class="font-semibold text-gray-900">KOTO DENIM</span> <span class="text-gray-500">— Denim recyclé</span><span class="submenu-progress"></span></a></li>
-                                    <li class="submenu-item"><a target="_blank" href="https://www.example.com" class="text-sm inline-block relative"><span class="font-semibold text-gray-900">MID KOTO DENIM</span> <span class="text-gray-500">— Denim recyclé</span><span class="submenu-progress"></span></a></li>
-                                    <li class="submenu-item"><a target="_blank" href="https://www.example.com" class="text-sm inline-block relative"><span class="font-semibold text-gray-900">AXOLO LIN</span> <span class="text-gray-500">— Lin</span><span class="submenu-progress"></span></a></li>
-                                    <li class="submenu-item"><a target="_blank" href="https://www.example.com" class="text-sm inline-block relative"><span class="font-semibold text-gray-900">AXOLO R‑SKIN MONOCHROME</span> <span class="text-gray-500">— Caoutchouc recyclé</span><span class="submenu-progress"></span></a></li>
-                                    <li class="submenu-item"><a target="_blank" href="https://www.example.com" class="text-sm inline-block relative"><span class="font-semibold text-gray-900">TERRA‑E</span> <span class="text-gray-500">— Laine recyclée</span><span class="submenu-progress"></span></a></li>
-                                    <li class="submenu-item"><a target="_blank" href="https://www.example.com" class="text-sm inline-block relative"><span class="font-semibold text-gray-900">MID TERRA‑E</span> <span class="text-gray-500">— Laine recyclée</span><span class="submenu-progress"></span></a></li>
-                                    <li class="submenu-item"><a target="_blank" href="https://www.example.com" class="text-sm inline-block relative"><span class="font-semibold text-gray-900">AXOLO VELOURS</span> <span class="text-gray-500">— Coton recyclé</span><span class="submenu-progress"></span></a></li>
-                                    <li class="submenu-item"><a target="_blank" href="https://www.example.com" class="text-sm inline-block relative"><span class="font-semibold text-gray-900">KOTO VELOURS</span> <span class="text-gray-500">— Coton recyclé</span><span class="submenu-progress"></span></a></li>
-                                    <li class="submenu-item"><a target="_blank" href="https://www.example.com" class="text-sm inline-block relative"><span class="font-semibold text-gray-900">MID KOTO VELOURS</span> <span class="text-gray-500">— Coton recyclé</span><span class="submenu-progress"></span></a></li>
+                                    <li class="submenu-item"><a target="_blank" href="https://www.example.com"
+                                            class="text-sm inline-block relative"><span
+                                                class="font-semibold text-gray-900">KOTO KNIT</span> <span
+                                                class="text-gray-500">— Coton biologique et tencel</span><span
+                                                class="submenu-progress"></span></a></li>
+                                    <li class="submenu-item"><a target="_blank" href="https://www.example.com"
+                                            class="text-sm inline-block relative"><span
+                                                class="font-semibold text-gray-900">VOLKAN LAINE</span> <span
+                                                class="text-gray-500">— Laine recyclée</span><span
+                                                class="submenu-progress"></span></a></li>
+                                    <li class="submenu-item"><a target="_blank" href="https://www.example.com"
+                                            class="text-sm inline-block relative"><span
+                                                class="font-semibold text-gray-900">VOLKAN MESCLAT</span> <span
+                                                class="text-gray-500">— Chanvre</span><span
+                                                class="submenu-progress"></span></a></li>
+                                    <li class="submenu-item"><a target="_blank" href="https://www.example.com"
+                                            class="text-sm inline-block relative"><span
+                                                class="font-semibold text-gray-900">VOLKAN KNIT</span> <span
+                                                class="text-gray-500">— Coton biologique et tencel</span><span
+                                                class="submenu-progress"></span></a></li>
+                                    <li class="submenu-item"><a target="_blank" href="https://www.example.com"
+                                            class="text-sm inline-block relative"><span
+                                                class="font-semibold text-gray-900">AXOLO R‑SKIN</span> <span
+                                                class="text-gray-500">— Caoutchouc recyclé</span><span
+                                                class="submenu-progress"></span></a></li>
+                                    <li class="submenu-item"><a target="_blank" href="https://www.example.com"
+                                            class="text-sm inline-block relative"><span
+                                                class="font-semibold text-gray-900">KOTO</span> <span
+                                                class="text-gray-500">— Coton recyclé</span><span
+                                                class="submenu-progress"></span></a></li>
+                                    <li class="submenu-item"><a target="_blank" href="https://www.example.com"
+                                            class="text-sm inline-block relative"><span
+                                                class="font-semibold text-gray-900">VOLA</span> <span
+                                                class="text-gray-500">— Laine recyclée</span><span
+                                                class="submenu-progress"></span></a></li>
+                                    <li class="submenu-item"><a target="_blank" href="https://www.example.com"
+                                            class="text-sm inline-block relative"><span
+                                                class="font-semibold text-gray-900">KOTO DENIM</span> <span
+                                                class="text-gray-500">— Denim recyclé</span><span
+                                                class="submenu-progress"></span></a></li>
+                                    <li class="submenu-item"><a target="_blank" href="https://www.example.com"
+                                            class="text-sm inline-block relative"><span
+                                                class="font-semibold text-gray-900">MID KOTO DENIM</span> <span
+                                                class="text-gray-500">— Denim recyclé</span><span
+                                                class="submenu-progress"></span></a></li>
+                                    <li class="submenu-item"><a target="_blank" href="https://www.example.com"
+                                            class="text-sm inline-block relative"><span
+                                                class="font-semibold text-gray-900">AXOLO LIN</span> <span
+                                                class="text-gray-500">— Lin</span><span
+                                                class="submenu-progress"></span></a></li>
+                                    <li class="submenu-item"><a target="_blank" href="https://www.example.com"
+                                            class="text-sm inline-block relative"><span
+                                                class="font-semibold text-gray-900">AXOLO R‑SKIN MONOCHROME</span> <span
+                                                class="text-gray-500">— Caoutchouc recyclé</span><span
+                                                class="submenu-progress"></span></a></li>
+                                    <li class="submenu-item"><a target="_blank" href="https://www.example.com"
+                                            class="text-sm inline-block relative"><span
+                                                class="font-semibold text-gray-900">TERRA‑E</span> <span
+                                                class="text-gray-500">— Laine recyclée</span><span
+                                                class="submenu-progress"></span></a></li>
+                                    <li class="submenu-item"><a target="_blank" href="https://www.example.com"
+                                            class="text-sm inline-block relative"><span
+                                                class="font-semibold text-gray-900">MID TERRA‑E</span> <span
+                                                class="text-gray-500">— Laine recyclée</span><span
+                                                class="submenu-progress"></span></a></li>
+                                    <li class="submenu-item"><a target="_blank" href="https://www.example.com"
+                                            class="text-sm inline-block relative"><span
+                                                class="font-semibold text-gray-900">AXOLO VELOURS</span> <span
+                                                class="text-gray-500">— Coton recyclé</span><span
+                                                class="submenu-progress"></span></a></li>
+                                    <li class="submenu-item"><a target="_blank" href="https://www.example.com"
+                                            class="text-sm inline-block relative"><span
+                                                class="font-semibold text-gray-900">KOTO VELOURS</span> <span
+                                                class="text-gray-500">— Coton recyclé</span><span
+                                                class="submenu-progress"></span></a></li>
+                                    <li class="submenu-item"><a target="_blank" href="https://www.example.com"
+                                            class="text-sm inline-block relative"><span
+                                                class="font-semibold text-gray-900">MID KOTO VELOURS</span> <span
+                                                class="text-gray-500">— Coton recyclé</span><span
+                                                class="submenu-progress"></span></a></li>
                                 </ul>
                             </div>
                             <div>
                                 <h3 class="text-sm font-semibold mb-3">Accessoires</h3>
                                 <ul class="space-y-1">
-                                    <li class="submenu-item"><a target="_blank" href="https://www.example.com" class="text-sm inline-block relative"><span class="font-semibold text-gray-900">Chaussette laine</span><span class="submenu-progress"></span></a></li>
-                                    <li class="submenu-item"><a target="_blank" href="https://www.example.com" class="text-sm inline-block relative"><span class="font-semibold text-gray-900">Chaussette coton</span><span class="submenu-progress"></span></a></li>
-                                    <li class="submenu-item"><a target="_blank" href="https://www.example.com" class="text-sm inline-block relative"><span class="font-semibold text-gray-900">Bonnet</span><span class="submenu-progress"></span></a></li>
-                                    <li class="submenu-item"><a target="_blank" href="https://www.example.com" class="text-sm inline-block relative"><span class="font-semibold text-gray-900">Écharpe</span><span class="submenu-progress"></span></a></li>
-                                    <li class="submenu-item"><a target="_blank" href="https://www.example.com" class="text-sm inline-block relative"><span class="font-semibold text-gray-900">Ceinture coton</span><span class="submenu-progress"></span></a></li>
-                                    <li class="submenu-item"><a target="_blank" href="https://www.example.com" class="text-sm inline-block relative"><span class="font-semibold text-gray-900">Casquette coton</span><span class="submenu-progress"></span></a></li>
-                                    <li class="submenu-item"><a target="_blank" href="https://www.example.com" class="text-sm inline-block relative"><span class="font-semibold text-gray-900">Carte Cadeau Digital</span><span class="submenu-progress"></span></a></li>
+                                    <li class="submenu-item"><a target="_blank" href="https://www.example.com"
+                                            class="text-sm inline-block relative"><span
+                                                class="font-semibold text-gray-900">Chaussette laine</span><span
+                                                class="submenu-progress"></span></a></li>
+                                    <li class="submenu-item"><a target="_blank" href="https://www.example.com"
+                                            class="text-sm inline-block relative"><span
+                                                class="font-semibold text-gray-900">Chaussette coton</span><span
+                                                class="submenu-progress"></span></a></li>
+                                    <li class="submenu-item"><a target="_blank" href="https://www.example.com"
+                                            class="text-sm inline-block relative"><span
+                                                class="font-semibold text-gray-900">Bonnet</span><span
+                                                class="submenu-progress"></span></a></li>
+                                    <li class="submenu-item"><a target="_blank" href="https://www.example.com"
+                                            class="text-sm inline-block relative"><span
+                                                class="font-semibold text-gray-900">Écharpe</span><span
+                                                class="submenu-progress"></span></a></li>
+                                    <li class="submenu-item"><a target="_blank" href="https://www.example.com"
+                                            class="text-sm inline-block relative"><span
+                                                class="font-semibold text-gray-900">Ceinture coton</span><span
+                                                class="submenu-progress"></span></a></li>
+                                    <li class="submenu-item"><a target="_blank" href="https://www.example.com"
+                                            class="text-sm inline-block relative"><span
+                                                class="font-semibold text-gray-900">Casquette coton</span><span
+                                                class="submenu-progress"></span></a></li>
+                                    <li class="submenu-item"><a target="_blank" href="https://www.example.com"
+                                            class="text-sm inline-block relative"><span
+                                                class="font-semibold text-gray-900">Carte Cadeau Digital</span><span
+                                                class="submenu-progress"></span></a></li>
                                 </ul>
                             </div>
                         </div>
@@ -141,75 +245,166 @@
                     <div class="px-6 py-6 flex items-start gap-8">
                         <div class="flex-shrink-0">
                             <div class="w-[260px] ">
-                                <img class="w-full h-full object-cover" src="https://fastly.picsum.photos/id/134/600/400.jpg?hmac=GYoZSDKT34ygtDjRhJTsRrgtjso3oino2e4RPQyUG5s" alt="Preview Homme">
+                                <img class="w-full h-full object-cover"
+                                    src="https://fastly.picsum.photos/id/134/600/400.jpg?hmac=GYoZSDKT34ygtDjRhJTsRrgtjso3oino2e4RPQyUG5s"
+                                    alt="Preview Homme">
                             </div>
                         </div>
                         <div class="flex-1 flex items-start gap-12">
                             <div>
                                 <h3 class="text-sm font-semibold mb-3">Baskets</h3>
                                 <ul class="space-y-1">
-                                    <li class="submenu-item"><a target="_blank" href="https://www.example.com" class="text-sm inline-block relative"><span class="font-semibold text-gray-900">KOTO KNIT</span> <span class="text-gray-500">— Coton biologique et tencel</span><span class="submenu-progress"></span></a></li>
-                                    <li class="submenu-item"><a target="_blank" href="https://www.example.com" class="text-sm inline-block relative"><span class="font-semibold text-gray-900">VOLKAN LAINE</span> <span class="text-gray-500">— Laine recyclée</span><span class="submenu-progress"></span></a></li>
-                                    <li class="submenu-item"><a target="_blank" href="https://www.example.com" class="text-sm inline-block relative"><span class="font-semibold text-gray-900">VOLKAN MESCLAT</span> <span class="text-gray-500">— Chanvre</span><span class="submenu-progress"></span></a></li>
-                                    <li class="submenu-item"><a target="_blank" href="https://www.example.com" class="text-sm inline-block relative"><span class="font-semibold text-gray-900">VOLKAN KNIT</span> <span class="text-gray-500">— Coton biologique et tencel</span><span class="submenu-progress"></span></a></li>
-                                    <li class="submenu-item"><a target="_blank" href="https://www.example.com" class="text-sm inline-block relative"><span class="font-semibold text-gray-900">AXOLO R‑SKIN</span> <span class="text-gray-500">— Caoutchouc recyclé</span><span class="submenu-progress"></span></a></li>
-                                    <li class="submenu-item"><a target="_blank" href="https://www.example.com" class="text-sm inline-block relative"><span class="font-semibold text-gray-900">KOTO</span> <span class="text-gray-500">— Coton recyclé</span><span class="submenu-progress"></span></a></li>
-                                    <li class="submenu-item"><a target="_blank" href="https://www.example.com" class="text-sm inline-block relative"><span class="font-semibold text-gray-900">VOLA</span> <span class="text-gray-500">— Laine recyclée</span><span class="submenu-progress"></span></a></li>
-                                    <li class="submenu-item"><a target="_blank" href="https://www.example.com" class="text-sm inline-block relative"><span class="font-semibold text-gray-900">KOTO DENIM</span> <span class="text-gray-500">— Denim recyclé</span><span class="submenu-progress"></span></a></li>
-                                    <li class="submenu-item"><a target="_blank" href="https://www.example.com" class="text-sm inline-block relative"><span class="font-semibold text-gray-900">MID KOTO DENIM</span> <span class="text-gray-500">— Denim recyclé</span><span class="submenu-progress"></span></a></li>
-                                    <li class="submenu-item"><a target="_blank" href="https://www.example.com" class="text-sm inline-block relative"><span class="font-semibold text-gray-900">AXOLO LIN</span> <span class="text-gray-500">— Lin</span><span class="submenu-progress"></span></a></li>
-                                    <li class="submenu-item"><a target="_blank" href="https://www.example.com" class="text-sm inline-block relative"><span class="font-semibold text-gray-900">AXOLO R‑SKIN MONOCHROME</span> <span class="text-gray-500">— Caoutchouc recyclé</span><span class="submenu-progress"></span></a></li>
-                                    <li class="submenu-item"><a target="_blank" href="https://www.example.com" class="text-sm inline-block relative"><span class="font-semibold text-gray-900">TERRA‑E</span> <span class="text-gray-500">— Laine recyclée</span><span class="submenu-progress"></span></a></li>
-                                    <li class="submenu-item"><a target="_blank" href="https://www.example.com" class="text-sm inline-block relative"><span class="font-semibold text-gray-900">MID TERRA‑E</span> <span class="text-gray-500">— Laine recyclée</span><span class="submenu-progress"></span></a></li>
-                                    <li class="submenu-item"><a target="_blank" href="https://www.example.com" class="text-sm inline-block relative"><span class="font-semibold text-gray-900">AXOLO VELOURS</span> <span class="text-gray-500">— Coton recyclé</span><span class="submenu-progress"></span></a></li>
-                                    <li class="submenu-item"><a target="_blank" href="https://www.example.com" class="text-sm inline-block relative"><span class="font-semibold text-gray-900">KOTO VELOURS</span> <span class="text-gray-500">— Coton recyclé</span><span class="submenu-progress"></span></a></li>
-                                    <li class="submenu-item"><a target="_blank" href="https://www.example.com" class="text-sm inline-block relative"><span class="font-semibold text-gray-900">MID KOTO VELOURS</span> <span class="text-gray-500">— Coton recyclé</span><span class="submenu-progress"></span></a></li>
+                                    <li class="submenu-item"><a target="_blank" href="https://www.example.com"
+                                            class="text-sm inline-block relative"><span
+                                                class="font-semibold text-gray-900">KOTO KNIT</span> <span
+                                                class="text-gray-500">— Coton biologique et tencel</span><span
+                                                class="submenu-progress"></span></a></li>
+                                    <li class="submenu-item"><a target="_blank" href="https://www.example.com"
+                                            class="text-sm inline-block relative"><span
+                                                class="font-semibold text-gray-900">VOLKAN LAINE</span> <span
+                                                class="text-gray-500">— Laine recyclée</span><span
+                                                class="submenu-progress"></span></a></li>
+                                    <li class="submenu-item"><a target="_blank" href="https://www.example.com"
+                                            class="text-sm inline-block relative"><span
+                                                class="font-semibold text-gray-900">VOLKAN MESCLAT</span> <span
+                                                class="text-gray-500">— Chanvre</span><span
+                                                class="submenu-progress"></span></a></li>
+                                    <li class="submenu-item"><a target="_blank" href="https://www.example.com"
+                                            class="text-sm inline-block relative"><span
+                                                class="font-semibold text-gray-900">VOLKAN KNIT</span> <span
+                                                class="text-gray-500">— Coton biologique et tencel</span><span
+                                                class="submenu-progress"></span></a></li>
+                                    <li class="submenu-item"><a target="_blank" href="https://www.example.com"
+                                            class="text-sm inline-block relative"><span
+                                                class="font-semibold text-gray-900">AXOLO R‑SKIN</span> <span
+                                                class="text-gray-500">— Caoutchouc recyclé</span><span
+                                                class="submenu-progress"></span></a></li>
+                                    <li class="submenu-item"><a target="_blank" href="https://www.example.com"
+                                            class="text-sm inline-block relative"><span
+                                                class="font-semibold text-gray-900">KOTO</span> <span
+                                                class="text-gray-500">— Coton recyclé</span><span
+                                                class="submenu-progress"></span></a></li>
+                                    <li class="submenu-item"><a target="_blank" href="https://www.example.com"
+                                            class="text-sm inline-block relative"><span
+                                                class="font-semibold text-gray-900">VOLA</span> <span
+                                                class="text-gray-500">— Laine recyclée</span><span
+                                                class="submenu-progress"></span></a></li>
+                                    <li class="submenu-item"><a target="_blank" href="https://www.example.com"
+                                            class="text-sm inline-block relative"><span
+                                                class="font-semibold text-gray-900">KOTO DENIM</span> <span
+                                                class="text-gray-500">— Denim recyclé</span><span
+                                                class="submenu-progress"></span></a></li>
+                                    <li class="submenu-item"><a target="_blank" href="https://www.example.com"
+                                            class="text-sm inline-block relative"><span
+                                                class="font-semibold text-gray-900">MID KOTO DENIM</span> <span
+                                                class="text-gray-500">— Denim recyclé</span><span
+                                                class="submenu-progress"></span></a></li>
+                                    <li class="submenu-item"><a target="_blank" href="https://www.example.com"
+                                            class="text-sm inline-block relative"><span
+                                                class="font-semibold text-gray-900">AXOLO LIN</span> <span
+                                                class="text-gray-500">— Lin</span><span
+                                                class="submenu-progress"></span></a></li>
+                                    <li class="submenu-item"><a target="_blank" href="https://www.example.com"
+                                            class="text-sm inline-block relative"><span
+                                                class="font-semibold text-gray-900">AXOLO R‑SKIN MONOCHROME</span> <span
+                                                class="text-gray-500">— Caoutchouc recyclé</span><span
+                                                class="submenu-progress"></span></a></li>
+                                    <li class="submenu-item"><a target="_blank" href="https://www.example.com"
+                                            class="text-sm inline-block relative"><span
+                                                class="font-semibold text-gray-900">TERRA‑E</span> <span
+                                                class="text-gray-500">— Laine recyclée</span><span
+                                                class="submenu-progress"></span></a></li>
+                                    <li class="submenu-item"><a target="_blank" href="https://www.example.com"
+                                            class="text-sm inline-block relative"><span
+                                                class="font-semibold text-gray-900">MID TERRA‑E</span> <span
+                                                class="text-gray-500">— Laine recyclée</span><span
+                                                class="submenu-progress"></span></a></li>
+                                    <li class="submenu-item"><a target="_blank" href="https://www.example.com"
+                                            class="text-sm inline-block relative"><span
+                                                class="font-semibold text-gray-900">AXOLO VELOURS</span> <span
+                                                class="text-gray-500">— Coton recyclé</span><span
+                                                class="submenu-progress"></span></a></li>
+                                    <li class="submenu-item"><a target="_blank" href="https://www.example.com"
+                                            class="text-sm inline-block relative"><span
+                                                class="font-semibold text-gray-900">KOTO VELOURS</span> <span
+                                                class="text-gray-500">— Coton recyclé</span><span
+                                                class="submenu-progress"></span></a></li>
+                                    <li class="submenu-item"><a target="_blank" href="https://www.example.com"
+                                            class="text-sm inline-block relative"><span
+                                                class="font-semibold text-gray-900">MID KOTO VELOURS</span> <span
+                                                class="text-gray-500">— Coton recyclé</span><span
+                                                class="submenu-progress"></span></a></li>
                                 </ul>
                             </div>
                             <div>
                                 <h3 class="text-sm font-semibold mb-3">Accessoires</h3>
                                 <ul class="space-y-1">
-                                    <li class="submenu-item"><a target="_blank" href="https://www.example.com" class="text-sm inline-block relative"><span class="font-semibold text-gray-900">Chaussette laine</span><span class="submenu-progress"></span></a></li>
-                                    <li class="submenu-item"><a target="_blank" href="https://www.example.com" class="text-sm inline-block relative"><span class="font-semibold text-gray-900">Chaussette coton</span><span class="submenu-progress"></span></a></li>
-                                    <li class="submenu-item"><a target="_blank" href="https://www.example.com" class="text-sm inline-block relative"><span class="font-semibold text-gray-900">Bonnet</span><span class="submenu-progress"></span></a></li>
-                                    <li class="submenu-item"><a target="_blank" href="https://www.example.com" class="text-sm inline-block relative"><span class="font-semibold text-gray-900">Écharpe</span><span class="submenu-progress"></span></a></li>
-                                    <li class="submenu-item"><a target="_blank" href="https://www.example.com" class="text-sm inline-block relative"><span class="font-semibold text-gray-900">Ceinture coton</span><span class="submenu-progress"></span></a></li>
-                                    <li class="submenu-item"><a target="_blank" href="https://www.example.com" class="text-sm inline-block relative"><span class="font-semibold text-gray-900">Casquette coton</span><span class="submenu-progress"></span></a></li>
-                                    <li class="submenu-item"><a target="_blank" href="https://www.example.com" class="text-sm inline-block relative"><span class="font-semibold text-gray-900">Carte Cadeau Digital</span><span class="submenu-progress"></span></a></li>
+                                    <li class="submenu-item"><a target="_blank" href="https://www.example.com"
+                                            class="text-sm inline-block relative"><span
+                                                class="font-semibold text-gray-900">Chaussette laine</span><span
+                                                class="submenu-progress"></span></a></li>
+                                    <li class="submenu-item"><a target="_blank" href="https://www.example.com"
+                                            class="text-sm inline-block relative"><span
+                                                class="font-semibold text-gray-900">Chaussette coton</span><span
+                                                class="submenu-progress"></span></a></li>
+                                    <li class="submenu-item"><a target="_blank" href="https://www.example.com"
+                                            class="text-sm inline-block relative"><span
+                                                class="font-semibold text-gray-900">Bonnet</span><span
+                                                class="submenu-progress"></span></a></li>
+                                    <li class="submenu-item"><a target="_blank" href="https://www.example.com"
+                                            class="text-sm inline-block relative"><span
+                                                class="font-semibold text-gray-900">Écharpe</span><span
+                                                class="submenu-progress"></span></a></li>
+                                    <li class="submenu-item"><a target="_blank" href="https://www.example.com"
+                                            class="text-sm inline-block relative"><span
+                                                class="font-semibold text-gray-900">Ceinture coton</span><span
+                                                class="submenu-progress"></span></a></li>
+                                    <li class="submenu-item"><a target="_blank" href="https://www.example.com"
+                                            class="text-sm inline-block relative"><span
+                                                class="font-semibold text-gray-900">Casquette coton</span><span
+                                                class="submenu-progress"></span></a></li>
+                                    <li class="submenu-item"><a target="_blank" href="https://www.example.com"
+                                            class="text-sm inline-block relative"><span
+                                                class="font-semibold text-gray-900">Carte Cadeau Digital</span><span
+                                                class="submenu-progress"></span></a></li>
                                 </ul>
                             </div>
                         </div>
                     </div>
                 </template>
 
-               
+
             </div>
         </div>
     </header>
 
     <!-- 全屏品牌剧场 -->
-     <section class="h-screen flex items-center justify-center bg-black text-white relative overflow-hidden">
+    <section class="h-screen flex items-center justify-center bg-black text-white relative overflow-hidden">
         <div class="container mx-auto px-4 text-center z-10 ">
-             <p class="text-[clamp(.6rem,1vw,.9rem)] mb-4 font-semibold">
+            <p class="text-[clamp(.6rem,1vw,.9rem)] mb-4 font-semibold">
                 JUSQU'A-40%
             </p>
             <h1 class="text-[clamp(1.5rem,4vw,3rem)] font-bold mb-4 leading-tight">
-                LE GRAND 
+                LE GRAND
             </h1>
             <h1 class="text-[clamp(1.5rem,4vw,3rem)] font-bold  leading-tight">
                 DESTOCKAGE
             </h1>
-            <div class="flex flex-col sm:flex-row justify-center gap-12 absolute bottom-[8rem] left-1/2 -translate-x-1/2">
-                <a href="https://www.example.com" class="bg-transparent text-white py-1 text-2xl font-medium transition-all duration-300 transform underline-anim">
+            <div
+                class="flex flex-col sm:flex-row justify-center gap-12 absolute bottom-[8rem] left-1/2 -translate-x-1/2">
+                <a href="https://www.example.com"
+                    class="bg-transparent text-white py-1 text-2xl font-medium transition-all duration-300 transform underline-anim">
                     Femme
                 </a>
-                <a href="https://www.example.com" class="bg-transparent text-white py-1 text-2xl font-medium transition-all duration-300 transform underline-anim">
+                <a href="https://www.example.com"
+                    class="bg-transparent text-white py-1 text-2xl font-medium transition-all duration-300 transform underline-anim">
                     Homme
                 </a>
             </div>
         </div>
         <div class="absolute inset-0 opacity-80">
-            <img src="https://images.prismic.io/ubac/Zv5Rm7VsGrYSwU4L_sliderethomeoct24-4-.png?auto=format%2Ccompress&rect=0%2C0%2C4320%2C2400&w=1920&q=80" alt="Ubac Sneaker" class="w-full h-full object-cover">
+            <img src="https://images.prismic.io/ubac/Zv5Rm7VsGrYSwU4L_sliderethomeoct24-4-.png?auto=format%2Ccompress&rect=0%2C0%2C4320%2C2400&w=1920&q=80"
+                alt="Ubac Sneaker" class="w-full h-full object-cover">
         </div>
     </section>
 
@@ -218,8 +413,11 @@
         <div class="container mx-auto px-4">
             <!-- Tabs -->
             <div class="flex items-center space-x-12 border-b border-gray-300 mb-12 relative max-w-[90vw]">
-                <button class="tab-btn text-2xl font-medium pb-4 border-b-2 border-black transition-all" data-tab="women">Femme</button>
-                <button class="tab-btn text-2xl font-medium pb-4 border-b-2 border-transparent text-gray-400 hover:text-black transition-all" data-tab="men">Homme</button>
+                <button class="tab-btn text-2xl font-medium pb-4 border-b-2 border-black transition-all"
+                    data-tab="women">Femme</button>
+                <button
+                    class="tab-btn text-2xl font-medium pb-4 border-b-2 border-transparent text-gray-400 hover:text-black transition-all"
+                    data-tab="men">Homme</button>
             </div>
 
             <!-- Carousel Area -->
@@ -235,15 +433,18 @@
                 </div>
 
                 <!-- Mobile Nav Buttons -->
-                <button id="carouselPrevMobile" class="lg:hidden absolute left-0 top-1/3 z-10 p-2 bg-white/80 rounded-full shadow-md">
+                <button id="carouselPrevMobile"
+                    class="lg:hidden absolute left-0 top-1/3 z-10 p-2 bg-white/80 rounded-full shadow-md">
                     <i data-lucide="chevron-left" class="w-6 h-6"></i>
                 </button>
-                <button id="carouselNextMobile" class="lg:hidden absolute right-0 top-1/3 z-10 p-2 bg-white/80 rounded-full shadow-md">
+                <button id="carouselNextMobile"
+                    class="lg:hidden absolute right-0 top-1/3 z-10 p-2 bg-white/80 rounded-full shadow-md">
                     <i data-lucide="chevron-right" class="w-6 h-6"></i>
                 </button>
 
                 <!-- Scroll Container -->
-                <div id="productTrack" class="flex overflow-x-auto snap-x snap-mandatory scrollbar-hide gap-6 pb-8 scroll-smooth">
+                <div id="productTrack"
+                    class="flex overflow-x-auto snap-x snap-mandatory scrollbar-hide gap-6 pb-8 scroll-smooth">
                     <!-- Products will be injected here -->
                 </div>
             </div>
@@ -252,91 +453,148 @@
 
     <!-- Brand Series Block 1: NEWS -->
     <section class="group relative w-full h-[70vh] min-h-[500px] flex flex-col md:flex-row overflow-hidden">
-        <div class="relative w-full md:w-1/2 h-1/2 md:h-full overflow-hidden animate-on-scroll opacity-0 translate-y-8 transition-all duration-700 ease-out">
-            <img src="https://images.unsplash.com/photo-1549298916-b41d501d3772?w=600&h=800&fit=crop" alt="News Left" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" loading="lazy">
+        <div
+            class="relative w-full md:w-1/2 h-1/2 md:h-full overflow-hidden animate-on-scroll opacity-0 translate-y-8 transition-all duration-700 ease-out">
+            <img src="https://images.unsplash.com/photo-1549298916-b41d501d3772?w=600&h=800&fit=crop" alt="News Left"
+                class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                loading="lazy">
             <div class="absolute top-3/4 right-8 z-20">
-                 <a target="_blank" href="https://www.example.com" class="text-white text-xl font-medium relative inline-block pb-0.5 after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-0 after:h-[2px] after:bg-white after:transition-all after:duration-300 after:ease-out hover:after:w-full transition-colors">Femme</a>
+                <a target="_blank" href="https://www.example.com"
+                    class="text-white text-xl font-medium relative inline-block pb-0.5 after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-0 after:h-[2px] after:bg-white after:transition-all after:duration-300 after:ease-out hover:after:w-full transition-colors">Femme</a>
             </div>
         </div>
-        <div class="relative w-full md:w-1/2 h-1/2 md:h-full overflow-hidden animate-on-scroll opacity-0 translate-y-8 transition-all duration-700 ease-out">
-            <img src="https://images.unsplash.com/photo-1605348532760-6753d2c43329?w=600&h=800&fit=crop" alt="News Right" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" loading="lazy">
+        <div
+            class="relative w-full md:w-1/2 h-1/2 md:h-full overflow-hidden animate-on-scroll opacity-0 translate-y-8 transition-all duration-700 ease-out">
+            <img src="https://images.unsplash.com/photo-1605348532760-6753d2c43329?w=600&h=800&fit=crop"
+                alt="News Right"
+                class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                loading="lazy">
             <div class="absolute top-3/4 left-8 z-20">
-                 <a target="_blank" href="https://www.example.com" class="text-white text-xl font-medium relative inline-block pb-0.5 after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-0 after:h-[2px] after:bg-white after:transition-all after:duration-300 after:ease-out hover:after:w-full transition-colors">Homme</a>
+                <a target="_blank" href="https://www.example.com"
+                    class="text-white text-xl font-medium relative inline-block pb-0.5 after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-0 after:h-[2px] after:bg-white after:transition-all after:duration-300 after:ease-out hover:after:w-full transition-colors">Homme</a>
             </div>
         </div>
-        <div class="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 z-30 pointer-events-none mix-blend-difference text-center w-full">
-            <h2 class="text-4xl md:text-6xl font-bold text-white tracking-widest uppercase drop-shadow-lg">AXOLO LIN</h2>
+        <div
+            class="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 z-30 pointer-events-none mix-blend-difference text-center w-full">
+            <h2 class="text-4xl md:text-6xl font-bold text-white tracking-widest uppercase drop-shadow-lg">AXOLO LIN
+            </h2>
         </div>
     </section>
 
     <!-- Brand Series Block 2: VELVET CAPSULE -->
     <section class="group relative w-full h-[70vh] min-h-[500px] flex flex-col md:flex-row overflow-hidden">
-        <div class="relative w-full md:w-1/2 h-1/2 md:h-full overflow-hidden animate-on-scroll opacity-0 translate-y-8 transition-all duration-700 ease-out">
-            <img src="https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77?w=600&h=800&fit=crop" alt="Velvet Left" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" loading="lazy">
+        <div
+            class="relative w-full md:w-1/2 h-1/2 md:h-full overflow-hidden animate-on-scroll opacity-0 translate-y-8 transition-all duration-700 ease-out">
+            <img src="https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77?w=600&h=800&fit=crop"
+                alt="Velvet Left"
+                class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                loading="lazy">
             <div class="absolute top-3/4 right-8 z-20">
-                 <a target="_blank" href="https://www.example.com" class="text-white text-xl font-medium relative inline-block pb-0.5 after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-0 after:h-[2px] after:bg-white after:transition-all after:duration-300 after:ease-out hover:after:w-full transition-colors">Femme</a>
+                <a target="_blank" href="https://www.example.com"
+                    class="text-white text-xl font-medium relative inline-block pb-0.5 after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-0 after:h-[2px] after:bg-white after:transition-all after:duration-300 after:ease-out hover:after:w-full transition-colors">Femme</a>
             </div>
         </div>
-        <div class="relative w-full md:w-1/2 h-1/2 md:h-full overflow-hidden animate-on-scroll opacity-0 translate-y-8 transition-all duration-700 ease-out">
-            <img src="https://images.unsplash.com/photo-1543508282-6319a3e2621f?w=600&h=800&fit=crop" alt="Velvet Right" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" loading="lazy">
+        <div
+            class="relative w-full md:w-1/2 h-1/2 md:h-full overflow-hidden animate-on-scroll opacity-0 translate-y-8 transition-all duration-700 ease-out">
+            <img src="https://images.unsplash.com/photo-1543508282-6319a3e2621f?w=600&h=800&fit=crop" alt="Velvet Right"
+                class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                loading="lazy">
             <div class="absolute top-3/4 left-8 z-20">
-                 <a target="_blank" href="https://www.example.com" class="text-white text-xl font-medium relative inline-block pb-0.5 after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-0 after:h-[2px] after:bg-white after:transition-all after:duration-300 after:ease-out hover:after:w-full transition-colors">Homme</a>
+                <a target="_blank" href="https://www.example.com"
+                    class="text-white text-xl font-medium relative inline-block pb-0.5 after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-0 after:h-[2px] after:bg-white after:transition-all after:duration-300 after:ease-out hover:after:w-full transition-colors">Homme</a>
             </div>
         </div>
-        <div class="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 z-30 pointer-events-none mix-blend-difference text-center w-full">
-            <h2 class="text-4xl md:text-6xl font-bold text-white tracking-widest uppercase drop-shadow-lg">VOLKAN KNIT</h2>
+        <div
+            class="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 z-30 pointer-events-none mix-blend-difference text-center w-full">
+            <h2 class="text-4xl md:text-6xl font-bold text-white tracking-widest uppercase drop-shadow-lg">VOLKAN KNIT
+            </h2>
         </div>
     </section>
 
     <!-- Brand Series Block 3: VOLKAN LAINE -->
     <section class="group relative w-full h-[70vh] min-h-[500px] flex flex-col md:flex-row overflow-hidden">
-        <div class="relative w-full md:w-1/2 h-1/2 md:h-full overflow-hidden animate-on-scroll opacity-0 translate-y-8 transition-all duration-700 ease-out">
-            <img src="https://images.unsplash.com/photo-1608231387042-66d1773070a5?w=600&h=800&fit=crop" alt="Volkan Laine Left" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" loading="lazy">
+        <div
+            class="relative w-full md:w-1/2 h-1/2 md:h-full overflow-hidden animate-on-scroll opacity-0 translate-y-8 transition-all duration-700 ease-out">
+            <img src="https://images.unsplash.com/photo-1608231387042-66d1773070a5?w=600&h=800&fit=crop"
+                alt="Volkan Laine Left"
+                class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                loading="lazy">
             <div class="absolute top-3/4 right-8 z-20">
-                 <a target="_blank" href="https://www.example.com" class="text-white text-xl font-medium relative inline-block pb-0.5 after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-0 after:h-[2px] after:bg-white after:transition-all after:duration-300 after:ease-out hover:after:w-full transition-colors">Femme</a>
+                <a target="_blank" href="https://www.example.com"
+                    class="text-white text-xl font-medium relative inline-block pb-0.5 after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-0 after:h-[2px] after:bg-white after:transition-all after:duration-300 after:ease-out hover:after:w-full transition-colors">Femme</a>
             </div>
         </div>
-        <div class="relative w-full md:w-1/2 h-1/2 md:h-full overflow-hidden animate-on-scroll opacity-0 translate-y-8 transition-all duration-700 ease-out">
-            <img src="https://images.unsplash.com/photo-1584735175315-9d5df23860e6?w=600&h=800&fit=crop" alt="Volkan Laine Right" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" loading="lazy">
+        <div
+            class="relative w-full md:w-1/2 h-1/2 md:h-full overflow-hidden animate-on-scroll opacity-0 translate-y-8 transition-all duration-700 ease-out">
+            <img src="https://images.unsplash.com/photo-1584735175315-9d5df23860e6?w=600&h=800&fit=crop"
+                alt="Volkan Laine Right"
+                class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                loading="lazy">
             <div class="absolute top-3/4 left-8 z-20">
-                 <a target="_blank" href="https://www.example.com" class="text-white text-xl font-medium relative inline-block pb-0.5 after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-0 after:h-[2px] after:bg-white after:transition-all after:duration-300 after:ease-out hover:after:w-full transition-colors">Homme</a>
+                <a target="_blank" href="https://www.example.com"
+                    class="text-white text-xl font-medium relative inline-block pb-0.5 after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-0 after:h-[2px] after:bg-white after:transition-all after:duration-300 after:ease-out hover:after:w-full transition-colors">Homme</a>
             </div>
         </div>
-        <div class="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 z-30 pointer-events-none mix-blend-difference text-center w-full">
-            <h2 class="text-4xl md:text-6xl font-bold text-white tracking-widest uppercase drop-shadow-lg">KOTO KNIT</h2>
+        <div
+            class="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 z-30 pointer-events-none mix-blend-difference text-center w-full">
+            <h2 class="text-4xl md:text-6xl font-bold text-white tracking-widest uppercase drop-shadow-lg">KOTO KNIT
+            </h2>
         </div>
     </section>
 
     <!-- Brand Series Block 4: Accessories -->
     <section class="group relative w-full h-[70vh] min-h-[500px] flex flex-col md:flex-row overflow-hidden">
-        <div class="relative w-full md:w-1/2 h-1/2 md:h-full overflow-hidden animate-on-scroll opacity-0 translate-y-8 transition-all duration-700 ease-out">
-            <img src="https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=600&h=800&fit=crop" alt="Accessories Left" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" loading="lazy">
+        <div
+            class="relative w-full md:w-1/2 h-1/2 md:h-full overflow-hidden animate-on-scroll opacity-0 translate-y-8 transition-all duration-700 ease-out">
+            <img src="https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=600&h=800&fit=crop"
+                alt="Accessories Left"
+                class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                loading="lazy">
             <div class="absolute top-3/4 right-8 z-20">
-                 <a target="_blank" href="https://www.example.com" class="text-white text-xl font-medium relative inline-block pb-0.5 after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-0 after:h-[2px] after:bg-white after:transition-all after:duration-300 after:ease-out hover:after:w-full transition-colors">Femme</a>
+                <a target="_blank" href="https://www.example.com"
+                    class="text-white text-xl font-medium relative inline-block pb-0.5 after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-0 after:h-[2px] after:bg-white after:transition-all after:duration-300 after:ease-out hover:after:w-full transition-colors">Femme</a>
             </div>
         </div>
-        <div class="relative w-full md:w-1/2 h-1/2 md:h-full overflow-hidden animate-on-scroll opacity-0 translate-y-8 transition-all duration-700 ease-out">
-            <img src="https://images.unsplash.com/photo-1512374382149-233c42b6a83b?w=600&h=800&fit=crop" alt="Accessories Right" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" loading="lazy">
+        <div
+            class="relative w-full md:w-1/2 h-1/2 md:h-full overflow-hidden animate-on-scroll opacity-0 translate-y-8 transition-all duration-700 ease-out">
+            <img src="https://images.unsplash.com/photo-1512374382149-233c42b6a83b?w=600&h=800&fit=crop"
+                alt="Accessories Right"
+                class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                loading="lazy">
             <div class="absolute top-3/4 left-8 z-20">
-                 <a target="_blank" href="https://www.example.com" class="text-white text-xl font-medium relative inline-block pb-0.5 after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-0 after:h-[2px] after:bg-white after:transition-all after:duration-300 after:ease-out hover:after:w-full transition-colors">Homme</a>
+                <a target="_blank" href="https://www.example.com"
+                    class="text-white text-xl font-medium relative inline-block pb-0.5 after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-0 after:h-[2px] after:bg-white after:transition-all after:duration-300 after:ease-out hover:after:w-full transition-colors">Homme</a>
             </div>
         </div>
-        <div class="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 z-30 pointer-events-none mix-blend-difference text-center w-full">
-            <h2 class="text-4xl md:text-6xl font-bold text-white tracking-widest uppercase drop-shadow-lg">AXOLO R-SKIN®</h2>
+        <div
+            class="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 z-30 pointer-events-none mix-blend-difference text-center w-full">
+            <h2 class="text-4xl md:text-6xl font-bold text-white tracking-widest uppercase drop-shadow-lg">AXOLO R-SKIN®
+            </h2>
         </div>
     </section>
 
     <!-- Brand Series Block 5: UBAC VISION -->
     <section class="group relative w-full h-[70vh] min-h-[500px] flex flex-col md:flex-row overflow-hidden">
-        <div class="relative w-full md:w-1/2 h-1/2 md:h-full overflow-hidden animate-on-scroll opacity-0 translate-y-8 transition-all duration-700 ease-out">
-            <img src="https://images.unsplash.com/photo-1600185365483-26d7a4cc7519?w=600&h=800&fit=crop" alt="Vision Left" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" loading="lazy">
+        <div
+            class="relative w-full md:w-1/2 h-1/2 md:h-full overflow-hidden animate-on-scroll opacity-0 translate-y-8 transition-all duration-700 ease-out">
+            <img src="https://images.unsplash.com/photo-1600185365483-26d7a4cc7519?w=600&h=800&fit=crop"
+                alt="Vision Left"
+                class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                loading="lazy">
         </div>
-        <div class="relative w-full md:w-1/2 h-1/2 md:h-full overflow-hidden animate-on-scroll opacity-0 translate-y-8 transition-all duration-700 ease-out">
-            <img src="https://images.unsplash.com/photo-1605348532760-6753d2c43329?w=600&h=800&fit=crop" alt="Vision Right" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" loading="lazy">
+        <div
+            class="relative w-full md:w-1/2 h-1/2 md:h-full overflow-hidden animate-on-scroll opacity-0 translate-y-8 transition-all duration-700 ease-out">
+            <img src="https://images.unsplash.com/photo-1605348532760-6753d2c43329?w=600&h=800&fit=crop"
+                alt="Vision Right"
+                class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                loading="lazy">
         </div>
-        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-30 text-center w-full px-4 animate-on-scroll opacity-0 translate-y-8 transition-all duration-700 ease-out">
-            <h2 class="text-4xl md:text-6xl font-bold text-white tracking-widest uppercase mb-6 drop-shadow-lg">VISION</h2>
-            <a target="_blank" href="https://www.example.com" class="inline-block px-8 py-3 border-2 border-white text-white font-medium hover:bg-white hover:text-black transition-all duration-300">Découvrir</a>
+        <div
+            class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-30 text-center w-full px-4 animate-on-scroll opacity-0 translate-y-8 transition-all duration-700 ease-out">
+            <h2 class="text-4xl md:text-6xl font-bold text-white tracking-widest uppercase mb-6 drop-shadow-lg">VISION
+            </h2>
+            <a target="_blank" href="https://www.example.com"
+                class="inline-block px-8 py-3 border-2 border-white text-white font-medium hover:bg-white hover:text-black transition-all duration-300">Découvrir</a>
         </div>
     </section>
     <!-- 品牌介绍 -->
@@ -347,7 +605,9 @@
                 “ INSPIRé PAR LA NATURE CONçU POUR LE FUTUR “
             </h2>
             <p class="text-[24px] text-[#212322] leading-relaxed max-w-4xl mx-auto">
-               Nous créons des baskets qui connectent les matières naturelles à un design audacieux en privilégiant une fabrication locale des composants à l'assemblage, promesse d'un impact sur l'environnement réduit à son maximum.
+                Nous créons des baskets qui connectent les matières naturelles à un design audacieux en privilégiant une
+                fabrication locale des composants à l'assemblage, promesse d'un impact sur l'environnement réduit à son
+                maximum.
             </p>
         </div>
         <div class="h-px bg-[#212322]/25 mx-12"></div>
@@ -368,104 +628,194 @@
                     </button>
                 </div>
                 <!-- 滚动容器 -->
-                <div id="uniqueTrack" class="flex overflow-x-auto snap-x snap-mandatory gap-6 pb-4 scroll-smooth scrollbar-hide">
+                <div id="uniqueTrack"
+                    class="flex overflow-x-auto snap-x snap-mandatory gap-6 pb-4 scroll-smooth scrollbar-hide">
                     <!-- Cards will be injected by script.js -->
                 </div>
                 <!-- Mobile Nav Buttons for Unique Carousel -->
-                <button id="uniquePrevMobile" class="lg:hidden absolute left-0 top-1/2 -translate-y-1/2 z-10 p-2 bg-white/80 rounded-full shadow-md">
+                <button id="uniquePrevMobile"
+                    class="lg:hidden absolute left-0 top-1/2 -translate-y-1/2 z-10 p-2 bg-white/80 rounded-full shadow-md">
                     <i data-lucide="chevron-left" class="w-6 h-6"></i>
                 </button>
-                <button id="uniqueNextMobile" class="lg:hidden absolute right-0 top-1/2 -translate-y-1/2 z-10 p-2 bg-white/80 rounded-full shadow-md">
+                <button id="uniqueNextMobile"
+                    class="lg:hidden absolute right-0 top-1/2 -translate-y-1/2 z-10 p-2 bg-white/80 rounded-full shadow-md">
                     <i data-lucide="chevron-right" class="w-6 h-6"></i>
                 </button>
             </div>
         </div>
     </section>
 
-    <!-- 订阅区 -->
-    <section class="py-24 bg-earth-beige animate-on-scroll opacity-0 translate-y-8 transition-all duration-700 ease-out">
-        <div class="container mx-auto px-4 text-center">
-            <h2 class="text-[clamp(2rem,4vw,3rem)] font-bold mb-4">NEWSLETTER</h2>
-            <p class="text-lg mb-10 text-gray-700">
-               Découvrez en avant-première tous nos nouveaux produits, nos dernières actions et profitez de 10€ sur votre première commande en s'inscrivant à notre newsletter !
-            </p>
-            <form class="max-w-md mx-auto flex flex-col sm:flex-row gap-4" action="https://www.example.com" target="_blank" method="GET">
-                <input type="email" placeholder="Votre adresse email" required class="flex-1 px-6 py-4 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-300">
-                <button type="submit" class="bg-rock-gray text-white px-8 py-4 rounded-lg font-medium hover:bg-primary transition-all duration-300 transform hover:scale-105 whitespace-nowrap">
-                    S'abonner
-                </button>
-            </form>
-        </div>
-    </section>
 
     <!-- 页脚 -->
-    <footer class="bg-rock-gray text-white py-16">
-        <div class="container mx-auto px-4">
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
-                <div>
-                    <h3 class="text-xl font-bold mb-6">UBAC</h3>
-                    <p class="mb-6 text-gray-400">
-                        La basket responsable en laine recyclée, inspirée par la nature et conçue pour le futur.
+    <footer class="bg-white text-rock-gray border-t border-gray-200">
+        <!-- Newsletter Section -->
+        <div class="container mx-auto px-4 py-16">
+            <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center md:items-start justify-between gap-12">
+                <!-- Left Content -->
+                <div class="w-full md:w-1/2 text-center md:text-left">
+                    <h3 class="text-3xl font-bold uppercase mb-4 tracking-wide">Newsletter</h3>
+                    <p class="text-gray-500 mb-8 text-sm leading-relaxed max-w-md mx-auto md:mx-0">
+                        Découvrez en avant-première tous nos nouveaux produits, nos dernières actions et profitez de
+                        10€ sur votre première commande en s'inscrivant à notre newsletter !
                     </p>
-                    <div class="flex space-x-4">
-                        <a target="_blank" href="https://www.example.com" class="text-gray-400 hover:text-white transition-colors">
-                            <i data-lucide="facebook"></i>
-                        </a>
-                        <a target="_blank" href="https://www.example.com" class="text-gray-400 hover:text-white transition-colors">
-                            <i data-lucide="instagram"></i>
-                        </a>
-                        <a target="_blank" href="https://www.example.com" class="text-gray-400 hover:text-white transition-colors">
-                            <i data-lucide="twitter"></i>
-                        </a>
-                        <a target="_blank" href="https://www.example.com" class="text-gray-400 hover:text-white transition-colors">
-                            <i data-lucide="pinterest"></i>
-                        </a>
-                    </div>
+                    <form action="https://www.example.com" target="_blank"
+                        class="relative w-full max-w-md mx-auto md:mx-0">
+                        <input type="email" placeholder="Tapez votre adresse email ici"
+                            class="w-full bg-gray-50 rounded-full py-4 pl-6 pr-36 border border-transparent focus:bg-white focus:border-gray-300 focus:outline-none transition-all text-sm">
+                        <button
+                            class="absolute right-1 top-1 bottom-1 bg-[#1A1A1A] text-white rounded-full px-6 text-xs font-bold uppercase tracking-widest hover:bg-black transition-colors">
+                            S'inscrire
+                        </button>
+                    </form>
                 </div>
-                <div>
-                    <h4 class="text-lg font-semibold mb-6">Shop</h4>
-                    <ul class="space-y-3">
-                        <li><a target="_blank" href="https://www.example.com" class="text-gray-400 hover:text-white transition-colors">Femme</a></li>
-                        <li><a target="_blank" href="https://www.example.com" class="text-gray-400 hover:text-white transition-colors">Homme</a></li>
-                        <li><a target="_blank" href="https://www.example.com" class="text-gray-400 hover:text-white transition-colors">Collections</a></li>
-                        <li><a target="_blank" href="https://www.example.com" class="text-gray-400 hover:text-white transition-colors">Nouveautés</a></li>
-                        <li><a target="_blank" href="https://www.example.com" class="text-gray-400 hover:text-white transition-colors">Soldes</a></li>
-                    </ul>
-                </div>
-                <div>
-                    <h4 class="text-lg font-semibold mb-6">Aide</h4>
-                    <ul class="space-y-3">
-                        <li><a target="_blank" href="https://www.example.com" class="text-gray-400 hover:text-white transition-colors">Contact</a></li>
-                        <li><a target="_blank" href="https://www.example.com" class="text-gray-400 hover:text-white transition-colors">FAQ</a></li>
-                        <li><a target="_blank" href="https://www.example.com" class="text-gray-400 hover:text-white transition-colors">Livraison</a></li>
-                        <li><a target="_blank" href="https://www.example.com" class="text-gray-400 hover:text-white transition-colors">Retours</a></li>
-                        <li><a target="_blank" href="https://www.example.com" class="text-gray-400 hover:text-white transition-colors">Paiement sécurisé</a></li>
-                    </ul>
-                </div>
-                <div>
-                    <h4 class="text-lg font-semibold mb-6">Notre Engagement</h4>
-                    <ul class="space-y-3">
-                        <li><a target="_blank" href="https://www.example.com" class="text-gray-400 hover:text-white transition-colors">Sustainable Development</a></li>
-                        <li><a target="_blank" href="https://www.example.com" class="text-gray-400 hover:text-white transition-colors">Fabrication Locale</a></li>
-                        <li><a target="_blank" href="https://www.example.com" class="text-gray-400 hover:text-white transition-colors">Matériaux Naturels</a></li>
-                        <li><a target="_blank" href="https://www.example.com" class="text-gray-400 hover:text-white transition-colors">1% For The Planet</a></li>
-                        <li><a target="_blank" href="https://www.example.com" class="text-gray-400 hover:text-white transition-colors">BirdLife International</a></li>
-                    </ul>
-                </div>
-            </div>
-            <div class="border-t border-gray-700 mt-12 pt-8 text-center text-gray-400">
-                <p>© 2024 Ubac. Tous droits réservés.</p>
-                <div class="mt-4 flex justify-center space-x-6">
-                    <span>Paiement sécurisé</span>
-                    <span>Retours simplifiés</span>
-                    <span>1% des revenus versés à BirdLife</span>
+
+                <!-- Right Social Icons -->
+                <div class="flex items-center justify-center md:justify-end gap-4 md:self-center">
+                    <a href="https://www.instagram.com/ubac_shoes/" target="_blank"
+                        class="w-12 h-12 flex items-center justify-center bg-[#F7F7F7] rounded-full text-gray-900 hover:bg-gray-200 transition-colors">
+                        <i data-lucide="instagram" width="20" height="20"></i>
+                    </a>
+                    <a href="https://fr-fr.facebook.com/ubacshoes/" target="_blank"
+                        class="w-12 h-12 flex items-center justify-center bg-[#F7F7F7] rounded-full text-gray-900 hover:bg-gray-200 transition-colors">
+                        <i data-lucide="facebook" width="20" height="20"></i>
+                    </a>
+                    <a href="https://www.tiktok.com/@ubac_shoes" target="_blank"
+                        class="w-12 h-12 flex items-center justify-center bg-[#F7F7F7] rounded-full text-gray-900 hover:bg-gray-200 transition-colors">
+                        <i data-lucide="music" width="20" height="20"></i>
+                    </a>
+                    <a href="https://www.linkedin.com/company/ubacshoes/" target="_blank"
+                        class="w-12 h-12 flex items-center justify-center bg-[#F7F7F7] rounded-full text-gray-900 hover:bg-gray-200 transition-colors">
+                        <i data-lucide="linkedin" width="20" height="20"></i>
+                    </a>
                 </div>
             </div>
         </div>
 
+        <!-- Services Section -->
+        <div class="border-t border-gray-100">
+            <div class="container mx-auto px-4 max-w-6xl">
+                <div class="grid grid-cols-1 md:grid-cols-3">
+                    <div
+                        class="flex flex-col items-center justify-center gap-3 py-12 md:border-r border-gray-100 text-center px-4">
+                        <i data-lucide="shield-check" class="w-8 h-8 mb-1 stroke-1"></i>
+                        <span class="font-bold uppercase text-sm tracking-wide">Paiement sécurisé</span>
+                        <span class="text-gray-500 text-sm">carte bancaire</span>
+                    </div>
+                    <div
+                        class="flex flex-col items-center justify-center gap-3 py-12 md:border-r border-gray-100 text-center px-4">
+                        <i data-lucide="refresh-ccw" class="w-8 h-8 mb-1 stroke-1"></i>
+                        <span class="font-bold uppercase text-sm tracking-wide">Retour simplifié</span>
+                        <span class="text-gray-500 text-sm">(sous 60 jours)</span>
+                    </div>
+                    <div class="flex flex-col items-center justify-center gap-3 py-12 text-center px-4">
+                        <i data-lucide="sprout" class="w-8 h-8 mb-1 stroke-1"></i>
+                        <span class="font-bold uppercase text-sm tracking-wide">1% reversé</span>
+                        <span class="text-gray-500 text-sm">à la Ligue pour la Protection des Oiseaux</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Links Section -->
+        <!-- Main Links (Vertical List with Plus Icons) -->
+        <div class="bg-[#F9F9F7] py-20 border-t border-gray-100">
+            <div class="container mx-auto px-4">
+                <ul class="flex flex-col items-start gap-6 w-fit mx-auto">
+                    <li>
+                        <a href="https://www.example.com" target="_blank"
+                            class="flex items-center gap-5 text-2xl md:text-3xl text-gray-900 hover:text-gray-600 transition-colors group font-normal">
+                            <div
+                                class="w-12 h-12 flex items-center justify-center rounded-full transition-colors duration-300 group-hover:bg-black group-hover:text-white">
+                                <i data-lucide="plus" class="w-6 h-6 stroke-[2.5]"></i>
+                            </div>
+                            <span>Contactez-nous</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.example.com" target="_blank"
+                            class="flex items-center gap-5 text-2xl md:text-3xl text-gray-900 hover:text-gray-600 transition-colors group font-normal">
+                            <div
+                                class="w-12 h-12 flex items-center justify-center rounded-full transition-colors duration-300 group-hover:bg-black group-hover:text-white">
+                                <i data-lucide="plus" class="w-6 h-6 stroke-[2.5]"></i>
+                            </div>
+                            <span>Foire aux questions</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.example.com" target="_blank"
+                            class="flex items-center gap-5 text-2xl md:text-3xl text-gray-900 hover:text-gray-600 transition-colors group font-normal">
+                            <div
+                                class="w-12 h-12 flex items-center justify-center rounded-full transition-colors duration-300 group-hover:bg-black group-hover:text-white">
+                                <i data-lucide="plus" class="w-6 h-6 stroke-[2.5]"></i>
+                            </div>
+                            <span>Retours & Échanges</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.example.com" target="_blank"
+                            class="flex items-center gap-5 text-2xl md:text-3xl text-gray-900 hover:text-gray-600 transition-colors group font-normal">
+                            <div
+                                class="w-12 h-12 flex items-center justify-center rounded-full transition-colors duration-300 group-hover:bg-black group-hover:text-white">
+                                <i data-lucide="plus" class="w-6 h-6 stroke-[2.5]"></i>
+                            </div>
+                            <span>Guide des tailles</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Footer Bottom (Dark Background) -->
+        <div class="bg-[#1A1A1A] text-white py-16">
+            <div class="container mx-auto px-4 relative">
+                <div
+                    class="grid grid-cols-2 md:grid-cols-4 gap-y-8 gap-x-4 text-[11px] font-bold tracking-wide leading-loose">
+                    <!-- Column 1 -->
+                    <ul class="flex flex-col gap-1">
+                        <li><a href="https://www.example.com" target="_blank"
+                                class="hover:text-gray-400 transition-colors">Contactez-nous</a></li>
+                        <li><a href="https://www.example.com" target="_blank"
+                                class="hover:text-gray-400 transition-colors">CGV</a></li>
+                    </ul>
+                    <!-- Column 2 -->
+                    <ul class="flex flex-col gap-1">
+                        <li><a href="https://www.example.com" target="_blank"
+                                class="hover:text-gray-400 transition-colors">Ubac vision</a></li>
+                        <li><a href="https://www.example.com" target="_blank"
+                                class="hover:text-gray-400 transition-colors">Mentions légales</a></li>
+                    </ul>
+                    <!-- Column 3 -->
+                    <ul class="flex flex-col gap-1">
+                        <li><a href="https://www.example.com" target="_blank"
+                                class="hover:text-gray-400 transition-colors">10€ sur votre 1ère
+                                commande</a></li>
+                        <li><a href="https://www.example.com" target="_blank"
+                                class="hover:text-gray-400 transition-colors">Politique de confidentialité</a>
+                        </li>
+                    </ul>
+                    <!-- Column 4 -->
+                    <ul class="flex flex-col gap-1">
+                        <li><a href="https://www.example.com" target="_blank"
+                                class="hover:text-gray-400 transition-colors">Blog - REGARD</a></li>
+                        <li><a href="https://www.example.com" target="_blank"
+                                class="hover:text-gray-400 transition-colors">Plan du site</a></li>
+                    </ul>
+                </div>
+
+                <!-- Chat Icon (Bottom Right) -->
+                <div class="absolute right-4 bottom-0 md:top-1/2 md:-translate-y-1/2">
+                    <button class="text-white hover:text-gray-300 transition-colors">
+                        <i data-lucide="message-circle" class="w-6 h-6"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </footer>
     <!-- Mobile Menu Drawer -->
-    <div id="mobileMenuOverlay" class="fixed inset-0 bg-black/50 z-40 opacity-0 invisible transition-opacity duration-300 md:hidden"></div>
-    <div id="mobileMenuDrawer" class="fixed top-0 left-0 h-full w-[80%] max-w-[320px] bg-white z-50 transform -translate-x-full transition-transform duration-300 ease-in-out shadow-2xl md:hidden flex flex-col">
+    <div id="mobileMenuOverlay"
+        class="fixed inset-0 bg-black/50 z-40 opacity-0 invisible transition-opacity duration-300 md:hidden"></div>
+    <div id="mobileMenuDrawer"
+        class="fixed top-0 left-0 h-full w-[80%] max-w-[320px] bg-white z-50 transform -translate-x-full transition-transform duration-300 ease-in-out shadow-2xl md:hidden flex flex-col">
         <!-- Header -->
         <div class="p-6 flex items-center justify-between border-b border-gray-100">
             <span class="text-xl font-bold">MENU</span>
@@ -483,25 +833,29 @@
                 <a href="#" class="text-lg font-semibold text-gray-900">VISION</a>
             </nav>
             <div class="border-t border-gray-100 pt-6 space-y-4">
-                 <a href="#" class="flex items-center gap-3 text-gray-700">
+                <a href="#" class="flex items-center gap-3 text-gray-700">
                     <i data-lucide="user" width="20" height="20"></i>
                     <span>Compte</span>
-                 </a>
-                 <div class="flex items-center gap-3 text-gray-700">
-                    <span class="w-[30px] h-[30px] rounded-full bg-gray-100 flex items-center justify-center text-xs font-bold">EN</span>
+                </a>
+                <div class="flex items-center gap-3 text-gray-700">
+                    <span
+                        class="w-[30px] h-[30px] rounded-full bg-gray-100 flex items-center justify-center text-xs font-bold">EN</span>
                     <span>English</span>
-                 </div>
+                </div>
             </div>
         </div>
     </div>
 
     <!-- Cart Drawer -->
-    <div id="cartOverlay" class="fixed inset-0 bg-black/50 z-50 opacity-0 invisible transition-opacity duration-300"></div>
-    <div id="cartDrawer" class="fixed top-0 right-0 h-full w-full max-w-[500px] bg-white z-[60] transform translate-x-full transition-transform duration-300 ease-in-out shadow-2xl flex flex-col">
+    <div id="cartOverlay" class="fixed inset-0 bg-black/50 z-50 opacity-0 invisible transition-opacity duration-300">
+    </div>
+    <div id="cartDrawer"
+        class="fixed top-0 right-0 h-full w-full max-w-[500px] bg-white z-[60] transform translate-x-full transition-transform duration-300 ease-in-out shadow-2xl flex flex-col">
         <!-- Header -->
         <div class="p-6 relative text-gray-900">
             <h2 class="text-3xl font-bold text-center uppercase tracking-wider ">Panier</h2>
-            <button id="cartCloseBtn" class="absolute top-6 right-6 p-2  hover:bg-gray-100 rounded-full transition-colors">
+            <button id="cartCloseBtn"
+                class="absolute top-6 right-6 p-2  hover:bg-gray-100 rounded-full transition-colors">
                 <i data-lucide="x" width="24" height="24"></i>
             </button>
         </div>
@@ -513,26 +867,31 @@
                 <div class="flex w-full mb-4">
                     <!-- Image -->
                     <div class="w-24 h-24 bg-gray-100 flex-none">
-                        <img src="https://images.unsplash.com/photo-1549298916-b41d501d3772?w=600&h=800&fit=crop" alt="Product" class="w-full h-full object-cover">
+                        <img src="https://images.unsplash.com/photo-1549298916-b41d501d3772?w=600&h=800&fit=crop"
+                            alt="Product" class="w-full h-full object-cover">
                     </div>
-                    
+
                     <!-- Details -->
                     <div class="ml-4 flex-1 flex flex-col md:flex-row md:items-start md:justify-between gap-4">
                         <div class="flex-1">
-                             <h3 class="font-bold text-lg uppercase mb-1 text-gray-900">KOTO KNIT</h3>
-                             <div class="flex items-center gap-2 mb-1">
+                            <h3 class="font-bold text-lg uppercase mb-1 text-gray-900">KOTO KNIT</h3>
+                            <div class="flex items-center gap-2 mb-1">
                                 <span class="w-3 h-3 rounded-full bg-blue-700 block"></span>
                                 <span class="text-sm text-gray-600">Bleu Mer</span>
-                             </div>
-                             <p class="text-sm text-gray-600">Taille : 36</p>
+                            </div>
+                            <p class="text-sm text-gray-600">Taille : 36</p>
                         </div>
-                        
+
                         <div class="flex justify-between items-center text-gray-800 md:flex-col md:items-end md:gap-2">
                             <!-- Quantity -->
                             <div class="flex items-center border border-gray-300 h-8">
-                                <button class="btn-quantity-minus w-8 h-full flex items-center justify-center hover:bg-gray-50 transition-colors">-</button>
-                                <input type="text" value="1" class="input-quantity w-8 h-full text-center text-sm border-none focus:ring-0 p-0" readonly>
-                                <button class="btn-quantity-plus w-8 h-full flex items-center justify-center hover:bg-gray-50 transition-colors">+</button>
+                                <button
+                                    class="btn-quantity-minus w-8 h-full flex items-center justify-center hover:bg-gray-50 transition-colors">-</button>
+                                <input type="text" value="1"
+                                    class="input-quantity w-8 h-full text-center text-sm border-none focus:ring-0 p-0"
+                                    readonly>
+                                <button
+                                    class="btn-quantity-plus w-8 h-full flex items-center justify-center hover:bg-gray-50 transition-colors">+</button>
                             </div>
                             <!-- Price -->
                             <span class="font-bold text-lg">59,00 €</span>
@@ -542,10 +901,12 @@
 
                 <!-- Remove Button Wrapper -->
                 <div class="relative w-full overflow-hidden">
-                    <button class="btn-delete-trigger w-full text-center py-3 text-xs text-gray-500 hover:text-black uppercase tracking-wide transition-colors  decoration-transparent hover:decoration-black py-1">Supprimer</button>
-                    
+                    <button
+                        class="btn-delete-trigger w-full text-center py-3 text-xs text-gray-500 hover:text-black uppercase tracking-wide transition-colors  decoration-transparent hover:decoration-black py-1">Supprimer</button>
+
                     <!-- Sliding Confirm Button -->
-                    <button class="btn-delete-confirm absolute top-0 right-[-1px] h-full w-1/3 bg-black text-white flex items-center justify-center transform translate-x-full transition-transform duration-300 z-10">
+                    <button
+                        class="btn-delete-confirm absolute top-0 right-[-1px] h-full w-1/3 bg-black text-white flex items-center justify-center transform translate-x-full transition-transform duration-300 z-10">
                         <i data-lucide="x" width="16" height="16"></i>
                     </button>
                 </div>
@@ -559,10 +920,12 @@
                 <span class="font-bold text-lg">59,00 € TTC</span>
             </div>
             <div class="flex flex-col gap-3">
-                <button class="w-full py-4 border border-black text-black uppercase font-bold text-sm hover:bg-black hover:text-white transition-colors tracking-widest">
+                <button
+                    class="w-full py-4 border border-black text-black uppercase font-bold text-sm hover:bg-black hover:text-white transition-colors tracking-widest">
                     Continuer mes achats
                 </button>
-                <button class="w-full py-4 bg-[#212322] text-white uppercase font-bold text-sm hover:bg-gray-400 transition-colors tracking-widest">
+                <button
+                    class="w-full py-4 bg-[#212322] text-white uppercase font-bold text-sm hover:bg-gray-400 transition-colors tracking-widest">
                     Commander
                 </button>
             </div>
@@ -571,4 +934,5 @@
 
     <script src="script.js"></script>
 </body>
+
 </html>

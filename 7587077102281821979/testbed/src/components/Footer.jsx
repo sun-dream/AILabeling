@@ -39,12 +39,12 @@ const Footer = () => {
           <div className="px-4 pb-[80px] lg:pb-0 lg:px-[200px] flex justify-between flex-col lg:flex-row gap-4 lg:gap-[80px]">
             <div className="flex flex-col">
               <span className="anybody-bold uppercase text-base lg:text-lg leading-6">Kontakt</span>
-              <a href="mailto:dafestival.info@gmail.com" className="anybody-medium text-base lg:text-lg leading-6">dafestival.info@gmail.com</a>
+              <a href="https://www.example.com" target="_blank" rel="noopener noreferrer" className="anybody-medium text-base lg:text-lg leading-6">dafestival.info@gmail.com</a>
             </div>
             <div className="flex flex-col">
               <span className="anybody-bold uppercase text-base lg:text-lg leading-6">Social</span>
-              <a href="https://www.instagram.com/da.festival/" className="anybody-medium text-base lg:text-lg leading-6" target="_blank" rel="noopener noreferrer">Instagram</a>
-              <a href="https://web.facebook.com/festivalDA/?locale=hr_HR&#038;_rdc=1&#038;_rdr" className="anybody-medium text-base lg:text-lg leading-6" target="_blank" rel="noopener noreferrer">Facebook</a>
+              <a href="https://www.example.com" className="anybody-medium text-base lg:text-lg leading-6" target="_blank" rel="noopener noreferrer">Instagram</a>
+              <a href="https://www.example.com" className="anybody-medium text-base lg:text-lg leading-6" target="_blank" rel="noopener noreferrer">Facebook</a>
             </div>
             <div className="flex flex-col">
               <span className="anybody-bold uppercase text-base lg:text-lg leading-6">Lokacije</span>
@@ -55,7 +55,7 @@ const Footer = () => {
             </div>
             <div className="flex flex-col">
               <span className="anybody-bold uppercase text-base lg:text-lg leading-6">Web dizajn i razvoj</span>
-              <a href="https://bien.studio" target="_blank" rel="noopener noreferrer" className="anybody-medium text-base lg:text-lg leading-6">Bien.studio</a>
+              <a href="https://www.example.com" target="_blank" rel="noopener noreferrer" className="anybody-medium text-base lg:text-lg leading-6">Bien.studio</a>
             </div>
           </div>
         </div>

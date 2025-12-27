@@ -23,7 +23,7 @@ const Izlozba = () => {
     >
       <div id="izlozba-trigger"
         className="frizer relative text-[40px] lg:text-[170px] leading-none uppercase py-[120px] lg:py-[180px] text-center max-w-[1200px] w-full">
-        <a href="https://da-festival.hr/izlozba" className="block uppercase relative z-10 transition-transform duration-300 hover:scale-105">Pogledaj izložbu</a>
+        <a href="https://www.example.com" target="_blank" rel="noopener noreferrer" className="block uppercase relative z-10 transition-transform duration-300 hover:scale-105">Pogledaj izložbu</a>
         
         {images.map((img, index) => (
           <img 
