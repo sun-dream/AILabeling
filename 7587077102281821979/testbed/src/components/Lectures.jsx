@@ -1,91 +1,275 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
+import EventModal from './EventModal';
 
 const Lectures = () => {
-  // Parallax effect on scroll
-  const [scrollY, setScrollY] = useState(0);
+  const [selectedEvent, setSelectedEvent] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-  useEffect(() => {
-    const handleScroll = () => {
-      setScrollY(window.scrollY);
-    };
+  const openModal = (event) => {
+    setSelectedEvent(event);
+    setIsModalOpen(true);
+  };
 
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  const closeModal = () => {
+    setIsModalOpen(false);
+    // Optional: clear selected event after animation
+    setTimeout(() => setSelectedEvent(null), 300);
+  };
 
   const lectures = [
     {
-      title: "ORGANIZIRANO OBLIKOVANJE",
-      description: "探索设计组织的新方法和策略",
-      date: "04.04.2025",
-      time: "18:00"
+      id: 769,
+      title: "Organizirano Oblikovanje",
+      subtitle: "Oblikovanje naše prakse",
+      bgImg: "https://da-festival.hr/wp-content/uploads/2025/03/organiziranoobl.png",
+      fgImg: "https://da-festival.hr/wp-content/uploads/2025/03/orgobl-white.png",
+      date: "PETAK 24.1.",
+      location: "PREDAVAONICA 317",
+      address: "ARHITEKTONSKI FAKULTET",
+      description: "Kako organizirati kreativni proces? Kako strukturirati kaos ideja u konkretan dizajnerski proizvod? Ovo predavanje bavi se metodologijama rada u dizajnu, od koncepta do realizacije.",
+      biographyTitle: "O PREDAVAČIMA",
+      biography: "Organizirano oblikovanje je dizajnerski kolektiv koji se fokusira na društveno odgovoran dizajn i edukaciju."
     },
     {
-      title: "IVAN VELJAČA",
-      description: "场景设计思路与实践",
-      date: "06.04.2025",
-      time: "19:00"
+      id: 1085,
+      title: "Ivan Veljača",
+      subtitle: "Scenografija – način razmišljanja",
+      bgImg: "https://da-festival.hr/wp-content/uploads/2025/03/ivan-veljaca-papirici-1.png",
+      fgImg: "https://da-festival.hr/wp-content/uploads/2025/03/ivan-veljaca-white-1.png",
+      date: "SUBOTA 25.1.",
+      location: "VELIKA PREDAVAONICA",
+      address: "ARHITEKTONSKI FAKULTET",
+      description: "Ivan Veljača govori o scenografiji ne samo kao o uređenju prostora, već kao o načinu razmišljanja i pripovijedanja kroz prostor.",
+      biographyTitle: "O PREDAVAČU",
+      biography: "Ivan Veljača je renomirani scenograf i dizajner interijera s bogatim iskustvom u filmskoj i kazališnoj industriji."
     },
     {
-      title: "HIGH ON TYPE",
-      description: "字体设计的创新与表达",
-      date: "10.04.2025",
-      time: "18:30"
+      id: 985,
+      title: "high on type",
+      subtitle: "Writing together",
+      bgImg: "https://da-festival.hr/wp-content/uploads/2025/03/high-on-type-papirici.png",
+      fgImg: "https://da-festival.hr/wp-content/uploads/2025/03/high-on-type-white.png",
+      date: "SUBOTA 25.1.",
+      location: "STUDIO 1",
+      address: "ARHITEKTONSKI FAKULTET",
+      description: "Interaktivno predavanje o tipografiji, pismu i zajedničkom stvaranju. Istražujemo granice čitljivosti i ekspresivnosti slova.",
+      biographyTitle: "O KOLEKTIVU",
+      biography: "High on Type je kolektiv posvećen promociji tipografije i kaligrafije kroz radionice, festivale i izložbe."
     },
     {
-      title: "DIGITAL COLLAGE",
-      description: "数字拼贴艺术的边界探索",
-      date: "12.04.2025",
-      time: "19:30"
+      id: 789,
+      title: "Matej Merlić & Maja Merlić Ilić",
+      subtitle: "Moderna vremena",
+      bgImg: "https://da-festival.hr/wp-content/uploads/2025/03/modvremena-papiric.png",
+      fgImg: "https://da-festival.hr/wp-content/uploads/2025/03/modernavrwhitte.png",
+      date: "NEDJELJA 26.1.",
+      location: "PREDAVAONICA 221",
+      address: "ARHITEKTONSKI FAKULTET",
+      description: "Razgovor o suvremenim izazovima u arhitekturi i dizajnu, te kako se prilagoditi brzim promjenama u industriji.",
+      biographyTitle: "O PREDAVAČIMA",
+      biography: "Matej i Maja su arhitekti s višegodišnjim iskustvom u projektiranju stambenih i poslovnih objekata."
+    }
+  ];
+
+  const workshops = [
+    {
+      id: 332,
+      title: "Klasja Habjan",
+      subtitle: "Ilustracije, priče i pokvareni telefon",
+      bgImg: "https://da-festival.hr/wp-content/uploads/2025/03/klasja-papirici.png",
+      fgImg: "https://da-festival.hr/wp-content/uploads/2025/03/klasja-white.png",
+      date: "PETAK 24.1.",
+      location: "UČIONICA 3",
+      address: "FRANKOPANSKA 12",
+      description: "Radionica ilustracije i vizualnog pripovijedanja. Polaznici će istraživati narativne tehnike kroz crtež i kolaž.",
+      biographyTitle: "O VODITELJICI",
+      biography: "Klasja Habjan je ilustratorica i grafička dizajnerica, poznata po svom jedinstvenom vizualnom jeziku.",
+      capacity: "15 OSOBA",
+      equipment: "PRIBOR ZA CRTANJE, LAPTOP",
+      registrationLink: "https://example.com/apply"
+    },
+    {
+      id: 888,
+      title: "Büro Bietenhader Moroder",
+      subtitle: "Dumb Emancipatory Architecture",
+      bgImg: "https://da-festival.hr/wp-content/uploads/2025/03/dea-papirici_bg.png",
+      fgImg: "https://da-festival.hr/wp-content/uploads/2025/03/dea-white.png",
+      date: "SUBOTA 25.1.",
+      location: "STUDIO 2",
+      address: "ARHITEKTONSKI FAKULTET",
+      description: "Istraživanje 'glupe' arhitekture kao emancipatornog alata. Kako jednostavna rješenja mogu riješiti složene probleme?",
+      biographyTitle: "O VODITELJIMA",
+      biography: "Švicarski arhitektonski duo fokusiran na eksperimentalnu arhitekturu i teoriju.",
+      capacity: "20 OSOBA",
+      equipment: "LAPTOP"
+    },
+    {
+      id: 961,
+      title: "Appear Offline",
+      subtitle: "Print, scan, repeat.",
+      bgImg: "https://da-festival.hr/wp-content/uploads/2025/03/appear-papirici.png",
+      fgImg: "https://da-festival.hr/wp-content/uploads/2025/03/appear-white.png",
+      date: "NEDJELJA 26.1.",
+      location: "TISKARA",
+      address: "FRANKOPANSKA 12",
+      description: "Radionica analogno-digitalnog tiska. Istražujemo greške u procesu skeniranja i printanja kao kreativni element.",
+      biographyTitle: "O KOLEKTIVU",
+      biography: "Appear Offline je dizajnerski studio specijaliziran za eksperimentalni tisak i izdavaštvo.",
+      capacity: "10 OSOBA",
+      equipment: "MATERIJALI OSIGURANI"
+    },
+    {
+      id: 898,
+      title: "Emil Flatz & Luka Perić",
+      subtitle: "Dizajn i razvoj interaktivne time-tracking aplikacije",
+      bgImg: "https://da-festival.hr/wp-content/uploads/2025/03/pf-papiric.png",
+      fgImg: "https://da-festival.hr/wp-content/uploads/2025/03/pf-white-2.png",
+      date: "SUBOTA 25.1.",
+      location: "RAČUNALNA UČIONICA",
+      address: "ARHITEKTONSKI FAKULTET",
+      description: "Naučite osnove UI/UX dizajna i front-end developmenta kroz izradu jednostavne aplikacije.",
+      biographyTitle: "O VODITELJIMA",
+      biography: "Emil i Luka su studenti dizajna vizualnih komunikacija s iskustvom u web developmentu.",
+      capacity: "12 OSOBA",
+      equipment: "LAPTOP S INSTALIRANIM NODE.JS"
     }
   ];
 
   return (
-    <div className="relative w-full py-20 bg-neonLime/20 torn-edge-top">
-      {/* Background decorative text with parallax */}
-      <div 
-        className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-[clamp(8rem,20vw,15rem)] font-black text-neonLime/30 pointer-events-none select-none"
-        style={{ 
-          transform: `translate(-50%, -50%) translateY(${scrollY * 0.05}px)`,
-          zIndex: 0
-        }}
-      >
-        PREDAVANJA
-      </div>
-
-      <div className="relative z-10 container mx-auto px-4">
-        <h2 className="text-[clamp(2.5rem,6vw,4rem)] font-black text-center text-black mb-16 text-shadow">
-          PREDAVANJA
-        </h2>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {lectures.map((lecture, index) => (
-            <div 
-              key={index}
-              className="bg-white p-8 paper-shadow magnetic rounded-lg transition-all duration-300 hover:shadow-xl"
-              style={{
-                transform: `translateY(${scrollY * 0.1 * (index + 1) * 0.1}px)`,
-                opacity: 1 - (scrollY * 0.001 * (index + 1))
-              }}
-            >
-              <div className="flex justify-between items-start mb-4">
-                <h3 className="text-2xl font-bold text-black">{lecture.title}</h3>
-                <div className="bg-neonLime text-black px-4 py-2 rounded-full font-bold">
-                  {lecture.date}
-                </div>
-              </div>
-              <p className="text-gray-700 mb-4">{lecture.description}</p>
-              <div className="flex items-center text-vividOrange font-bold">
-                <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                {lecture.time}
+    <>
+      <EventModal isOpen={isModalOpen} onClose={closeModal} event={selectedEvent} />
+      <section id="predavanja" className="relative w-full">
+        <div>
+          <picture>
+            <source srcSet="https://da-festival.hr/wp-content/themes/da2025/assets/paper_top_green_2x.webp" media="(min-width: 1500px)" type="image/webp" />
+            <source srcSet="https://da-festival.hr/wp-content/themes/da2025/assets/paper_top_green_mobile.webp" media="(max-width: 600px)" type="image/webp" />
+            <source srcSet="https://da-festival.hr/wp-content/themes/da2025/assets/paper_top_green_mobile.png" media="(max-width: 600px)" type="image/png" />
+            <source srcSet="https://da-festival.hr/wp-content/themes/da2025/assets/paper_top_green.webp" type="image/webp" />
+            <source srcSet="https://da-festival.hr/wp-content/themes/da2025/assets/paper_top_green_2x.png" media="(min-width: 1500px)" />
+            <img src="https://da-festival.hr/wp-content/themes/da2025/assets/paper_top_green.png" alt="Paper Top Green" className="w-full h-auto object-cover" />
+          </picture>
+        </div>
+        <div className="relative -mt-2 bg-[#C9E83B]">
+          <div className="px-0 lg:px-10 pt-4 lg:pt-8 pb-[100px] lg:pb-[150px]">
+            <div className="fade-in-up flex flex-col lg:flex-row lg:items-center lg:justify-between mb-4 px-4 lg:px-0">
+              <h2 className="anybody-bold text-[44px] lg:text-[100px] leading-[54px] lg:leading-[120px] uppercase tracking-[-2px] lg:tracking-[-5px]">
+                Predavanja
+              </h2>
+              <a href="https://www.example.com" target="_blank" rel="noopener noreferrer" className="hidden lg:block px-4 py-2 anybody-bold text-sm md:text-base leading-6 uppercase mt-2 md:mt-0 border border-transparent hover:border-black hover:border-dashed transition-all duration-200">
+                Vidi sva predavanja
+              </a>
+            </div>
+            <div className="overflow-x-auto lg:overflow-visible pb-4 lg:pb-0 hide-scrollbar">
+              <div className="flex lg:grid lg:grid-cols-4 lg:gap-6 pl-4 pr-0 lg:px-0">
+                {lectures.map((lecture) => (
+                  <div 
+                    key={lecture.id} 
+                    className="group min-w-[280px] w-[280px] lg:min-w-0 lg:w-full mr-4 card event-item flex-shrink-0 cursor-pointer" 
+                    data-id={lecture.id}
+                    onClick={() => openModal(lecture)}
+                  >
+                    <img src="https://da-festival.hr/wp-content/themes/da2025/assets/paper-horizontal.png" alt="Paper Edge" className="w-full h-auto object-cover paper-edge" />
+                    <div className="relative -mt-2 aspect-[320/380] bg-white overflow-hidden mb-3 lg:mb-5">
+                      <img src={lecture.bgImg} alt="Background" className="bg-img absolute inset-0 w-full h-full object-cover z-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                      <img src={lecture.fgImg} alt="Foreground" className="foreground relative z-10 w-full h-full object-cover" />
+                    </div>
+                    <div className="flex flex-col gap-1">
+                      <h3 className="text-xl lg:text-2xl leading-4 lg:leading-5 p-0 m-0 anybody-bold uppercase">
+                        {lecture.title}
+                      </h3>
+                      <p className="text-base lg:text-lg leading-4 lg:leading-4 anybody-medium uppercase">
+                        {lecture.subtitle}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+                <div className="w-4 flex-shrink-0 lg:hidden"></div>
               </div>
             </div>
-          ))}
+            <div className="lg:hidden fade-in-up w-full flex items-center justify-center mt-8">
+              <a href="https://www.example.com" target="_blank" rel="noopener noreferrer" className="lg:hidden block px-4 py-2 anybody-bold text-sm md:text-base leading-6 uppercase mt-2 border border-black border-dashed transition-all duration-200">
+                Vidi sva predavanja
+              </a>
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
+        <div>
+          <picture>
+            <source srcSet="https://da-festival.hr/wp-content/themes/da2025/assets/paper_bottom_green_2x.webp" media="(min-width: 1500px)" type="image/webp" />
+            <source srcSet="https://da-festival.hr/wp-content/themes/da2025/assets/paper_bottom_green.webp" type="image/webp" />
+            <source srcSet="https://da-festival.hr/wp-content/themes/da2025/assets/paper_bottom_green_2x.png" media="(min-width: 1500px)" />
+            <img src="https://da-festival.hr/wp-content/themes/da2025/assets/paper_bottom_green.png" alt="Paper Bottom Green" className="-mt-2 w-full h-auto object-cover" />
+          </picture>
+        </div>
+      </section>
+
+      <section id="radionice" className="relative w-full mt-[-100px] lg:-mt-[180px] fhd:mt-[-250px] z-50">
+        <div>
+          <picture>
+            <source srcSet="https://da-festival.hr/wp-content/themes/da2025/assets/paper_top_orange_2x.webp" media="(min-width: 1500px)" type="image/webp" />
+            <source srcSet="https://da-festival.hr/wp-content/themes/da2025/assets/paper_orange_top_mobile.webp" media="(max-width: 600px)" type="image/webp" />
+            <source srcSet="https://da-festival.hr/wp-content/themes/da2025/assets/paper_orange_top_mobile.png" media="(max-width: 600px)" type="image/png" />
+            <source srcSet="https://da-festival.hr/wp-content/themes/da2025/assets/paper_top_orange.webp" type="image/webp" />
+            <source srcSet="https://da-festival.hr/wp-content/themes/da2025/assets/paper_top_orange_2x.png" media="(min-width: 1500px)" />
+            <img src="https://da-festival.hr/wp-content/themes/da2025/assets/paper_top_orange.png" alt="Paper Top Orange" className="w-full h-auto object-cover" />
+          </picture>
+        </div>
+        <div className="relative -mt-2 bg-[#FE6828]">
+          <div className="px-0 lg:px-10 pt-4 lg:pt-8 pb-[20px] lg:pb-[80px]">
+            <div className="fade-in-up flex flex-col lg:flex-row lg:items-center lg:justify-between mb-4 px-4 lg:px-0">
+              <h2 className="anybody-bold text-[44px] lg:text-[100px] leading-[54px] lg:leading-[120px] uppercase tracking-[-2px] lg:tracking-[-5px]">
+                Radionice
+              </h2>
+              <a href="https://www.example.com" target="_blank" rel="noopener noreferrer" className="hidden lg:block px-4 py-2 anybody-bold text-sm md:text-base leading-6 uppercase mt-2 md:mt-0 border border-transparent hover:border-black hover:border-dashed transition-all duration-200">
+                Vidi sve radionice
+              </a>
+            </div>
+            <div className="overflow-x-auto lg:overflow-visible pb-4 lg:pb-0 hide-scrollbar">
+              <div className="flex lg:grid lg:grid-cols-4 lg:gap-6 pl-4 pr-0 lg:px-0">
+                {workshops.map((workshop) => (
+                  <div 
+                    key={workshop.id} 
+                    className="group min-w-[280px] w-[280px] lg:min-w-0 lg:w-full mr-4 card event-item flex-shrink-0 cursor-pointer" 
+                    data-id={workshop.id}
+                    onClick={() => openModal(workshop)}
+                  >
+                    <img src="https://da-festival.hr/wp-content/themes/da2025/assets/paper-horizontal.png" alt="Paper Edge" className="w-full h-auto object-cover paper-edge" />
+                    <div className="relative -mt-2 aspect-[320/380] bg-white overflow-hidden mb-3 lg:mb-5">
+                      <img src={workshop.bgImg} alt="Background" className="bg-img absolute inset-0 w-full h-full object-cover z-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                      <img src={workshop.fgImg} alt="Foreground" className="foreground relative z-10 w-full h-full object-cover" />
+                    </div>
+                    <div className="flex flex-col gap-1">
+                      <h3 className="text-xl lg:text-2xl leading-6 lg:leading-5 p-0 m-0 anybody-bold uppercase">
+                        {workshop.title}
+                      </h3>
+                      <p className="text-base lg:text-lg leading-4 lg:leading-4 anybody-medium uppercase">
+                        {workshop.subtitle}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+                <div className="w-4 flex-shrink-0 lg:hidden"></div>
+              </div>
+            </div>
+            <div className="lg:hidden fade-in-up w-full flex items-center justify-center mt-8">
+              <a href="https://www.example.com" target="_blank" rel="noopener noreferrer" className="lg:hidden block px-4 py-2 anybody-bold text-sm md:text-base leading-6 uppercase mt-2 border border-black border-dashed transition-all duration-200">
+                Vidi sve radionice
+              </a>
+            </div>
+          </div>
+        </div>
+        <div>
+          <picture>
+            <source srcSet="https://da-festival.hr/wp-content/themes/da2025/assets/paper_bottom_orange_mobile.webp" media="(max-width: 600px)" type="image/webp" />
+            <source srcSet="https://da-festival.hr/wp-content/themes/da2025/assets/paper_bottom_orange_mobile.png" media="(max-width: 600px)" type="image/png" />
+            <source srcSet="https://da-festival.hr/wp-content/themes/da2025/assets/paper_bottom_orange_2x.webp" media="(min-width: 1500px)" type="image/webp" />
+            <source srcSet="https://da-festival.hr/wp-content/themes/da2025/assets/paper_bottom_orange.webp" type="image/webp" />
+            <source srcSet="https://da-festival.hr/wp-content/themes/da2025/assets/paper_bottom_orange_2x.png" media="(min-width: 1500px)" />
+            <img src="https://da-festival.hr/wp-content/themes/da2025/assets/paper_bottom_orange.png" alt="Paper Bottom Orange" className="-mt-2 w-full h-auto object-cover" />
+          </picture>
+        </div>
+      </section>
+    </>
   );
 };
 

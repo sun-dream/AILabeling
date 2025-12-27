@@ -1,143 +1,74 @@
-# 项目重构与复刻指导手册 (Project Refactoring & Build Guide)
+# 页面复刻评审与修改指南
 
-为了让项目结构更清晰、易于维护，并精确还原设计稿的“拼贴美学”，你需要按照以下方案对现有代码进行**组件化重构**和**视觉修正**。
-
-## 1. 组件化重构方案 (Componentization Strategy)
-
-目前项目组件划分较为扁平，建议采用“原子化”思维，提取通用 UI 组件。
-
-### 1.1 建议目录结构
-```text
+## 0. 当前项目目录结构 (testbed/src)
+```
 src/
+├── assets/
+│   └── react.svg
 ├── components/
-│   ├── common/            # 通用基础组件 (可在多处复用)
-│   │   ├── Navbar.jsx     # [新增] 顶部导航栏 (Logo + 菜单)
-│   │   ├── EventCard.jsx  # [新增] 通用活动卡片 (用于讲座和工作坊)
-│   │   ├── SectionDivider.jsx # [新增] 撕纸边缘分割线
-│   │   └── Marquee.jsx    # [新增] 跑马灯滚动条 (从 Footer 提取)
-│   ├── sections/          # 页面主要业务板块
-│   │   ├── Hero.jsx       # Hero 区域 (使用 DraggablePaper)
-│   │   ├── Lectures.jsx   # 讲座板块 (使用 EventCard + SectionDivider)
-│   │   ├── Workshops.jsx  # 工作坊板块 (使用 EventCard + SectionDivider)
-│   │   ├── Schedule.jsx   # 日程板块
-│   │   └── Footer.jsx     # 页脚 (包含 Marquee + Sponsors)
-│   └── ui/                # 独立交互单元
-│       └── DraggablePaper.jsx # [原 Paper.jsx] 负责单个纸片的物理拖拽逻辑
-└── App.jsx                # 组装所有 Section
+│   ├── Footer.jsx    (已更新：按钮链接修复)
+│   ├── Hero.jsx      (已更新：拖拽优化，撕纸元素补全)
+│   ├── Intro.jsx     (新创建：包含简介和报名按钮)
+│   ├── Lectures.jsx  (已更新：包含 Predavanja 和 Radionice 版块)
+│   ├── Navbar.jsx    (新创建：响应式导航)
+│   ├── Paper.jsx     (已更新：拖拽性能优化，移除阴影)
+│   ├── Schedule.jsx  (待优化：数据提取)
+│   └── Workshops.jsx (已删除：功能合并至 Lectures.jsx)
+├── App.css
+├── App.jsx
+├── index.css
+└── main.jsx
 ```
 
-### 1.2 核心组件开发规范
-
-#### A. `SectionDivider.jsx` (通用分割线)
-*   **功能**：统一处理板块之间的“撕纸”过渡效果，替代原本 CSS `clip-path` 的简陋实现。
-*   **Props**: `imageSrc` (撕纸图片链接), `bgColor` (接壤的背景色, 用于填补缝隙)。
-*   **实现**：使用 `<picture>` 标签包裹 `<img>`，宽度 `w-full`，高度自适应，确保视觉上无缝连接。
-
-#### B. `EventCard.jsx` (通用卡片)
-*   **功能**：统一讲座 (Lectures) 和工作坊 (Workshops) 的卡片样式。
-*   **Props**:
-    *   `title` (标题)
-    *   `subtitle` (副标题/日期)
-    *   `bgImage` (背景纹理图)
-    *   `fgImage` (前景主体图 - 人物或文字)
-*   **布局逻辑**：
-    *   父容器：`relative aspect-[320/380] overflow-hidden`
-    *   背景层：`absolute inset-0 object-cover z-0` (渲染 `bgImage`)
-    *   前景层：`relative z-10 w-full h-full object-cover` (渲染 `fgImage`)
-    *   **注意**：必须实现鼠标 Hover 时前景/背景的微动或视差效果（参考 `instruction.md` 的磁吸感描述）。
-
-#### C. `DraggablePaper.jsx` (Hero 纸片)
-*   **修改点**：
-    *   移除 `lucide-react` 图标依赖。
-    *   移除 `color` 属性（纯色背景）。
-    *   **新增** `imageSrc` 属性，直接渲染 `<img src={imageSrc} />`。
-    *   保持 `framer-motion` 或原生事件实现的拖拽逻辑。
+## 1. 最新进展 (Progress Update)
+经过最近的修改，项目核心功能已取得显著进展：
+*   **导航与简介完善**：`Navbar` 和 `Intro` 组件已成功创建并集成，页面结构不再缺失。导航链接已统一指向 `https://www.example.com`。
+*   **Hero 区域优化**：
+    *   **完整性**：已从原网站提取并添加了 30+ 个撕纸装饰元素，视觉还原度大幅提升。
+    *   **交互体验**：重构了拖拽逻辑，移除了拖拽时的阴影效果（符合原设计），并消除了拖拽过程中的卡顿现象，体验丝滑。
+*   **Footer 修复**：底部的 "POGLEDAJ IZLOŽBU" 按钮已修复为链接跳转。
 
 ---
 
-## 2. 视觉还原与素材映射 (Visual & Assets Mapping)
+## 2. 后续修改建议 (Remaining Action Items)
 
-请按照以下映射表，将硬编码的 CSS 样式替换为真实的图片素材。
+### HTML/组件结构
+*   **Lectures & Workshops 组件**：
+    *   **数据分离**：目前的数据（讲座列表、工作坊列表）硬编码在组件内部。建议将其提取到单独的 JSON 文件或常量文件中，以便于维护。
+    *   **交互增强**：目前的讲座和工作坊卡片仅作展示。请检查需求，如果需要点击查看详情，请使用 `<a>` 标签包裹卡片内容，并指向 `https://www.example.com`。
+    *   **视觉丰富**：目前的卡片样式较为单一（白色背景+阴影）。建议参考 `Hero` 区域的实现，为部分卡片引入背景纹理图片，以增强“拼贴”风格的视觉冲击力。
 
-### 2.1 Hero 区域 (Hero.jsx)
-*   **纸片素材池**：请创建一个数组，包含 `p1.png` 到 `p10.png` 的 URL，随机分配给 `DraggablePaper` 组件。
-    *   URL 模式：`https://da-festival.hr/wp-content/themes/da2025/assets/p{n}.png` (n=1...10)
-*   **交互**：保留拖拽功能，确保 `z-index` 正确（点击时置顶）。
+### CSS/样式
+*   **撕纸边缘 (Torn Edges)**：
+    *   目前部分组件使用 CSS `clip-path` 模拟撕纸边缘。建议逐步替换为使用图片素材（如 `.paper-top-green`），以获得更真实的纸张质感。
+*   **颜色校准**：
+    *   请再次核对 `tailwind.config.js` 中的自定义颜色（如 `neonLime`, `vividOrange`），确保与原设计稿完全一致。
 
-### 2.2 板块分割线 (Section Dividers)
-在各板块组件的**顶部**引入 `SectionDivider` 组件，并传入对应图片：
+### 图片资源本地化 (Image Assets)
+目前所有图片均引用自 `https://da-festival.hr/...` 的远程链接。为了保证项目的稳定性和加载速度，建议执行以下操作：
+1.  **创建目录**：在 `src/assets/images` 下创建文件夹。
+2.  **下载资源**：将下列关键图片下载到本地。
+3.  **替换引用**：修改组件代码，将远程 URL 替换为本地 import 路径。
 
-| 板块 (Section) | 组件位置 | 图片 URL |
-| :--- | :--- | :--- |
-| **Lectures** | Top | `https://da-festival.hr/wp-content/themes/da2025/assets/paper_top_green.png` |
-| **Workshops** | Top | `https://da-festival.hr/wp-content/themes/da2025/assets/paper_top_orange.png` |
-| **Schedule** | Top | `https://da-festival.hr/wp-content/themes/da2025/assets/paper_yellow_top.png` |
-| **Footer** | Top | `https://da-festival.hr/wp-content/themes/da2025/assets/paper_top_blue.png` |
-| **Footer** | Bottom (装饰) | `https://da-festival.hr/wp-content/themes/da2025/assets/paper_footer_white.png` |
+**关键图片资源清单（源自 origin.html）：**
 
-### 2.3 卡片数据源 (Cards Data) - 完整资源列表
-请更新 `Lectures.jsx` 和 `Workshops.jsx` 中的数据源，使用以下完整的图片资源列表：
+*   **全局/导航：**
+    *   Logo: `https://da-festival.hr/wp-content/themes/da2025/assets/logo.svg`
+    *   菜单背景: `https://da-festival.hr/wp-content/themes/da2025/assets/menu-bg.png`
+    *   菜单条: `https://da-festival.hr/wp-content/themes/da2025/assets/menu_bg.png`
 
-#### **Lectures (讲座)**
-| 标题 | 背景图 (bgImage) | 前景图 (fgImage) |
-| :--- | :--- | :--- |
-| **Organizirano Oblikovanje** | `https://da-festival.hr/wp-content/uploads/2025/03/organiziranoobl.png` | `https://da-festival.hr/wp-content/uploads/2025/03/orgobl-white.png` |
-| **Ivan Veljača** | `https://da-festival.hr/wp-content/uploads/2025/03/ivan-veljaca-papirici-1.png` | `https://da-festival.hr/wp-content/uploads/2025/03/ivan-veljaca-white-1.png` |
-| **high on type** | `https://da-festival.hr/wp-content/uploads/2025/03/high-on-type-papirici.png` | `https://da-festival.hr/wp-content/uploads/2025/03/high-on-type-white.png` |
-| **Matej Merlić & Maja Merlić Ilić** | `https://da-festival.hr/wp-content/uploads/2025/03/modvremena-papiric.png` | `https://da-festival.hr/wp-content/uploads/2025/03/modernavrwhitte.png` |
+*   **Hero 区域：**
+    *   白色纸片背景: `https://da-festival.hr/wp-content/themes/da2025/assets/paper-white.png`
+    *   长条纸片背景: `https://da-festival.hr/wp-content/themes/da2025/assets/paper-white-long.png`
+    *   报名按钮 (默认): `https://da-festival.hr/wp-content/themes/da2025/assets/prijavi-button-bg.png`
+    *   报名按钮 (悬停): `https://da-festival.hr/wp-content/themes/da2025/assets/prijavi-hover.png`
+    *   撕纸装饰 (部分): `https://da-festival.hr/wp-content/themes/da2025/assets/p1.webp` (及其他 p2-p15.webp)
 
-#### **Workshops (工作坊)**
-| 标题 | 背景图 (bgImage) | 前景图 (fgImage) |
-| :--- | :--- | :--- |
-| **Klasja Habjan** | `https://da-festival.hr/wp-content/uploads/2025/03/klasja-papirici.png` | `https://da-festival.hr/wp-content/uploads/2025/03/klasja-white.png` |
-| **Büro Bietenhader Moroder** | `https://da-festival.hr/wp-content/uploads/2025/03/dea-papirici_bg.png` | `https://da-festival.hr/wp-content/uploads/2025/03/dea-white.png` |
-| **Appear Offline** | `https://da-festival.hr/wp-content/uploads/2025/03/appear-papirici.png` | `https://da-festival.hr/wp-content/uploads/2025/03/appear-white.png` |
-| **Emil Flatz & Luka Perić** | `https://da-festival.hr/wp-content/uploads/2025/03/pf-papiric.png` | `https://da-festival.hr/wp-content/uploads/2025/03/pf-white-2.png` |
+*   **装饰/分隔：**
+    *   绿色顶部撕纸: `https://da-festival.hr/wp-content/themes/da2025/assets/paper_top_green.png`
+    *   橙色顶部撕纸: `https://da-festival.hr/wp-content/themes/da2025/assets/paper_top_orange.png`
+    *   水平纸张边缘: `https://da-festival.hr/wp-content/themes/da2025/assets/paper-horizontal.png`
 
-### 2.4 页脚赞助商 (Footer Sponsors) - 完整资源列表
-在 Footer 底部添加一个 Flex 容器，展示以下所有赞助商 Logo（按顺序）：
-1. `https://da-festival.hr/wp-content/uploads/2025/03/l1.svg`
-2. `https://da-festival.hr/wp-content/uploads/2025/03/l2.svg`
-3. `https://da-festival.hr/wp-content/uploads/2025/03/l3.svg`
-4. `https://da-festival.hr/wp-content/uploads/2025/03/l6.svg`
-5. `https://da-festival.hr/wp-content/uploads/2025/03/brigada-02.svg`
-6. `https://da-festival.hr/wp-content/uploads/2025/03/buro-05.svg`
-7. `https://da-festival.hr/wp-content/uploads/2025/03/daz-05.svg`
-8. `https://da-festival.hr/wp-content/uploads/2025/03/grad-zagreb-02.svg`
-9. `https://da-festival.hr/wp-content/uploads/2025/03/vizkultura-02.svg`
-10. `https://da-festival.hr/wp-content/uploads/2025/03/KSPUFF-logo_vektor.svg`
-11. `https://da-festival.hr/wp-content/uploads/2025/03/oris-12.svg`
-12. `https://da-festival.hr/wp-content/uploads/2025/03/kulturpunkt-01.svg`
-13. `https://da-festival.hr/wp-content/uploads/2025/03/uha-03.png`
-14. `https://da-festival.hr/wp-content/uploads/2025/03/dar-04.png`
-15. `https://da-festival.hr/wp-content/uploads/2025/03/Logo-SZAF-1.png`
-16. `https://da-festival.hr/wp-content/uploads/2025/03/aluprotekt-novi.png`
-17. `https://da-festival.hr/wp-content/uploads/2025/03/erste-crnovijel.png`
-
----
-
-## 3. 功能缺失补全 (Missing Features)
-
-### 3.1 顶部导航栏 (Navbar.jsx)
-*   **状态**：目前缺失。
-*   **要求**：
-    *   固定在顶部或随页面滚动显示。
-    *   **左侧**：Logo (`https://da-festival.hr/wp-content/themes/da2025/assets/logo.svg`)。
-    *   **右侧**：菜单项 [Predavanja, Radionice, Izložba, O nama, Prijavi rad]。
-    *   **背景**：使用 instruction.md 中提到的 `.menu-bg` 图片 (`https://da-festival.hr/wp-content/themes/da2025/assets/menu_bg.png`) 作为导航栏背景纹理。
-
-### 3.2 全局点击跳转 (Global Interaction)
-*   **规则**：页面中所有可交互元素（Nav Links, Buttons, Cards, Social Icons）都必须添加点击事件。
-*   **行为**：`onClick={() => window.open('https://www.example.com', '_blank')}`。
-*   **覆盖范围**：
-    *   Navbar 上的所有链接。
-    *   Hero 区域的 "Pogledaj izložbu" 按钮。
-    *   所有 EventCard。
-    *   Footer 中的 Email 和社交媒体链接。
-
----
-
-## 4. 样式细节修正 (CSS Polish)
-
-*   **字体**：确保按照 instruction.md 配置 `tailwind.config.js`，正确引入 `Inter` 或 `Anyone` (如果原站有) 字体，并使用 `clamp()` 处理响应式字号。
-*   **纹理背景**：给 `body` 或主容器添加纸张纹理背景 (`paper-white.png`)，避免纯白背景带来的生硬感。
+*   **特殊卡片背景：**
+    *   Organizirano Oblikovanje: `https://da-festival.hr/wp-content/uploads/2025/03/organiziranoobl.png`
+    *   Ivan Veljača: `https://da-festival.hr/wp-content/uploads/2025/03/ivan-veljaca-papirici-1.png`

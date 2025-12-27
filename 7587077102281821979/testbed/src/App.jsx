@@ -1,21 +1,21 @@
 import React from 'react';
-import Navbar from './components/common/Navbar';
-import Hero from './components/sections/Hero';
-import Lectures from './components/sections/Lectures';
-import Workshops from './components/sections/Workshops';
-import Schedule from './components/sections/Schedule';
-import Footer from './components/sections/Footer';
+import Navbar from './components/Navbar';
+import Hero from './components/Hero';
+import Intro from './components/Intro';
+import Lectures from './components/Lectures';
+import Schedule from './components/Schedule';
+import Footer from './components/Footer';
+import Izlozba from './components/Izlozba';
 
 function App() {
   return (
-    <div className="App w-full overflow-hidden">
+    <div className="App">
       <Navbar />
-      <main>
-        <Hero />
-        <Lectures />
-        <Workshops />
-        <Schedule />
-      </main>
+      <Hero />
+      <Intro />
+      <Lectures />
+      <Schedule />
+      <Izlozba />
       <Footer />
     </div>
   );
