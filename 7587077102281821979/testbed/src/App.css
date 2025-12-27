@@ -10,7 +10,10 @@
 html {
   scroll-behavior: smooth;
 }
-
+body {
+  font-family: 'Inter', sans-serif;
+  overflow-x: hidden;
+}
 /* Animation for scrolling text */
 @keyframes scroll {
   0% {
