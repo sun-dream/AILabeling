@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import Paper from './Paper';
-import { Calendar, Users, BookOpen, Palette, Code, Music } from 'lucide-react';
 
 const Hero = () => {
   const [papers, setPapers] = useState([
