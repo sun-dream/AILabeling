@@ -6,8 +6,8 @@ const Footer = () => {
   const badgeUrl = 'https://balzac.it/wp-content/uploads/2022/01/Badge.jpg';
 
   return (
-    <footer className="w-full">
-      <section className="bg-[#FFC629] text-black w-full">
+    <footer className="w-full relative z-[60]">
+      <section className="bg-[#FFC629] text-black w-full ">
         <div className="mx-auto  grid grid-cols-1 md:grid-cols-12 gap-0">
           <div className="col-span-1 md:col-span-3  border-t border-black flex items-center justify-center bg-white md:border-r border-black">
             <a href="https://www.example.com" target="_blank" rel="noopener noreferrer" className="block">
