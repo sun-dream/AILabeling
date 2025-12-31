@@ -41,7 +41,7 @@ const Hero = () => {
       <div className="relative z-10 w-full h-full flex flex-col justify-center items-center text-center">
         
         {/* Logo */}
-        <div className="mb-8 transform hover:scale-105 transition-transform duration-500">
+        <div className="mb-8 transform hover:scale-105 transition-transform duration-500 slide-in-left-damped">
           <img 
             src="https://balzac.it/wp-content/uploads/2021/10/Logo-tondo.png" 
             alt="Balzac Logo" 
@@ -50,7 +50,7 @@ const Hero = () => {
         </div>
 
         {/* Text Box */}
-        <div className="bg-white w-3/4 px-8 py-8 md:px-16 md:py-12 shadow-2xl self-start text-right transform transition-all hover:shadow-xl">
+        <div className="bg-white lg:w-3/5 w-3/4 px-8 py-8 md:px-16 md:py-12 shadow-2xl self-start text-right transform transition-all hover:shadow-xl slide-in-left-damped">
           <h1 className="font-serif text-5xl md:text-7xl font-bold text-gray-900 mb-4 tracking-tight">
             Brand stories
           </h1>

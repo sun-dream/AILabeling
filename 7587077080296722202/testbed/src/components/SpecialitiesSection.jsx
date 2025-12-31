@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { ArrowLeft } from 'lucide-react';
 
 const SpecialitiesSection = () => {
@@ -6,10 +6,34 @@ const SpecialitiesSection = () => {
   const overlayUrl = 'http://balzac.it/wp-content/uploads/2021/10/Texture.png';
   const yellowCircleUrl = 'http://balzac.it/wp-content/uploads/2021/10/Sole-Giallo.png';
   const groupUrl = 'http://balzac.it/wp-content/uploads/2021/10/gruppo.jpg';
+  const sec1Ref = useRef(null);
+  const sec2Ref = useRef(null);
+  const sec3Ref = useRef(null);
+  
+  useEffect(() => {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const nodes = entry.target.querySelectorAll('.reveal-up');
+          nodes.forEach((node, i) => {
+            setTimeout(() => {
+              node.classList.add('slide-in-up-damped');
+              node.classList.remove('opacity-0', 'translate-y-8');
+            }, 120 * i);
+          });
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.2 });
+    [sec1Ref.current, sec2Ref.current, sec3Ref.current].forEach((el) => {
+      if (el) observer.observe(el);
+    });
+    return () => observer.disconnect();
+  }, []);
 
   return (
     <>
-    <section className="group relative min-h-[40vh] md:min-h-[55vh] w-full overflow-hidden bg-[#FFC629]">
+    <section ref={sec1Ref} className="group relative min-h-[40vh] md:min-h-[55vh] w-full overflow-hidden bg-[#FFC629]">
       {/* texture overlay */}
       <div
         className="absolute inset-0"
@@ -45,7 +69,7 @@ const SpecialitiesSection = () => {
 
       {/* content */}
       <div className="relative z-10 container mx-auto max-w-[1140px] px-6 md:px-12 py-14 md:py-20">
-        <div className="slide-in mb-4 md:mb-6">
+        <div className="opacity-0 translate-y-8 reveal-up mb-4 md:mb-6">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 43 23.2" className="w-10 h-6 md:w-12 md:h-7 fill-current text-black">
             <g>
               <g>
@@ -56,11 +80,11 @@ const SpecialitiesSection = () => {
           </svg>
         </div>
 
-        <h2 className="slide-in font-serif font-bold text-black leading-tight  text-[clamp(2rem,6vw,4.5rem)]">
+        <h2 className="opacity-0 translate-y-8 reveal-up font-serif font-bold text-black leading-tight  text-[clamp(2rem,6vw,4.5rem)]">
           Brand stories, storytelling, branding design, social media, web & app for start-up and all size company
         </h2>
 
-        <div className="slide-in mt-6">
+        <div className="opacity-0 translate-y-8 reveal-up mt-6">
           <a
             href="https://www.example.com"
             target="_blank"
@@ -72,7 +96,7 @@ const SpecialitiesSection = () => {
         </div>
       </div>
     </section>
-    <section className="group md:my-[50px] my-[20px] relative min-h-[40vh] md:min-h-[55vh] w-full overflow-hidden" style={{ backgroundColor: '#B5E495' }}>
+    <section ref={sec2Ref} className="group md:my-[50px] my-[20px] relative min-h-[40vh] md:min-h-[55vh] w-full overflow-hidden" style={{ backgroundColor: '#B5E495' }}>
       <div
         className="absolute inset-0"
         style={{
@@ -103,7 +127,7 @@ const SpecialitiesSection = () => {
         }}
       />
       <div className="relative z-10 container mx-auto max-w-[1140px] px-6 md:px-12 py-14 md:py-20">
-        <div className="slide-in mb-4 md:mb-6">
+        <div className="opacity-0 translate-y-8 reveal-up mb-4 md:mb-6">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 43 23.2" className="w-10 h-6 md:w-12 md:h-7 fill-current text-black">
             <g>
               <g>
@@ -113,11 +137,11 @@ const SpecialitiesSection = () => {
             </g>
           </svg>
         </div>
-        <h2 className="slide-in font-serif font-bold text-black leading-tight md:w-2/3 text-[clamp(2.2rem,6vw,4rem)]">Who is Balzac?</h2>
-        <h3 className="slide-in mt-4 font-serif italic text-black text-[clamp(1.1rem,2.5vw,1.5rem)] md:w-3/4">
+        <h2 className="opacity-0 translate-y-8 reveal-up font-serif font-bold text-black leading-tight md:w-2/3 text-[clamp(2.2rem,6vw,4rem)]">Who is Balzac?</h2>
+        <h3 className="opacity-0 translate-y-8 reveal-up mt-4 font-serif italic text-black text-[clamp(1.1rem,2.5vw,1.5rem)] md:w-3/4">
           Balzac is the agency specialized in brand stories. Of course, you could say: Balzac was one of humanity’s greatest storytellers. Not so obvious, we could answer, especially in these times. Today everyone produces contents. But not everyone knows how to create stories to tell.
         </h3>
-        <div className="slide-in mt-6">
+        <div className="opacity-0 translate-y-8 reveal-up mt-6">
           <a
             href="https://www.example.com"
             target="_blank"
@@ -129,7 +153,7 @@ const SpecialitiesSection = () => {
         </div>
       </div>
     </section>
-    <section className="relative min-h-[80vh] w-full overflow-hidden bg-[#E7E7E7]">
+    <section ref={sec3Ref} className="relative min-h-[80vh] w-full overflow-hidden bg-[#E7E7E7]">
       <div
         className="absolute inset-0"
         style={{
@@ -155,13 +179,13 @@ const SpecialitiesSection = () => {
       />
       <div className="absolute bottom-0 left-0 right-0 z-10 container mx-auto max-w-[1140px] px-6 md:px-12 pb-0 md:pb-0 flex justify-center items-end">
         <div className="bg-white shadow-sm px-6 md:px-12 py-10 md:py-14 w-full md:w-[75%]">
-          <h2 className="slide-in font-serif font-bold text-black leading-tight text-[clamp(2rem,6vw,4rem)]">
+          <h2 className="opacity-0 translate-y-8 reveal-up font-serif font-bold text-black leading-tight text-[clamp(2rem,6vw,4rem)]">
             From the electric hypercar to the sunscreen for children
           </h2>
-          <h3 className="slide-in mt-4 font-serif text-black text-[clamp(1.6rem,3vw,3rem)]">
+          <h3 className="opacity-0 translate-y-8 reveal-up mt-4 font-serif text-black text-[clamp(1.6rem,3vw,3rem)]">
             Selected works by Balzac: little stories to read in a blink of eye
           </h3>
-          <div className="slide-in mt-10 flex flex-col md:flex-row items-center justify-between gap-6">
+          <div className="opacity-0 translate-y-8 reveal-up mt-10 flex flex-col md:flex-row items-center justify-between gap-6">
             <a
               href="https://www.example.com"
               target="_blank"

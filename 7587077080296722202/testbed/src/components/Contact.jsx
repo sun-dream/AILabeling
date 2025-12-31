@@ -70,13 +70,6 @@ const Contact = () => {
     };
     const onEnter = () => {
       bg.style.transition = 'transform 80ms linear';
-      const items = el.querySelectorAll('.y-anim');
-      items.forEach((node, i) => {
-        setTimeout(() => {
-          node.classList.remove('opacity-0', 'translate-y-4');
-          node.classList.add('opacity-100', 'translate-y-0');
-        }, 120 * i);
-      });
     };
     const onLeave = () => {
       bg.style.transition = 'transform 300ms ease';
@@ -91,6 +84,27 @@ const Contact = () => {
       el.removeEventListener('mouseleave', onLeave);
       if (rafId) cancelAnimationFrame(rafId);
     };
+  }, []);
+  
+  useEffect(() => {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const nodes = entry.target.querySelectorAll('.reveal-up');
+          nodes.forEach((node, i) => {
+            setTimeout(() => {
+              node.classList.add('slide-in-up-damped');
+              node.classList.remove('opacity-0', 'translate-y-8');
+            }, 120 * i);
+          });
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.2 });
+    [redRef.current, yellowRef.current].forEach((el) => {
+      if (el) observer.observe(el);
+    });
+    return () => observer.disconnect();
   }, []);
 
   return (
@@ -125,7 +139,7 @@ const Contact = () => {
         />
         <div className="relative z-20 container max-w-[1080px] mx-auto flex items-end px-6 md:px-12 flex justify-center">
           <div className="bg-white w-full px-6 md:px-12 py-10 md:py-14">
-            <div className="mb-4 md:mb-6">
+            <div className="opacity-0 translate-y-8 reveal-up mb-4 md:mb-6">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 43 23.2" className="w-10 h-6 md:w-12 md:h-7 fill-current text-black">
                 <g>
                   <g>
@@ -135,11 +149,11 @@ const Contact = () => {
                 </g>
               </svg>
             </div>
-            <h2 className="font-serif font-bold text-black leading-tight text-[clamp(3rem,7vw,4rem)]">What experience does Balzac have?</h2>
-            <h3 className="mt-4 font-serif text-black text-[clamp(2rem,3vw,1.5rem)]">
+            <h2 className="opacity-0 translate-y-8 reveal-up font-serif font-bold text-black leading-tight text-[clamp(3rem,7vw,4rem)]">What experience does Balzac have?</h2>
+            <h3 className="opacity-0 translate-y-8 reveal-up mt-4 font-serif text-black text-[clamp(2rem,3vw,1.5rem)]">
               Ugo de Balzac, born in ’63, has been working in communication since 1989. Gaetano de Balzac, born in 1977, since 1999. Together they have produced a thousand and one works for clients such as Barilla, Sant’Anna, Italdesign, Pininfarina, Ferrero, Indesit, Zambon, Agnesi, just to name a few. In '20 Bruno arrives, he is a reputation management and media relations expert. That's all, the team is complete.
             </h3>
-            <div className="mt-6">
+            <div className="opacity-0 translate-y-8 reveal-up mt-6">
               <a
                 href="https://www.example.com"
                 target="_blank"
@@ -192,16 +206,16 @@ const Contact = () => {
                 </g>
               </svg>
             </div>
-            <h2 className="y-anim opacity-0 translate-y-4 transition-all duration-700 ease-out font-serif font-bold text-black leading-tight text-[clamp(3rem,7vw,4rem)]">Where is Balzac?</h2>
-            <h3 className="y-anim opacity-0 translate-y-4 transition-all duration-700 ease-out mt-4 font-serif text-black text-[clamp(2.3rem,3.3vw,1.8rem)]">
+            <h2 className="opacity-0 translate-y-8 reveal-up font-serif font-bold text-black leading-tight text-[clamp(3rem,7vw,4rem)]">Where is Balzac?</h2>
+            <h3 className="opacity-0 translate-y-8 reveal-up mt-4 font-serif text-black text-[clamp(2.3rem,3.3vw,1.8rem)]">
               Balzac is in the centre of Turin in via Valfrè 14, between corso Galileo Ferraris and corso Vinzaglio. To find the door bell (and door) you just need to know that they are located just behind the “Cittadella of Pietro Micca”, behind the Carabinieri Cernaia station. To follow the navigator or Google maps is more simple.
             </h3>
-            <div className="mt-6">
+            <div className="opacity-0 translate-y-8 reveal-up mt-6">
               <a
                 href="https://www.example.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="y-anim opacity-0 translate-y-4 transition-all duration-700 ease-out inline-block border border-black px-5 py-2 rounded-sm shadow-sm hover:bg-black hover:text-white transition"
+                className="inline-block border border-black px-5 py-2 rounded-sm shadow-sm hover:bg-black hover:text-white transition"
               >
                 How to get in touch
               </a>

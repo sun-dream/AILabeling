@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 
 const works = [
   {
@@ -62,15 +62,36 @@ const Tile = ({ item }) => (
 );
 
 const About = () => {
+  const aboutRef = useRef(null);
+  useEffect(() => {
+    const el = aboutRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const nodes = entry.target.querySelectorAll('.reveal-up');
+          nodes.forEach((node, i) => {
+            setTimeout(() => {
+              node.classList.add('slide-in-up-damped');
+              node.classList.remove('opacity-0', 'translate-y-8');
+            }, 120 * i);
+          });
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.2 });
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
   return (
-    <section id="about" className="relative w-full overflow-hidden">
+    <section ref={aboutRef} id="about" className="relative w-full overflow-hidden">
       <div className="bg-gray-200 mx-auto px-6 md:px-12 py-10">
-        <h2 className="text-center font-serif font-bold text-[clamp(3rem,7vw,4rem)] text-black">
+        <h2 className="opacity-0 translate-y-8 reveal-up text-center font-serif font-bold text-[clamp(3rem,7vw,4rem)] text-black">
           Five (randomly) selected works
         </h2>
       </div>
 
-      <div className=" mx-auto w-full px-0 md:px-0 pb-8 md:pb-12">
+      <div className="mx-auto w-full px-0 md:px-0 pb-8 md:pb-12">
         <div className="grid grid-cols-2 md:grid-cols-12 gap-0 md:gap-0">
           <div className="col-span-1 md:col-span-5 md:col-start-1 md:row-start-1 md:row-span-2 h-[180px] md:h-[600px]">
             <Tile item={works[0]} />

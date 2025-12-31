@@ -93,6 +93,30 @@ html {
   animation: circleMove 20s linear infinite;
 }
 
+@keyframes slideInLeftDamped {
+  0% { transform: translateX(-80px); opacity: 0; }
+  60% { transform: translateX(12px); opacity: 1; }
+  75% { transform: translateX(-6px); }
+  88% { transform: translateX(3px); }
+  100% { transform: translateX(0); }
+}
+
+.slide-in-left-damped {
+  animation: slideInLeftDamped 900ms ease-out forwards;
+}
+
+@keyframes slideInUpDamped {
+  0% { transform: translateY(80px); opacity: 0; }
+  60% { transform: translateY(-10px); opacity: 1; }
+  75% { transform: translateY(6px); }
+  88% { transform: translateY(-3px); }
+  100% { transform: translateY(0); }
+}
+
+.slide-in-up-damped {
+  animation: slideInUpDamped 900ms ease-out forwards;
+}
+
 
 /* Parallax effect */
 .parallax {
