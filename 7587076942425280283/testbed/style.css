@@ -44,7 +44,12 @@ body {
 }
 
 .animate-marquee {
-    animation: marquee 20s linear infinite;
+    animation: marquee 36s linear infinite;
     display: inline-block;
     white-space: nowrap;
+}
+
+/* Pause marquee on hover */
+.animate-marquee:hover {
+    animation-play-state: paused;
 }

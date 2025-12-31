@@ -43,27 +43,66 @@
 
 <body class="font-sans text-gray-800 antialiased overflow-x-hidden">
 
-    <!-- Announcement Bar -->
+    <!-- Announcement Bar  -->
     <div id="announcement-bar"
-        class="bg-black text-white text-xs font-bold relative z-50 transition-all duration-300 overflow-hidden">
-        <div class="container mx-auto flex items-center justify-between px-4 py-2.5">
-            <div class="flex-1"></div> <!-- Spacer for centering -->
-            <div class="flex items-center justify-center space-x-4 animate-marquee whitespace-nowrap">
-                <p>FREE RETURNS WITHIN 30 DAYS</p>
-                <span class="opacity-50">|</span>
-                <a href="https://www.example.com" target="_blank"
-                    class="flex items-center hover:text-gray-300 underline">
-                    BLACK FRIDAY SALE
-                    <i data-lucide="arrow-right" class="w-3 h-3 ml-1"></i>
-                </a>
-            </div>
-            <div class="flex-1 flex justify-end">
-                <button id="close-announcement" class="text-white hover:text-gray-300 focus:outline-none"
-                    aria-label="Close announcement">
-                    <i data-lucide="x" class="w-4 h-4"></i>
-                </button>
-            </div>
+        class="bg-black px-4 py-3 relative text-white text-xs font-bold relative z-50 transition-all duration-300 overflow-hidden">
+        <div
+            class="absolute w-[300%] animate-marquee whitespace-nowrap top-1 left-0 flex items-center gap-x-12 justify-start">
+            <p>FREE RETURNS WITHIN 30 DAYS</p>
+            <a href="https://www.example.com" target="_blank"
+                class="relative no-underline flex items-center hover:text-gray-300 after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-0 after:h-[2px] after:bg-white after:transition-all after:duration-300 after:ease-out hover:after:w-full">
+                BLACK FRIDAY SALE
+                <i data-lucide="arrow-right" class="w-3 h-3 ml-1"></i>
+            </a>
+
+            <p>FREE RETURNS WITHIN 30 DAYS</p>
+            <a href="https://www.example.com" target="_blank"
+                class="relative no-underline flex items-center hover:text-gray-300 after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-0 after:h-[2px] after:bg-white after:transition-all after:duration-300 after:ease-out hover:after:w-full">
+                BLACK FRIDAY SALE
+                <i data-lucide="arrow-right" class="w-3 h-3 ml-1"></i>
+            </a>
+
+            <p>FREE RETURNS WITHIN 30 DAYS</p>
+            <a href="https://www.example.com" target="_blank"
+                class="relative no-underline flex items-center hover:text-gray-300 after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-0 after:h-[2px] after:bg-white after:transition-all after:duration-300 after:ease-out hover:after:w-full">
+                BLACK FRIDAY SALE
+                <i data-lucide="arrow-right" class="w-3 h-3 ml-1"></i>
+            </a>
+            <p>FREE RETURNS WITHIN 30 DAYS</p>
+            <a href="https://www.example.com" target="_blank"
+                class="relative no-underline flex items-center hover:text-gray-300 after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-0 after:h-[2px] after:bg-white after:transition-all after:duration-300 after:ease-out hover:after:w-full">
+                BLACK FRIDAY SALE
+                <i data-lucide="arrow-right" class="w-3 h-3 ml-1"></i>
+            </a>
+            <p>FREE RETURNS WITHIN 30 DAYS</p>
+            <a href="https://www.example.com" target="_blank"
+                class="relative no-underline flex items-center hover:text-gray-300 after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-0 after:h-[2px] after:bg-white after:transition-all after:duration-300 after:ease-out hover:after:w-full">
+                BLACK FRIDAY SALE
+                <i data-lucide="arrow-right" class="w-3 h-3 ml-1"></i>
+            </a>
+            <p>FREE RETURNS WITHIN 30 DAYS</p>
+            <a href="https://www.example.com" target="_blank"
+                class="relative no-underline flex items-center hover:text-gray-300 after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-0 after:h-[2px] after:bg-white after:transition-all after:duration-300 after:ease-out hover:after:w-full">
+                BLACK FRIDAY SALE
+                <i data-lucide="arrow-right" class="w-3 h-3 ml-1"></i>
+            </a>
+            <p>FREE RETURNS WITHIN 30 DAYS</p>
+            <a href="https://www.example.com" target="_blank"
+                class="relative no-underline flex items-center hover:text-gray-300 after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-0 after:h-[2px] after:bg-white after:transition-all after:duration-300 after:ease-out hover:after:w-full">
+                BLACK FRIDAY SALE
+                <i data-lucide="arrow-right" class="w-3 h-3 ml-1"></i>
+            </a>
+            <p>FREE RETURNS WITHIN 30 DAYS</p>
+            <a href="https://www.example.com" target="_blank"
+                class="relative no-underline flex items-center hover:text-gray-300 after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-0 after:h-[2px] after:bg-white after:transition-all after:duration-300 after:ease-out hover:after:w-full">
+                BLACK FRIDAY SALE
+                <i data-lucide="arrow-right" class="w-3 h-3 ml-1"></i>
+            </a>
         </div>
+        <button id="close-announcement" class="absolute top-1 right-2 text-white hover:text-gray-300 focus:outline-none"
+            aria-label="Close announcement">
+            <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
     </div>
 
     <!-- Header -->
@@ -184,10 +223,11 @@
             </nav>
 
             <!-- Logo (Center) -->
-            <a href="#"
+            <a href="https://www.example.com" target="_blank"
                 class="block w-28 md:w-32 absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2">
                 <!-- Using a filter to invert logo color when header is transparent text-white -->
-                <img src="../demo/wonder-theme-fashion_files/velour-logo-v3.svg" alt="Velour"
+                <img src="//cdn.shopify.com/s/files/1/0568/8167/6459/files/velour-logo-v3-white.svg?v=1753565068&width=1216"
+                    alt="Velour"
                     class="w-full h-auto brightness-0 invert group-hover:brightness-100 group-hover:invert-0 transition-all duration-300"
                     id="header-logo">
             </a>
@@ -221,23 +261,131 @@
         <div class="absolute inset-0 z-0">
             <picture>
                 <source media="(max-width: 768px)"
-                    srcset="../demo/wonder-theme-fashion_files/3-velour-mobile-banner-main.jpg">
-                <img src="../demo/wonder-theme-fashion_files/BANNER-wonder.jpg" alt="Hero Banner"
-                    class="w-full h-full object-cover">
+                    srcset="//cdn.shopify.com/s/files/1/0568/8167/6459/files/3-velour-mobile-banner-main.jpg?v=1763505144&width=1920">
+                <img src="//cdn.shopify.com/s/files/1/0568/8167/6459/files/3-velour-desktop-main-banner.jpg?v=1763505103&width=2000"
+                    alt="Hero Banner" class="w-full h-full object-cover">
             </picture>
             <div class="absolute inset-0 bg-black/20"></div>
         </div>
 
         <!-- Content -->
         <div class="relative z-10 text-center text-white px-4 max-w-4xl animate-fade-in-up">
-            <p class="text-sm md:text-base font-medium uppercase tracking-[0.2em] mb-4">Most-loved collections</p>
+            <p class="text-sm md:text-base font-medium uppercase tracking-[0.2em] mb-4">Redefine Your Elegance</p>
             <h1 class="text-5xl md:text-7xl lg:text-8xl font-light leading-tight mb-8">
-                Cosy &<br><span class="font-normal">Comfort</span>
+                Dresses you'll adore
             </h1>
-            <a href="https://www.example.com" target="_blank"
-                class="inline-block bg-white text-black px-10 py-4 text-sm font-semibold uppercase tracking-widest hover:bg-black hover:text-white transition-all duration-300">
-                Discover Now
-            </a>
+            <div class="flex items-center justify-center gap-4">
+                <a href="https://www.example.com" target="_blank"
+                    class="inline-block bg-white text-black px-10 py-4 text-sm font-semibold uppercase tracking-widest hover:bg-black hover:text-white transition-all duration-300">
+                    Shop Dress
+                </a>
+                <a href="https://www.example.com" target="_blank"
+                    class="inline-block bg-white text-black px-10 py-4 text-sm font-semibold uppercase tracking-widest hover:bg-black hover:text-white transition-all duration-300">
+                    Shop Bags
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 15: New In (Featured Grid) -->
+    <section class="py-16 md:py-24 bg-white">
+        <div class="container mx-auto px-4 md:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl md:text-4xl font-normal uppercase tracking-wide">New In</h2>
+            </div>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
+                <!-- Item A -->
+                <div class="group cursor-pointer">
+                    <div class="relative overflow-hidden aspect-[2/3] mb-4">
+                        <img src="//cdn.shopify.com/s/files/1/0568/8167/6459/products/cm6903-sukienka-na-jedno-ramie-z-falbana-brudno-rozowa.jpg?v=1666876785&width=800"
+                            alt="Dress Pink"
+                            class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+                    </div>
+                    <div class="text-center">
+                        <h3 class="text-base font-medium mb-1">
+                            <a href="https://www.example.com" target="_blank">One-shoulder Dress</a>
+                        </h3>
+                        <p class="text-sm">$120.00</p>
+                    </div>
+                </div>
+                <!-- Item B -->
+                <div class="group cursor-pointer">
+                    <div class="relative overflow-hidden aspect-[2/3] mb-4">
+                        <img src="//cdn.shopify.com/s/files/1/0568/8167/6459/products/cm6844-sukienka-midi-z-szerokimi-rekawami-czarna_1.jpg?v=1666703838&width=1000"
+                            alt="Dress Black"
+                            class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+                    </div>
+                    <div class="text-center">
+                        <h3 class="text-base font-medium mb-1">
+                            <a href="https://www.example.com" target="_blank">Midi Dress Black</a>
+                        </h3>
+                        <p class="text-sm">$98.00</p>
+                    </div>
+                </div>
+                <!-- Item C -->
+                <div class="group cursor-pointer">
+                    <div class="relative overflow-hidden aspect-[2/3] mb-4">
+                        <img src="//cdn.shopify.com/s/files/1/0568/8167/6459/products/cm6844-sukienka-midi-z-szerokimi-rekawami-czerwona.jpg?v=1666703839&width=1000"
+                            alt="Dress Red"
+                            class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+                    </div>
+                    <div class="text-center">
+                        <h3 class="text-base font-medium mb-1">
+                            <a href="https://www.example.com" target="_blank">Midi Dress Red</a>
+                        </h3>
+                        <p class="text-sm">$98.00</p>
+                    </div>
+                </div>
+                <!-- Item D -->
+                <div class="group cursor-pointer">
+                    <div class="relative overflow-hidden aspect-[2/3] mb-4">
+                        <img src="//cdn.shopify.com/s/files/1/0568/8167/6459/products/cm6844-sukienka-midi-z-szerokimi-rekawami-soczysto-zielona.jpg?v=1666703839&width=1000"
+                            alt="Dress Green"
+                            class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+                    </div>
+                    <div class="text-center">
+                        <h3 class="text-base font-medium mb-1">
+                            <a href="https://www.example.com" target="_blank">Midi Dress Green</a>
+                        </h3>
+                        <p class="text-sm">$98.00</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 16: Accessories Spotlight -->
+    <section class="relative h-[60vh] md:h-[75vh] overflow-hidden">
+        <img src="//cdn.shopify.com/s/files/1/0568/8167/6459/files/rylko-bag-2.jpg?v=1754864863&width=1920"
+            alt="Accessories Spotlight" class="absolute inset-0 w-full h-full object-cover">
+        <div class="absolute inset-0 bg-black/30"></div>
+        <div class="relative z-10 h-full flex items-center justify-center text-center text-white px-4">
+            <div>
+                <h2 class="text-3xl md:text-5xl font-light uppercase tracking-wide mb-6">Accessories Spotlight</h2>
+                <a href="https://www.example.com" target="_blank"
+                    class="inline-block bg-white text-black px-8 py-3 text-sm font-semibold uppercase tracking-widest hover:bg-black hover:text-white transition-all duration-300">Shop
+                    Accessories</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 17: Newsletter CTA -->
+    <section class="py-16 bg-[#f8f8f8]">
+        <div class="container mx-auto px-4 md:px-8">
+            <div class="max-w-2xl mx-auto text-center">
+                <h2 class="text-3xl md:text-4xl font-normal uppercase tracking-wide mb-4">Join Our Private List</h2>
+                <p class="text-gray-600 mb-6">Subscribe to get special offers, free giveaways, and once-in-a-lifetime
+                    deals.</p>
+                <form class="flex flex-col sm:flex-row gap-3 justify-center">
+                    <input type="email" placeholder="Enter your email"
+                        class="bg-white border border-gray-300 px-4 py-3 w-full sm:w-auto sm:min-w-[320px] focus:outline-none focus:ring-1 focus:ring-primary">
+                    <button type="submit"
+                        class="bg-black text-white px-6 py-3 uppercase font-bold hover:bg-gray-900 transition-colors">Join</button>
+                    <a href="https://www.example.com" target="_blank"
+                        class="inline-block sm:ml-4 text-sm border-b border-black pb-1 uppercase tracking-wider hover:text-primary hover:border-primary transition-colors">Learn
+                        More</a>
+                </form>
+            </div>
         </div>
     </section>
 
@@ -252,9 +400,11 @@
                 <!-- Product 1 -->
                 <div class="group cursor-pointer">
                     <div class="relative overflow-hidden aspect-[2/3] mb-4">
-                        <img src="../demo/wonder-theme-fashion_files/cut-off-main-9.jpg" alt="Cut-off dress"
+                        <img src="//cdn.shopify.com/s/files/1/0568/8167/6459/files/cut-off-main-9.jpg?v=1754854408&width=1000"
+                            alt="Cut-off dress"
                             class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
-                        <img src="../demo/wonder-theme-fashion_files/cut-off-main-9b.jpg" alt="Cut-off dress hover"
+                        <img src="//cdn.shopify.com/s/files/1/0568/8167/6459/files/cut-off-main-9b.jpg?v=1756663137&width=1000"
+                            alt="Cut-off dress hover"
                             class="absolute inset-0 w-full h-full object-cover opacity-0 group-hover:opacity-100 transition-opacity duration-500">
                         <div
                             class="absolute bottom-4 left-0 right-0 flex justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
@@ -274,9 +424,11 @@
                 <!-- Product 2 -->
                 <div class="group cursor-pointer">
                     <div class="relative overflow-hidden aspect-[2/3] mb-4">
-                        <img src="../demo/wonder-theme-fashion_files/midi-serenity-main-1.jpg" alt="Serenity dress"
+                        <img src="//cdn.shopify.com/s/files/1/0568/8167/6459/files/midi-serenity-main-1.jpg?v=1754857828&width=1000"
+                            alt="Serenity dress"
                             class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
-                        <img src="../demo/wonder-theme-fashion_files/midi-serenity-2.jpg" alt="Serenity dress hover"
+                        <img src="//cdn.shopify.com/s/files/1/0568/8167/6459/files/midi-serenity-2.jpg?v=1754857828&width=1000"
+                            alt="Serenity dress hover"
                             class="absolute inset-0 w-full h-full object-cover opacity-0 group-hover:opacity-100 transition-opacity duration-500">
                         <div
                             class="absolute bottom-4 left-0 right-0 flex justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
@@ -296,7 +448,8 @@
                 <!-- Product 3 (Placeholder) -->
                 <div class="group cursor-pointer">
                     <div class="relative overflow-hidden aspect-[2/3] mb-4">
-                        <img src="../demo/wonder-theme-fashion_files/beauty.jpg" alt="Beauty Dress"
+                        <img src="//cdn.shopify.com/s/files/1/0568/8167/6459/files/beauty.jpg?v=1762075700&width=800"
+                            alt="Beauty Dress"
                             class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
                         <div
                             class="absolute bottom-4 left-0 right-0 flex justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
@@ -316,7 +469,8 @@
                 <!-- Product 4 (Placeholder) -->
                 <div class="group cursor-pointer">
                     <div class="relative overflow-hidden aspect-[2/3] mb-4">
-                        <img src="../demo/wonder-theme-fashion_files/blue-dress.jpg" alt="Blue Dress"
+                        <img src="//cdn.shopify.com/s/files/1/0568/8167/6459/files/blue-dress.jpg?v=1708465624&width=300"
+                            alt="Blue Dress"
                             class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
                         <div
                             class="absolute bottom-4 left-0 right-0 flex justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
@@ -340,7 +494,7 @@
     <section class="grid grid-cols-1 md:grid-cols-2 h-screen md:h-[80vh]">
         <!-- Item 1: MOE Collection -->
         <div class="relative group overflow-hidden">
-            <img src="../demo/wonder-theme-fashion_files/3efd7254a464405a81cc493e8dc94b06.thumbnail.0000000000_600x.jpg"
+            <img src="//cdn.shopify.com/s/files/1/0568/8167/6459/files/rylko-bag-4.jpg?v=1754865021&width=1920"
                 alt="MOE Collection"
                 class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
             <div class="absolute inset-0 bg-black/10"></div>
@@ -354,8 +508,8 @@
 
         <!-- Item 2: New Bags -->
         <div class="relative group overflow-hidden">
-            <!-- Note: Using a likely available image, assuming rylko-bags-desktop-9c.jpg exists -->
-            <img src="../demo/wonder-theme-fashion_files/lanti.jpg" alt="New Bags"
+            <img src="//cdn.shopify.com/s/files/1/0568/8167/6459/files/rylko-bag-3.jpg?v=1754864939&width=1920"
+                alt="New Bags"
                 class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
             <div class="absolute inset-0 bg-black/10"></div>
             <div class="absolute inset-0 flex flex-col items-center justify-end pb-16 md:pb-24">
@@ -377,7 +531,8 @@
             <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <!-- Item 1 -->
                 <div class="relative aspect-[3/4] group overflow-hidden cursor-pointer">
-                    <img src="../demo/wonder-theme-fashion_files/lalupa.jpg" alt="Curated 1"
+                    <img src="//cdn.shopify.com/s/files/1/0568/8167/6459/files/lalupa.jpg?v=1647437928&width=280"
+                        alt="Curated 1"
                         class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
                     <div class="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300">
                     </div>
@@ -385,7 +540,8 @@
                 </div>
                 <!-- Item 2 -->
                 <div class="relative aspect-[3/4] group overflow-hidden cursor-pointer">
-                    <img src="../demo/wonder-theme-fashion_files/lenitif.jpg" alt="Curated 2"
+                    <img src="//cdn.shopify.com/s/files/1/0568/8167/6459/files/lenitif.jpg?v=1647437928&width=280"
+                        alt="Curated 2"
                         class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
                     <div class="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300">
                     </div>
@@ -393,7 +549,8 @@
                 </div>
                 <!-- Item 3 -->
                 <div class="relative aspect-[3/4] group overflow-hidden cursor-pointer">
-                    <img src="../demo/wonder-theme-fashion_files/figl.jpg" alt="Curated 3"
+                    <img src="//cdn.shopify.com/s/files/1/0568/8167/6459/files/figl.jpg?v=1647437928&width=280"
+                        alt="Curated 3"
                         class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
                     <div class="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300">
                     </div>
@@ -401,7 +558,8 @@
                 </div>
                 <!-- Item 4 -->
                 <div class="relative aspect-[3/4] group overflow-hidden cursor-pointer">
-                    <img src="../demo/wonder-theme-fashion_files/beauty.jpg" alt="Curated 4"
+                    <img src="//cdn.shopify.com/s/files/1/0568/8167/6459/files/beauty.jpg?v=1762075700&width=800"
+                        alt="Curated 4"
                         class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
                     <div class="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300">
                     </div>
@@ -415,7 +573,8 @@
     <section class="relative h-[60vh] md:h-[80vh] bg-gray-100 overflow-hidden flex items-center justify-center group">
         <div class="absolute inset-0">
             <!-- Placeholder for video background -->
-            <img src="../demo/wonder-theme-fashion_files/beauty.jpg" alt="Shoppable Video Cover"
+            <img src="//cdn.shopify.com/s/files/1/0568/8167/6459/files/beauty.jpg?v=1762075700&width=800"
+                alt="Shoppable Video Cover"
                 class="w-full h-full object-cover opacity-90 transition-transform duration-700 group-hover:scale-105">
             <div class="absolute inset-0 bg-black/20"></div>
         </div>
@@ -441,7 +600,8 @@
                 <!-- Slide 1 -->
                 <div
                     class="min-w-[80vw] md:min-w-[30vw] aspect-[3/4] relative snap-center group cursor-pointer shrink-0">
-                    <img src="../demo/wonder-theme-fashion_files/main-column-1.jpg" alt="Campaign 1"
+                    <img src="//cdn.shopify.com/s/files/1/0568/8167/6459/files/main-column-1.jpg?v=1708418449&width=3840"
+                        alt="Campaign 1"
                         class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
                     <div class="absolute inset-0 bg-black/10 group-hover:bg-black/20 transition-colors"></div>
                     <div class="absolute bottom-8 left-8 text-white">
@@ -454,7 +614,8 @@
                 <!-- Slide 2 -->
                 <div
                     class="min-w-[80vw] md:min-w-[30vw] aspect-[3/4] relative snap-center group cursor-pointer shrink-0">
-                    <img src="../demo/wonder-theme-fashion_files/main-column-3.jpg" alt="Campaign 2"
+                    <img src="//cdn.shopify.com/s/files/1/0568/8167/6459/files/main-column-3.jpg?v=1708418480&width=3840"
+                        alt="Campaign 2"
                         class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
                     <div class="absolute inset-0 bg-black/10 group-hover:bg-black/20 transition-colors"></div>
                     <div class="absolute bottom-8 left-8 text-white">
@@ -467,7 +628,8 @@
                 <!-- Slide 3 -->
                 <div
                     class="min-w-[80vw] md:min-w-[30vw] aspect-[3/4] relative snap-center group cursor-pointer shrink-0">
-                    <img src="../demo/wonder-theme-fashion_files/left-1.jpg" alt="Campaign 3"
+                    <img src="//cdn.shopify.com/s/files/1/0568/8167/6459/files/left-1.jpg?v=1708091961&width=600"
+                        alt="Campaign 3"
                         class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
                     <div class="absolute inset-0 bg-black/10 group-hover:bg-black/20 transition-colors"></div>
                     <div class="absolute bottom-8 left-8 text-white">
@@ -484,7 +646,7 @@
     <!-- Section 8: Parallax -->
     <section
         class="relative h-[60vh] md:h-[70vh] flex items-center justify-center bg-fixed bg-center bg-cover overflow-hidden"
-        style="background-image: url('../demo/wonder-theme-fashion_files/BANNER-wonder.jpg');">
+        style="background-image: url('//cdn.shopify.com/s/files/1/0568/8167/6459/files/BANNER-wonder.jpg?v=1694690962&width=3840');">
         <div class="absolute inset-0 bg-black/40"></div>
         <div class="relative z-10 text-center text-white px-4">
             <p class="uppercase tracking-[0.2em] mb-4 text-sm md:text-base animate-fade-in-up">Discover the best deal
@@ -500,8 +662,8 @@
 
     <!-- Section 9: Full Width Video/Image -->
     <section class="h-screen w-full relative overflow-hidden">
-        <img src="../demo/wonder-theme-fashion_files/mobile-2.jpg" alt="Full Width Visual"
-            class="w-full h-full object-cover md:object-center">
+        <img src="//cdn.shopify.com/s/files/1/0568/8167/6459/files/mobile-2.jpg?v=1647294862&width=3840"
+            alt="Full Width Visual" class="w-full h-full object-cover md:object-center">
         <div class="absolute inset-0 bg-black/10"></div>
         <div class="absolute bottom-16 left-8 md:bottom-24 md:left-24 text-white max-w-xl">
             <h2 class="text-4xl md:text-6xl font-light mb-6">Fall into Comfort</h2>
@@ -526,7 +688,7 @@
                 <!-- Reel 1 -->
                 <div
                     class="min-w-[280px] md:min-w-[320px] aspect-[9/16] bg-gray-200 snap-center relative rounded-xl overflow-hidden cursor-pointer group">
-                    <img src="../demo/wonder-theme-fashion_files/cm6903-sukienka-na-jedno-ramie-z-falbana-brudno-rozowa.jpg"
+                    <img src="//cdn.shopify.com/s/files/1/0568/8167/6459/products/cm6903-sukienka-na-jedno-ramie-z-falbana-brudno-rozowa.jpg?v=1666876785&width=800"
                         alt="Reel 1"
                         class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
                     <div class="absolute inset-0 bg-gradient-to-b from-transparent to-black/60 opacity-60"></div>
@@ -541,7 +703,7 @@
                 <!-- Reel 2 -->
                 <div
                     class="min-w-[280px] md:min-w-[320px] aspect-[9/16] bg-gray-200 snap-center relative rounded-xl overflow-hidden cursor-pointer group">
-                    <img src="../demo/wonder-theme-fashion_files/cm6844-sukienka-midi-z-szerokimi-rekawami-czarna_1.jpg"
+                    <img src="//cdn.shopify.com/s/files/1/0568/8167/6459/products/cm6844-sukienka-midi-z-szerokimi-rekawami-czarna_1.jpg?v=1666703838&width=1000"
                         alt="Reel 2"
                         class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
                     <div class="absolute inset-0 bg-gradient-to-b from-transparent to-black/60 opacity-60"></div>
@@ -553,7 +715,7 @@
                 <!-- Reel 3 -->
                 <div
                     class="min-w-[280px] md:min-w-[320px] aspect-[9/16] bg-gray-200 snap-center relative rounded-xl overflow-hidden cursor-pointer group">
-                    <img src="../demo/wonder-theme-fashion_files/cm6844-sukienka-midi-z-szerokimi-rekawami-czerwona.jpg"
+                    <img src="//cdn.shopify.com/s/files/1/0568/8167/6459/products/cm6844-sukienka-midi-z-szerokimi-rekawami-czerwona.jpg?v=1666703839&width=1000"
                         alt="Reel 3"
                         class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
                     <div class="absolute inset-0 bg-gradient-to-b from-transparent to-black/60 opacity-60"></div>
@@ -565,7 +727,8 @@
                 <!-- Reel 4 -->
                 <div
                     class="min-w-[280px] md:min-w-[320px] aspect-[9/16] bg-gray-200 snap-center relative rounded-xl overflow-hidden cursor-pointer group">
-                    <img src="../demo/wonder-theme-fashion_files/dress-tied-image-hover.jpg" alt="Reel 4"
+                    <img src="//cdn.shopify.com/s/files/1/0568/8167/6459/files/dress-tied-image-hover.jpg?v=1756663360&width=1000"
+                        alt="Reel 4"
                         class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
                     <div class="absolute inset-0 bg-gradient-to-b from-transparent to-black/60 opacity-60"></div>
                     <div class="absolute bottom-6 left-6 text-white">
@@ -582,16 +745,16 @@
         <div class="container mx-auto px-4">
             <div
                 class="flex flex-wrap justify-center md:justify-between items-center gap-8 md:gap-12 grayscale opacity-60 hover:opacity-100 transition-opacity duration-300">
-                <img src="../demo/wonder-theme-fashion_files/lalupa.jpg" alt="Brand 1"
-                    class="h-8 md:h-10 w-auto object-contain">
-                <img src="../demo/wonder-theme-fashion_files/lenitif.jpg" alt="Brand 2"
-                    class="h-8 md:h-10 w-auto object-contain">
-                <img src="../demo/wonder-theme-fashion_files/figl.jpg" alt="Brand 3"
-                    class="h-8 md:h-10 w-auto object-contain">
-                <img src="../demo/wonder-theme-fashion_files/lanti.jpg" alt="Brand 4"
-                    class="h-8 md:h-10 w-auto object-contain">
-                <img src="../demo/wonder-theme-fashion_files/Untitled-9.jpg" alt="Brand 5"
-                    class="h-8 md:h-10 w-auto object-contain">
+                <img src="//cdn.shopify.com/s/files/1/0568/8167/6459/files/lalupa.jpg?v=1647437928&width=280"
+                    alt="Brand 1" class="h-8 md:h-10 w-auto object-contain">
+                <img src="//cdn.shopify.com/s/files/1/0568/8167/6459/files/lenitif.jpg?v=1647437928&width=280"
+                    alt="Brand 2" class="h-8 md:h-10 w-auto object-contain">
+                <img src="//cdn.shopify.com/s/files/1/0568/8167/6459/files/figl.jpg?v=1647437928&width=280"
+                    alt="Brand 3" class="h-8 md:h-10 w-auto object-contain">
+                <img src="//cdn.shopify.com/s/files/1/0568/8167/6459/files/lanti.jpg?v=1647437928&width=280"
+                    alt="Brand 4" class="h-8 md:h-10 w-auto object-contain">
+                <img src="//cdn.shopify.com/s/files/1/0568/8167/6459/files/Untitled-9.jpg?v=1647437928&width=280"
+                    alt="Brand 5" class="h-8 md:h-10 w-auto object-contain">
             </div>
         </div>
     </section>
@@ -606,7 +769,8 @@
                 <!-- Article 1 -->
                 <div class="group cursor-pointer">
                     <div class="overflow-hidden mb-6 aspect-[4/3]">
-                        <img src="../demo/wonder-theme-fashion_files/blog-2-article-2-wonder-couture.jpg" alt="Blog 1"
+                        <img src="//cdn.shopify.com/s/files/1/0568/8167/6459/articles/blog-2-article-2-wonder-couture.jpg?v=1726753905&width=3840"
+                            alt="Blog 1"
                             class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
                     </div>
                     <div class="text-center md:text-left">
@@ -621,7 +785,8 @@
                 <!-- Article 2 -->
                 <div class="group cursor-pointer">
                     <div class="overflow-hidden mb-6 aspect-[4/3]">
-                        <img src="../demo/wonder-theme-fashion_files/blog-3-article-3-wonder-couture.jpg" alt="Blog 2"
+                        <img src="//cdn.shopify.com/s/files/1/0568/8167/6459/articles/blog-3-article-3-wonder-couture.jpg?v=1726754115&width=3840"
+                            alt="Blog 2"
                             class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
                     </div>
                     <div class="text-center md:text-left">
@@ -636,7 +801,8 @@
                 <!-- Article 3 -->
                 <div class="group cursor-pointer">
                     <div class="overflow-hidden mb-6 aspect-[4/3]">
-                        <img src="../demo/wonder-theme-fashion_files/blog-5.jpg" alt="Blog 3"
+                        <img src="//cdn.shopify.com/s/files/1/0568/8167/6459/articles/blog-5.jpg?v=1726755101&width=3840"
+                            alt="Blog 3"
                             class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
                     </div>
                     <div class="text-center md:text-left">
@@ -684,8 +850,8 @@
     <footer class="bg-brand-black text-white py-12 border-t border-gray-800">
         <div class="container mx-auto px-4 md:px-8 grid grid-cols-1 md:grid-cols-4 gap-8">
             <div>
-                <img src="../demo/wonder-theme-fashion_files/velour-logo-v3.svg" alt="Velour"
-                    class="w-32 mb-6 invert brightness-0 grayscale-0 filter hue-rotate-180">
+                <img src="//cdn.shopify.com/s/files/1/0568/8167/6459/files/velour-logo-v3-white.svg?v=1753565068&width=1216"
+                    alt="Velour" class="w-32 mb-6 invert brightness-0 grayscale-0 filter hue-rotate-180">
                 <!-- Note: Logo might need inversion if it's black text -->
                 <p class="text-gray-400 text-sm">Elevating fashion with comfort and style. Your daily dose of elegance.
                 </p>
