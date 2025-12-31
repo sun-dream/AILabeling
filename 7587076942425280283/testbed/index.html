@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wonder Theme Fashion</title>
+    <!-- Tailwind CSS v3 (CDN) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="style.css">
+    <!-- Google Fonts: Inter & Outfit -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@300;400;500;700&display=swap"
+        rel="stylesheet">
+
+    <!-- Tailwind Configuration -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#165DFF',
+                        'brand-black': '#1a1a1a',
+                        'brand-gray': '#f5f5f5',
+                        'natural-green': '#2D5A3D',
+                        'accent-red': '#FF4757',
+                        'earth-beige': '#F5F1E9',
+                    },
+                    fontFamily: {
+                        sans: ['Outfit', 'Inter', 'sans-serif'],
+                    },
+                    animation: {
+                        'fade-in-up': 'fadeInUp 0.8s ease-out forwards',
+                    }
+                },
+            },
+        }
+    </script>
+</head>
+
+<body class="font-sans text-gray-800 antialiased overflow-x-hidden">
+
+    <!-- Announcement Bar -->
+    <div id="announcement-bar"
+        class="bg-black text-white text-xs font-bold relative z-50 transition-all duration-300 overflow-hidden">
+        <div class="container mx-auto flex items-center justify-between px-4 py-2.5">
+            <div class="flex-1"></div> <!-- Spacer for centering -->
+            <div class="flex items-center justify-center space-x-4 animate-marquee whitespace-nowrap">
+                <p>FREE RETURNS WITHIN 30 DAYS</p>
+                <span class="opacity-50">|</span>
+                <a href="https://www.example.com" target="_blank"
+                    class="flex items-center hover:text-gray-300 underline">
+                    BLACK FRIDAY SALE
+                    <i data-lucide="arrow-right" class="w-3 h-3 ml-1"></i>
+                </a>
+            </div>
+            <div class="flex-1 flex justify-end">
+                <button id="close-announcement" class="text-white hover:text-gray-300 focus:outline-none"
+                    aria-label="Close announcement">
+                    <i data-lucide="x" class="w-4 h-4"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header id="main-header"
+        class="fixed top-0 w-full z-40 transition-all duration-300 bg-transparent text-white group hover:bg-white hover:text-gray-900"
+        data-transparent="true">
+        <!-- Hover background helper for transparent mode -->
+        <div
+            class="absolute inset-0 bg-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10 shadow-sm">
+        </div>
+
+        <div class="container mx-auto px-4 md:px-8 h-20 flex items-center justify-between relative z-10">
+            <!-- Mobile Menu Trigger (Left) -->
+            <div class="md:hidden flex items-center">
+                <button id="mobile-menu-btn" class="hover:text-primary transition-colors" aria-label="Menu">
+                    <span id="icon-menu-container" class="block">
+                        <i data-lucide="menu" class="w-6 h-6"></i>
+                    </span>
+                    <span id="icon-close-container" class="hidden">
+                        <i data-lucide="x" class="w-6 h-6"></i>
+                    </span>
+                </button>
+            </div>
+
+            <!-- Navigation Teaser (Left Desktop) -->
+            <nav class="hidden md:flex space-x-6 text-sm font-bold tracking-wide uppercase h-full items-center">
+                <!-- Mega Menu Item (Presets/Shop) -->
+                <div class="group/menu h-full flex items-center">
+                    <a href="https://www.example.com" target="_blank"
+                        class="hover:underline decoration-2 underline-offset-4 decoration-primary transition-all cursor-pointer py-8 flex items-center gap-1">
+                        Presets
+                        <i data-lucide="chevron-down"
+                            class="w-4 h-4 transition-transform group-hover/menu:rotate-180"></i>
+                    </a>
+
+                    <!-- Mega Menu Dropdown -->
+                    <div
+                        class="absolute left-0 top-full w-full bg-white shadow-xl opacity-0 invisible group-hover/menu:opacity-100 group-hover/menu:visible transition-all duration-300 border-t border-gray-100 text-gray-900 z-50">
+                        <div class="container mx-auto px-8 py-12">
+                            <div class="grid grid-cols-4 gap-8">
+                                <!-- Item 1 -->
+                                <a href="https://www.example.com" target="_blank" class="group/item block">
+                                    <div class="overflow-hidden aspect-[3/4] mb-4 relative">
+                                        <img src="//cdn.shopify.com/s/files/1/0568/8167/6459/files/beauty.jpg?v=1762075700&width=800"
+                                            alt="Wonder"
+                                            class="w-full h-full object-cover transition-transform duration-700 group-hover/item:scale-105">
+                                        <div
+                                            class="absolute inset-0 bg-black/0 group-hover/item:bg-black/10 transition-colors">
+                                        </div>
+                                    </div>
+                                    <h3
+                                        class="text-center font-medium tracking-wide group-hover/item:text-primary transition-colors">
+                                        Wonder</h3>
+                                    <p class="text-center text-xs text-gray-500 mt-1">Beauty Theme</p>
+                                </a>
+                                <!-- Item 2 -->
+                                <a href="https://www.example.com" target="_blank" class="group/item block">
+                                    <div class="overflow-hidden aspect-[3/4] mb-4 relative">
+                                        <img src="//cdn.shopify.com/s/files/1/0568/8167/6459/files/root.jpg?v=1762075700&width=800"
+                                            alt="Root"
+                                            class="w-full h-full object-cover transition-transform duration-700 group-hover/item:scale-105">
+                                        <div
+                                            class="absolute inset-0 bg-black/0 group-hover/item:bg-black/10 transition-colors">
+                                        </div>
+                                    </div>
+                                    <h3
+                                        class="text-center font-medium tracking-wide group-hover/item:text-primary transition-colors">
+                                        Root</h3>
+                                    <p class="text-center text-xs text-gray-500 mt-1">Wellness Theme</p>
+                                </a>
+                                <!-- Item 3 -->
+                                <a href="https://www.example.com" target="_blank" class="group/item block">
+                                    <div class="overflow-hidden aspect-[3/4] mb-4 relative">
+                                        <img src="//cdn.shopify.com/s/files/1/0568/8167/6459/files/nook.jpg?v=1762075699&width=800"
+                                            alt="Nook"
+                                            class="w-full h-full object-cover transition-transform duration-700 group-hover/item:scale-105">
+                                        <div
+                                            class="absolute inset-0 bg-black/0 group-hover/item:bg-black/10 transition-colors">
+                                        </div>
+                                    </div>
+                                    <h3
+                                        class="text-center font-medium tracking-wide group-hover/item:text-primary transition-colors">
+                                        Nook</h3>
+                                    <p class="text-center text-xs text-gray-500 mt-1">Interior Theme</p>
+                                </a>
+                                <!-- Item 4 -->
+                                <a href="https://www.example.com" target="_blank" class="group/item block">
+                                    <div class="overflow-hidden aspect-[3/4] mb-4 relative">
+                                        <img src="//cdn.shopify.com/s/files/1/0568/8167/6459/files/velour.jpg?v=1762075700&width=800"
+                                            alt="Velour"
+                                            class="w-full h-full object-cover transition-transform duration-700 group-hover/item:scale-105">
+                                        <div
+                                            class="absolute inset-0 bg-black/0 group-hover/item:bg-black/10 transition-colors">
+                                        </div>
+                                    </div>
+                                    <h3
+                                        class="text-center font-medium tracking-wide group-hover/item:text-primary transition-colors">
+                                        Velour</h3>
+                                    <p class="text-center text-xs text-gray-500 mt-1">Fashion Theme</p>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="relative group/item h-full flex items-center">
+                    <a href="https://www.example.com" target="_blank"
+                        class="hover:underline decoration-2 underline-offset-4 decoration-primary transition-all py-8">Clothing</a>
+                </div>
+                <div class="relative group/item h-full flex items-center">
+                    <a href="https://www.example.com" target="_blank"
+                        class="hover:underline decoration-2 underline-offset-4 decoration-primary transition-all py-8">Bags</a>
+                </div>
+                <div class="relative group/item h-full flex items-center">
+                    <a href="https://www.example.com" target="_blank"
+                        class="hover:underline decoration-2 underline-offset-4 decoration-primary transition-all py-8">Accessories</a>
+                </div>
+            </nav>
+
+            <!-- Logo (Center) -->
+            <a href="#"
+                class="block w-28 md:w-32 absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                <!-- Using a filter to invert logo color when header is transparent text-white -->
+                <img src="../demo/wonder-theme-fashion_files/velour-logo-v3.svg" alt="Velour"
+                    class="w-full h-auto brightness-0 invert group-hover:brightness-100 group-hover:invert-0 transition-all duration-300"
+                    id="header-logo">
+            </a>
+
+            <!-- Right Icons -->
+            <div class="flex items-center space-x-5">
+                <!-- Localization (Hidden on mobile) -->
+                <button class="hidden md:flex items-center text-sm font-medium hover:opacity-70 transition-opacity">
+                    <span class="mr-1">USD</span>
+                    <i data-lucide="chevron-down" class="w-3 h-3"></i>
+                </button>
+
+                <button class="hover:text-primary transition-colors" aria-label="Search">
+                    <i data-lucide="search" class="w-5 h-5"></i>
+                </button>
+                <button class="hover:text-primary transition-colors hidden md:block" aria-label="Account">
+                    <i data-lucide="user" class="w-5 h-5"></i>
+                </button>
+                <button class="hover:text-primary transition-colors relative" aria-label="Cart">
+                    <i data-lucide="shopping-bag" class="w-5 h-5"></i>
+                    <span
+                        class="absolute -top-1 -right-1 bg-primary text-white text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center">0</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="relative h-screen w-full overflow-hidden flex items-center justify-center">
+        <!-- Background Image -->
+        <div class="absolute inset-0 z-0">
+            <picture>
+                <source media="(max-width: 768px)"
+                    srcset="../demo/wonder-theme-fashion_files/3-velour-mobile-banner-main.jpg">
+                <img src="../demo/wonder-theme-fashion_files/BANNER-wonder.jpg" alt="Hero Banner"
+                    class="w-full h-full object-cover">
+            </picture>
+            <div class="absolute inset-0 bg-black/20"></div>
+        </div>
+
+        <!-- Content -->
+        <div class="relative z-10 text-center text-white px-4 max-w-4xl animate-fade-in-up">
+            <p class="text-sm md:text-base font-medium uppercase tracking-[0.2em] mb-4">Most-loved collections</p>
+            <h1 class="text-5xl md:text-7xl lg:text-8xl font-light leading-tight mb-8">
+                Cosy &<br><span class="font-normal">Comfort</span>
+            </h1>
+            <a href="https://www.example.com" target="_blank"
+                class="inline-block bg-white text-black px-10 py-4 text-sm font-semibold uppercase tracking-widest hover:bg-black hover:text-white transition-all duration-300">
+                Discover Now
+            </a>
+        </div>
+    </section>
+
+    <!-- Section: Our Bestseller -->
+    <section class="py-16 md:py-24">
+        <div class="container mx-auto px-4 md:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl md:text-4xl font-normal uppercase tracking-wide">Our Bestseller</h2>
+            </div>
+
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
+                <!-- Product 1 -->
+                <div class="group cursor-pointer">
+                    <div class="relative overflow-hidden aspect-[2/3] mb-4">
+                        <img src="../demo/wonder-theme-fashion_files/cut-off-main-9.jpg" alt="Cut-off dress"
+                            class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+                        <img src="../demo/wonder-theme-fashion_files/cut-off-main-9b.jpg" alt="Cut-off dress hover"
+                            class="absolute inset-0 w-full h-full object-cover opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                        <div
+                            class="absolute bottom-4 left-0 right-0 flex justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                            <button
+                                class="bg-white text-black px-6 py-2 text-sm font-medium uppercase hover:bg-black hover:text-white transition-colors">Quick
+                                Add</button>
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <p class="text-xs text-gray-500 uppercase tracking-widest mb-1">MOE</p>
+                        <h3 class="text-base font-medium mb-1"><a href="https://www.example.com" target="_blank">Cut-off
+                                dress</a></h3>
+                        <p class="text-sm">$70.00</p>
+                    </div>
+                </div>
+
+                <!-- Product 2 -->
+                <div class="group cursor-pointer">
+                    <div class="relative overflow-hidden aspect-[2/3] mb-4">
+                        <img src="../demo/wonder-theme-fashion_files/midi-serenity-main-1.jpg" alt="Serenity dress"
+                            class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+                        <img src="../demo/wonder-theme-fashion_files/midi-serenity-2.jpg" alt="Serenity dress hover"
+                            class="absolute inset-0 w-full h-full object-cover opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                        <div
+                            class="absolute bottom-4 left-0 right-0 flex justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                            <button
+                                class="bg-white text-black px-6 py-2 text-sm font-medium uppercase hover:bg-black hover:text-white transition-colors">Quick
+                                Add</button>
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <p class="text-xs text-gray-500 uppercase tracking-widest mb-1">MOE</p>
+                        <h3 class="text-base font-medium mb-1"><a href="https://www.example.com"
+                                target="_blank">Serenity dress</a></h3>
+                        <p class="text-sm">$85.00</p>
+                    </div>
+                </div>
+
+                <!-- Product 3 (Placeholder) -->
+                <div class="group cursor-pointer">
+                    <div class="relative overflow-hidden aspect-[2/3] mb-4">
+                        <img src="../demo/wonder-theme-fashion_files/beauty.jpg" alt="Beauty Dress"
+                            class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+                        <div
+                            class="absolute bottom-4 left-0 right-0 flex justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                            <button
+                                class="bg-white text-black px-6 py-2 text-sm font-medium uppercase hover:bg-black hover:text-white transition-colors">Quick
+                                Add</button>
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <p class="text-xs text-gray-500 uppercase tracking-widest mb-1">MOE</p>
+                        <h3 class="text-base font-medium mb-1"><a href="https://www.example.com" target="_blank">Evening
+                                Gown</a></h3>
+                        <p class="text-sm">$120.00</p>
+                    </div>
+                </div>
+
+                <!-- Product 4 (Placeholder) -->
+                <div class="group cursor-pointer">
+                    <div class="relative overflow-hidden aspect-[2/3] mb-4">
+                        <img src="../demo/wonder-theme-fashion_files/blue-dress.jpg" alt="Blue Dress"
+                            class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+                        <div
+                            class="absolute bottom-4 left-0 right-0 flex justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                            <button
+                                class="bg-white text-black px-6 py-2 text-sm font-medium uppercase hover:bg-black hover:text-white transition-colors">Quick
+                                Add</button>
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <p class="text-xs text-gray-500 uppercase tracking-widest mb-1">MOE</p>
+                        <h3 class="text-base font-medium mb-1"><a href="https://www.example.com" target="_blank">Blue
+                                Summer Dress</a></h3>
+                        <p class="text-sm">$95.00</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section: Collections Split -->
+    <section class="grid grid-cols-1 md:grid-cols-2 h-screen md:h-[80vh]">
+        <!-- Item 1: MOE Collection -->
+        <div class="relative group overflow-hidden">
+            <img src="../demo/wonder-theme-fashion_files/3efd7254a464405a81cc493e8dc94b06.thumbnail.0000000000_600x.jpg"
+                alt="MOE Collection"
+                class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+            <div class="absolute inset-0 bg-black/10"></div>
+            <div class="absolute inset-0 flex flex-col items-center justify-end pb-16 md:pb-24">
+                <h2 class="text-3xl md:text-5xl font-light text-white mb-6 uppercase tracking-wider">MOE Collection</h2>
+                <a href="https://www.example.com" target="_blank"
+                    class="bg-white text-black px-8 py-3 text-sm font-semibold uppercase tracking-widest hover:bg-black hover:text-white transition-all duration-300">Shop
+                    Collection</a>
+            </div>
+        </div>
+
+        <!-- Item 2: New Bags -->
+        <div class="relative group overflow-hidden">
+            <!-- Note: Using a likely available image, assuming rylko-bags-desktop-9c.jpg exists -->
+            <img src="../demo/wonder-theme-fashion_files/lanti.jpg" alt="New Bags"
+                class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+            <div class="absolute inset-0 bg-black/10"></div>
+            <div class="absolute inset-0 flex flex-col items-center justify-end pb-16 md:pb-24">
+                <h2 class="text-3xl md:text-5xl font-light text-white mb-6 uppercase tracking-wider">New Bags</h2>
+                <a href="https://www.example.com" target="_blank"
+                    class="bg-white text-black px-8 py-3 text-sm font-semibold uppercase tracking-widest hover:bg-black hover:text-white transition-all duration-300">Shop
+                    New Arrivals</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section: Curated from the House -->
+    <section class="py-16 md:py-24 bg-[#f1f1f1]">
+        <div class="container mx-auto px-4 md:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl md:text-4xl font-normal uppercase tracking-wide">Curated from the House</h2>
+            </div>
+
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <!-- Item 1 -->
+                <div class="relative aspect-[3/4] group overflow-hidden cursor-pointer">
+                    <img src="../demo/wonder-theme-fashion_files/lalupa.jpg" alt="Curated 1"
+                        class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+                    <div class="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300">
+                    </div>
+                    <a href="https://www.example.com" target="_blank" class="absolute inset-0 z-10"></a>
+                </div>
+                <!-- Item 2 -->
+                <div class="relative aspect-[3/4] group overflow-hidden cursor-pointer">
+                    <img src="../demo/wonder-theme-fashion_files/lenitif.jpg" alt="Curated 2"
+                        class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+                    <div class="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300">
+                    </div>
+                    <a href="https://www.example.com" target="_blank" class="absolute inset-0 z-10"></a>
+                </div>
+                <!-- Item 3 -->
+                <div class="relative aspect-[3/4] group overflow-hidden cursor-pointer">
+                    <img src="../demo/wonder-theme-fashion_files/figl.jpg" alt="Curated 3"
+                        class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+                    <div class="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300">
+                    </div>
+                    <a href="https://www.example.com" target="_blank" class="absolute inset-0 z-10"></a>
+                </div>
+                <!-- Item 4 -->
+                <div class="relative aspect-[3/4] group overflow-hidden cursor-pointer">
+                    <img src="../demo/wonder-theme-fashion_files/beauty.jpg" alt="Curated 4"
+                        class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+                    <div class="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300">
+                    </div>
+                    <a href="https://www.example.com" target="_blank" class="absolute inset-0 z-10"></a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 5: Shoppable Video -->
+    <section class="relative h-[60vh] md:h-[80vh] bg-gray-100 overflow-hidden flex items-center justify-center group">
+        <div class="absolute inset-0">
+            <!-- Placeholder for video background -->
+            <img src="../demo/wonder-theme-fashion_files/beauty.jpg" alt="Shoppable Video Cover"
+                class="w-full h-full object-cover opacity-90 transition-transform duration-700 group-hover:scale-105">
+            <div class="absolute inset-0 bg-black/20"></div>
+        </div>
+        <button
+            class="relative z-10 w-20 h-20 bg-white rounded-full flex items-center justify-center hover:scale-110 transition-transform duration-300 shadow-lg"
+            aria-label="Play Video">
+            <i data-lucide="play" class="w-8 h-8 fill-black ml-1"></i>
+        </button>
+    </section>
+
+    <!-- Section 6: Rich Text (Campaign Styles) -->
+    <section class="py-20 md:py-32 text-center px-4">
+        <div class="max-w-3xl mx-auto animate-fade-in-up">
+            <p class="uppercase tracking-[0.2em] text-sm text-gray-500 mb-4">Autumn / Winter</p>
+            <h2 class="text-4xl md:text-6xl font-light uppercase tracking-wide">Campaign Styles</h2>
+        </div>
+    </section>
+
+    <!-- Section 7: Multicolumn Slider -->
+    <section class="py-12 overflow-hidden">
+        <div class="container mx-auto px-4 md:px-8">
+            <div class="flex gap-4 md:gap-8 overflow-x-auto pb-8 snap-x scrollbar-hide">
+                <!-- Slide 1 -->
+                <div
+                    class="min-w-[80vw] md:min-w-[30vw] aspect-[3/4] relative snap-center group cursor-pointer shrink-0">
+                    <img src="../demo/wonder-theme-fashion_files/main-column-1.jpg" alt="Campaign 1"
+                        class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+                    <div class="absolute inset-0 bg-black/10 group-hover:bg-black/20 transition-colors"></div>
+                    <div class="absolute bottom-8 left-8 text-white">
+                        <h3 class="text-2xl font-light uppercase">Elegant</h3>
+                        <a href="https://www.example.com" target="_blank"
+                            class="inline-block mt-2 text-sm border-b border-white pb-1 hover:text-gray-200">Shop
+                            Now</a>
+                    </div>
+                </div>
+                <!-- Slide 2 -->
+                <div
+                    class="min-w-[80vw] md:min-w-[30vw] aspect-[3/4] relative snap-center group cursor-pointer shrink-0">
+                    <img src="../demo/wonder-theme-fashion_files/main-column-3.jpg" alt="Campaign 2"
+                        class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+                    <div class="absolute inset-0 bg-black/10 group-hover:bg-black/20 transition-colors"></div>
+                    <div class="absolute bottom-8 left-8 text-white">
+                        <h3 class="text-2xl font-light uppercase">Casual</h3>
+                        <a href="https://www.example.com" target="_blank"
+                            class="inline-block mt-2 text-sm border-b border-white pb-1 hover:text-gray-200">Shop
+                            Now</a>
+                    </div>
+                </div>
+                <!-- Slide 3 -->
+                <div
+                    class="min-w-[80vw] md:min-w-[30vw] aspect-[3/4] relative snap-center group cursor-pointer shrink-0">
+                    <img src="../demo/wonder-theme-fashion_files/left-1.jpg" alt="Campaign 3"
+                        class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+                    <div class="absolute inset-0 bg-black/10 group-hover:bg-black/20 transition-colors"></div>
+                    <div class="absolute bottom-8 left-8 text-white">
+                        <h3 class="text-2xl font-light uppercase">Urban</h3>
+                        <a href="https://www.example.com" target="_blank"
+                            class="inline-block mt-2 text-sm border-b border-white pb-1 hover:text-gray-200">Shop
+                            Now</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 8: Parallax -->
+    <section
+        class="relative h-[60vh] md:h-[70vh] flex items-center justify-center bg-fixed bg-center bg-cover overflow-hidden"
+        style="background-image: url('../demo/wonder-theme-fashion_files/BANNER-wonder.jpg');">
+        <div class="absolute inset-0 bg-black/40"></div>
+        <div class="relative z-10 text-center text-white px-4">
+            <p class="uppercase tracking-[0.2em] mb-4 text-sm md:text-base animate-fade-in-up">Discover the best deal
+            </p>
+            <h2 class="text-4xl md:text-7xl font-bold uppercase mb-8 leading-tight animate-fade-in-up"
+                style="animation-delay: 0.2s;">SALE up to 50%<br><span class="font-light text-3xl md:text-5xl">for all
+                    collections</span></h2>
+            <a href="https://www.example.com" target="_blank"
+                class="inline-block bg-white text-black px-10 py-4 text-sm font-bold uppercase tracking-widest hover:bg-black hover:text-white transition-all duration-300 animate-fade-in-up"
+                style="animation-delay: 0.4s;">Check Now</a>
+        </div>
+    </section>
+
+    <!-- Section 9: Full Width Video/Image -->
+    <section class="h-screen w-full relative overflow-hidden">
+        <img src="../demo/wonder-theme-fashion_files/mobile-2.jpg" alt="Full Width Visual"
+            class="w-full h-full object-cover md:object-center">
+        <div class="absolute inset-0 bg-black/10"></div>
+        <div class="absolute bottom-16 left-8 md:bottom-24 md:left-24 text-white max-w-xl">
+            <h2 class="text-4xl md:text-6xl font-light mb-6">Fall into Comfort</h2>
+            <a href="https://www.example.com" target="_blank"
+                class="inline-block border border-white text-white px-8 py-3 uppercase tracking-widest hover:bg-white hover:text-black transition-colors">View
+                Lookbook</a>
+        </div>
+    </section>
+
+    <!-- Section 10: Rich Text (Inspiration) -->
+    <section class="py-20 text-center px-4 bg-white">
+        <div class="max-w-3xl mx-auto">
+            <p class="uppercase tracking-[0.2em] text-sm text-gray-500 mb-4">Tik Tok</p>
+            <h2 class="text-4xl md:text-5xl font-light uppercase tracking-wide">Inspiration</h2>
+        </div>
+    </section>
+
+    <!-- Section 11: Video Reels (Instagram Style) -->
+    <section class="py-12 bg-gray-50">
+        <div class="container mx-auto px-4 md:px-8">
+            <div class="flex gap-4 overflow-x-auto pb-4 snap-x scrollbar-hide">
+                <!-- Reel 1 -->
+                <div
+                    class="min-w-[280px] md:min-w-[320px] aspect-[9/16] bg-gray-200 snap-center relative rounded-xl overflow-hidden cursor-pointer group">
+                    <img src="../demo/wonder-theme-fashion_files/cm6903-sukienka-na-jedno-ramie-z-falbana-brudno-rozowa.jpg"
+                        alt="Reel 1"
+                        class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                    <div class="absolute inset-0 bg-gradient-to-b from-transparent to-black/60 opacity-60"></div>
+                    <div class="absolute bottom-6 left-6 text-white">
+                        <p class="font-medium text-lg">New Arrivals</p>
+                        <p class="text-sm opacity-80">Shop the look</p>
+                    </div>
+                    <div class="absolute top-4 right-4 bg-white/20 backdrop-blur-sm p-2 rounded-full">
+                        <i data-lucide="play" class="w-4 h-4 text-white fill-white"></i>
+                    </div>
+                </div>
+                <!-- Reel 2 -->
+                <div
+                    class="min-w-[280px] md:min-w-[320px] aspect-[9/16] bg-gray-200 snap-center relative rounded-xl overflow-hidden cursor-pointer group">
+                    <img src="../demo/wonder-theme-fashion_files/cm6844-sukienka-midi-z-szerokimi-rekawami-czarna_1.jpg"
+                        alt="Reel 2"
+                        class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                    <div class="absolute inset-0 bg-gradient-to-b from-transparent to-black/60 opacity-60"></div>
+                    <div class="absolute bottom-6 left-6 text-white">
+                        <p class="font-medium text-lg">Evening Wear</p>
+                        <p class="text-sm opacity-80">Shop the look</p>
+                    </div>
+                </div>
+                <!-- Reel 3 -->
+                <div
+                    class="min-w-[280px] md:min-w-[320px] aspect-[9/16] bg-gray-200 snap-center relative rounded-xl overflow-hidden cursor-pointer group">
+                    <img src="../demo/wonder-theme-fashion_files/cm6844-sukienka-midi-z-szerokimi-rekawami-czerwona.jpg"
+                        alt="Reel 3"
+                        class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                    <div class="absolute inset-0 bg-gradient-to-b from-transparent to-black/60 opacity-60"></div>
+                    <div class="absolute bottom-6 left-6 text-white">
+                        <p class="font-medium text-lg">Red Carpet</p>
+                        <p class="text-sm opacity-80">Shop the look</p>
+                    </div>
+                </div>
+                <!-- Reel 4 -->
+                <div
+                    class="min-w-[280px] md:min-w-[320px] aspect-[9/16] bg-gray-200 snap-center relative rounded-xl overflow-hidden cursor-pointer group">
+                    <img src="../demo/wonder-theme-fashion_files/dress-tied-image-hover.jpg" alt="Reel 4"
+                        class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                    <div class="absolute inset-0 bg-gradient-to-b from-transparent to-black/60 opacity-60"></div>
+                    <div class="absolute bottom-6 left-6 text-white">
+                        <p class="font-medium text-lg">Summer Vibes</p>
+                        <p class="text-sm opacity-80">Shop the look</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 12: Brands Marquee -->
+    <section class="py-16 border-t border-gray-100 overflow-hidden">
+        <div class="container mx-auto px-4">
+            <div
+                class="flex flex-wrap justify-center md:justify-between items-center gap-8 md:gap-12 grayscale opacity-60 hover:opacity-100 transition-opacity duration-300">
+                <img src="../demo/wonder-theme-fashion_files/lalupa.jpg" alt="Brand 1"
+                    class="h-8 md:h-10 w-auto object-contain">
+                <img src="../demo/wonder-theme-fashion_files/lenitif.jpg" alt="Brand 2"
+                    class="h-8 md:h-10 w-auto object-contain">
+                <img src="../demo/wonder-theme-fashion_files/figl.jpg" alt="Brand 3"
+                    class="h-8 md:h-10 w-auto object-contain">
+                <img src="../demo/wonder-theme-fashion_files/lanti.jpg" alt="Brand 4"
+                    class="h-8 md:h-10 w-auto object-contain">
+                <img src="../demo/wonder-theme-fashion_files/Untitled-9.jpg" alt="Brand 5"
+                    class="h-8 md:h-10 w-auto object-contain">
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 13: Blog Posts -->
+    <section class="py-20 md:py-24 px-4 md:px-8">
+        <div class="container mx-auto">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl md:text-4xl font-normal uppercase tracking-wide">Journal</h2>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
+                <!-- Article 1 -->
+                <div class="group cursor-pointer">
+                    <div class="overflow-hidden mb-6 aspect-[4/3]">
+                        <img src="../demo/wonder-theme-fashion_files/blog-2-article-2-wonder-couture.jpg" alt="Blog 1"
+                            class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                    </div>
+                    <div class="text-center md:text-left">
+                        <p class="text-xs text-gray-500 uppercase tracking-widest mb-2">September 19, 2024</p>
+                        <h3 class="text-xl font-medium mb-3 group-hover:text-primary transition-colors">How to dress for
+                            the office?</h3>
+                        <a href="https://www.example.com" target="_blank"
+                            class="inline-block text-sm border-b border-black pb-1 uppercase tracking-wider hover:text-primary hover:border-primary transition-colors">Read
+                            More</a>
+                    </div>
+                </div>
+                <!-- Article 2 -->
+                <div class="group cursor-pointer">
+                    <div class="overflow-hidden mb-6 aspect-[4/3]">
+                        <img src="../demo/wonder-theme-fashion_files/blog-3-article-3-wonder-couture.jpg" alt="Blog 2"
+                            class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                    </div>
+                    <div class="text-center md:text-left">
+                        <p class="text-xs text-gray-500 uppercase tracking-widest mb-2">September 18, 2024</p>
+                        <h3 class="text-xl font-medium mb-3 group-hover:text-primary transition-colors">Autumn
+                            Essentials</h3>
+                        <a href="https://www.example.com" target="_blank"
+                            class="inline-block text-sm border-b border-black pb-1 uppercase tracking-wider hover:text-primary hover:border-primary transition-colors">Read
+                            More</a>
+                    </div>
+                </div>
+                <!-- Article 3 -->
+                <div class="group cursor-pointer">
+                    <div class="overflow-hidden mb-6 aspect-[4/3]">
+                        <img src="../demo/wonder-theme-fashion_files/blog-5.jpg" alt="Blog 3"
+                            class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                    </div>
+                    <div class="text-center md:text-left">
+                        <p class="text-xs text-gray-500 uppercase tracking-widest mb-2">September 15, 2024</p>
+                        <h3 class="text-xl font-medium mb-3 group-hover:text-primary transition-colors">Style Guide 2024
+                        </h3>
+                        <a href="https://www.example.com" target="_blank"
+                            class="inline-block text-sm border-b border-black pb-1 uppercase tracking-wider hover:text-primary hover:border-primary transition-colors">Read
+                            More</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 14: Marquee Text/Images (Final Touch) -->
+    <section class="py-4 bg-black text-white overflow-hidden whitespace-nowrap">
+        <div class="animate-marquee inline-block">
+            <span class="text-sm font-bold uppercase tracking-[0.2em] mx-8">Free Shipping on orders over $100</span>
+            <span class="text-sm font-bold uppercase tracking-[0.2em] mx-8">New Arrivals Daily</span>
+            <span class="text-sm font-bold uppercase tracking-[0.2em] mx-8">Worldwide Shipping</span>
+            <span class="text-sm font-bold uppercase tracking-[0.2em] mx-8">Secure Payment</span>
+            <span class="text-sm font-bold uppercase tracking-[0.2em] mx-8">Free Shipping on orders over $100</span>
+            <span class="text-sm font-bold uppercase tracking-[0.2em] mx-8">New Arrivals Daily</span>
+            <span class="text-sm font-bold uppercase tracking-[0.2em] mx-8">Worldwide Shipping</span>
+            <span class="text-sm font-bold uppercase tracking-[0.2em] mx-8">Secure Payment</span>
+        </div>
+    </section>
+
+    <!-- Mobile Menu Overlay -->
+    <div id="mobile-menu"
+        class="fixed inset-0 z-40 bg-white transform translate-x-full transition-transform duration-300 md:hidden flex flex-col pt-24 px-8">
+        <nav class="flex flex-col space-y-6 text-xl font-medium uppercase tracking-wide">
+            <a href="https://www.example.com" target="_blank" class="hover:text-primary transition-colors">New In</a>
+            <a href="https://www.example.com" target="_blank" class="hover:text-primary transition-colors">Clothing</a>
+            <a href="https://www.example.com" target="_blank" class="hover:text-primary transition-colors">Shoes</a>
+            <a href="https://www.example.com" target="_blank"
+                class="hover:text-primary transition-colors">Accessories</a>
+            <a href="https://www.example.com" target="_blank"
+                class="text-accent-red hover:text-red-600 transition-colors">Sale</a>
+        </nav>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-brand-black text-white py-12 border-t border-gray-800">
+        <div class="container mx-auto px-4 md:px-8 grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div>
+                <img src="../demo/wonder-theme-fashion_files/velour-logo-v3.svg" alt="Velour"
+                    class="w-32 mb-6 invert brightness-0 grayscale-0 filter hue-rotate-180">
+                <!-- Note: Logo might need inversion if it's black text -->
+                <p class="text-gray-400 text-sm">Elevating fashion with comfort and style. Your daily dose of elegance.
+                </p>
+            </div>
+            <div>
+                <h4 class="text-lg font-medium mb-4">Shop</h4>
+                <ul class="space-y-2 text-sm text-gray-400">
+                    <li><a href="https://www.example.com" target="_blank" class="hover:text-white transition-colors">New
+                            Arrivals</a></li>
+                    <li><a href="https://www.example.com" target="_blank"
+                            class="hover:text-white transition-colors">Clothing</a></li>
+                    <li><a href="https://www.example.com" target="_blank"
+                            class="hover:text-white transition-colors">Accessories</a></li>
+                    <li><a href="https://www.example.com" target="_blank"
+                            class="hover:text-white transition-colors">Sale</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="text-lg font-medium mb-4">Help</h4>
+                <ul class="space-y-2 text-sm text-gray-400">
+                    <li><a href="https://www.example.com" target="_blank"
+                            class="hover:text-white transition-colors">Shipping & Returns</a></li>
+                    <li><a href="https://www.example.com" target="_blank"
+                            class="hover:text-white transition-colors">FAQ</a></li>
+                    <li><a href="https://www.example.com" target="_blank"
+                            class="hover:text-white transition-colors">Contact Us</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="text-lg font-medium mb-4">Newsletter</h4>
+                <p class="text-gray-400 text-sm mb-4">Subscribe to get special offers, free giveaways, and
+                    once-in-a-lifetime deals.</p>
+                <form class="flex">
+                    <input type="email" placeholder="Enter your email"
+                        class="bg-gray-800 text-white px-4 py-2 w-full focus:outline-none focus:ring-1 focus:ring-primary">
+                    <button type="submit"
+                        class="bg-white text-black px-4 py-2 uppercase font-bold hover:bg-gray-200 transition-colors">Join</button>
+                </form>
+            </div>
+        </div>
+        <div
+            class="container mx-auto px-4 md:px-8 mt-12 pt-8 border-t border-gray-800 text-center text-gray-500 text-xs">
+            &copy; 2024 Wonder Theme Fashion. All rights reserved.
+        </div>
+    </footer>
+
+    <!-- Custom Script -->
+    <script src="script.js"></script>
+    <script>
+        // Initialize Lucide Icons
+        lucide.createIcons();
+    </script>
+</body>
+
+</html>
