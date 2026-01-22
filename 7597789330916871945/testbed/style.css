@@ -1,0 +1,195 @@
+/* Custom styles for the website */
+
+/* Base styles */
+body {
+  font-family: 'Work Sans', sans-serif;
+  color: #333;
+  background-color: #F2EFEC;
+  overflow-x: hidden;
+}
+
+/* Typography */
+.font-poppins {
+  font-family: 'Poppins', sans-serif;
+}
+
+.font-work-sans {
+  font-family: 'Work Sans', sans-serif;
+}
+
+/* Animation classes */
+.animate-on-scroll {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+
+.animate-in {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Line growth animation */
+.hover-line {
+  position: relative;
+  cursor: pointer;
+}
+
+.hover-line .line {
+  transition: width 0.3s ease-out;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+  
+  h1 {
+    font-size: 2.5rem !important;
+  }
+  
+  h2 {
+    font-size: 2rem !important;
+  }
+}
+
+/* Hero section special effects */
+#hero-container h1 {
+  position: relative;
+  display: inline-block;
+}
+
+/* Grid pattern animation */
+#hero-container .grid {
+  transition: transform 0.1s ease-out;
+}
+
+/* Form styles */
+form input,
+form textarea {
+  transition: all 0.3s ease;
+}
+
+form input:focus,
+form textarea:focus {
+  border-color: #00ABEB;
+  box-shadow: 0 0 0 3px rgba(0, 171, 235, 0.1);
+}
+
+/* Button styles */
+button {
+  transition: all 0.3s ease;
+}
+
+button:hover {
+  box-shadow: 0 4px 12px rgba(0, 171, 235, 0.3);
+}
+
+/* Portfolio card animations */
+#portfolio-container .grid > div {
+  transition: all 0.3s ease;
+}
+
+#portfolio-container .grid > div:hover {
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+/* Navigation styles */
+nav {
+  transition: all 0.3s ease;
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Loading animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+body {
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+/* List item animations */
+#approach-container li {
+  transition: all 0.3s ease;
+}
+
+#approach-container li:hover {
+  transform: translateX(5px);
+}
+
+/* Responsive adjustments for hero section */
+@media (max-width: 640px) {
+  #hero-container h1 {
+    font-size: 2rem !important;
+  }
+}
+
+/* Ensure proper spacing */
+section {
+  scroll-margin-top: 100px;
+}
+
+/* Mobile menu styles */
+.mobile-menu {
+  display: none;
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 80%;
+  height: 100vh;
+  background-color: #F2EFEC;
+  z-index: 60;
+  padding: 2rem;
+  box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+.mobile-menu.active {
+  display: block;
+}
+
+.mobile-menu-close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+.mobile-menu ul {
+  list-style: none;
+  padding: 0;
+  margin-top: 4rem;
+}
+
+.mobile-menu ul li {
+  margin-bottom: 1.5rem;
+}
+
+.mobile-menu ul li a {
+  text-decoration: none;
+  color: #333;
+  font-size: 1.2rem;
+  font-weight: 500;
+}
