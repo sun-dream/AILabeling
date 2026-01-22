@@ -1,94 +1,100 @@
-// 主脚本文件，用于初始化和加载各个模块
-document.addEventListener('DOMContentLoaded', function() {
-  // 加载导航模块
-  loadModule('nav');
-  
-  // 加载Hero模块
-  loadModule('hero');
-  
-  // 加载服务模块
-  loadModule('services');
-  
-  // 加载方法模块
-  loadModule('approach');
-  
-  // 加载定价模块
-  loadModule('pricing');
-  
-  // 加载作品集模块
-  loadModule('portfolio');
-  
-  // 加载联系模块
-  loadModule('contact');
-  
-  // 初始化动画效果
-  initAnimations();
-});
+// Load components
+async function loadComponents() {
+    const components = [
+        { id: 'header', path: 'components/header.html' },
+        { id: 'hero', path: 'components/hero.html' },
+        { id: 'services', path: 'components/services.html' },
+        { id: 'approach', path: 'components/approach.html' },
+        { id: 'portfolio', path: 'components/portfolio.html' },
+        { id: 'contact', path: 'components/contact.html' },
+        { id: 'footer', path: 'components/footer.html' }
+    ];
 
-// 加载模块函数
-function loadModule(moduleName) {
-  fetch(`./components/${moduleName}.js`)
-    .then(response => response.text())
-    .then(html => {
-      const container = document.getElementById(`${moduleName}-container`);
-      if (container) {
-        container.innerHTML = html;
-      }
-    })
-    .catch(error => console.error(`Error loading ${moduleName} module:`, error));
-}
-
-// 初始化动画效果
-function initAnimations() {
-  // 平滑滚动
-  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function (e) {
-      e.preventDefault();
-      document.querySelector(this.getAttribute('href')).scrollIntoView({
-        behavior: 'smooth'
-      });
-    });
-  });
-  
-  // 滚动动画
-  const observerOptions = {
-    threshold: 0.1,
-    rootMargin: '0px 0px -50px 0px'
-  };
-  
-  const observer = new IntersectionObserver(function(entries) {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('animate-in');
-      }
-    });
-  }, observerOptions);
-  
-  // 观察所有需要动画的元素
-  document.querySelectorAll('.animate-on-scroll').forEach(el => {
-    observer.observe(el);
-  });
-  
-  // 导航栏滚动效果
-  window.addEventListener('scroll', function() {
-    const nav = document.querySelector('nav');
-    if (window.scrollY > 50) {
-      nav.classList.add('bg-opacity-90', 'backdrop-blur-sm');
-    } else {
-      nav.classList.remove('bg-opacity-90', 'backdrop-blur-sm');
+    for (const component of components) {
+        try {
+            const response = await fetch(component.path);
+            if (!response.ok) {
+                throw new Error(`Failed to load ${component.path}`);
+            }
+            const html = await response.text();
+            const element = document.getElementById(component.id);
+            if (element) {
+                element.innerHTML = html;
+            }
+        } catch (error) {
+            console.error('Error loading component:', error);
+        }
     }
-  });
-  
-  // 线条生长效果
-  document.querySelectorAll('.hover-line').forEach(element => {
-    element.addEventListener('mouseenter', function() {
-      this.querySelector('.line').classList.add('w-full');
-      this.querySelector('.line').classList.remove('w-0');
-    });
-    
-    element.addEventListener('mouseleave', function() {
-      this.querySelector('.line').classList.remove('w-full');
-      this.querySelector('.line').classList.add('w-0');
-    });
-  });
+
+    // Initialize Lucide icons after components are loaded
+    setTimeout(() => {
+        lucide.createIcons();
+    }, 100);
 }
+
+// Scroll animation
+function initScrollAnimations() {
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('active');
+            }
+        });
+    }, observerOptions);
+
+    // Observe all elements with fade-in or spring-bounce classes
+    document.querySelectorAll('.fade-in, .spring-bounce').forEach(el => {
+        observer.observe(el);
+    });
+}
+
+
+// Dot grid parallax effect
+function initDotGridParallax() {
+    window.addEventListener('scroll', () => {
+        const scrollY = window.scrollY;
+        const dotGrids = document.querySelectorAll('.dot-grid');
+        
+        dotGrids.forEach(grid => {
+            const speed = 0.02;
+            grid.style.transform = `translateY(${scrollY * speed}px)`;
+        });
+    });
+}
+
+// Smooth scroll for anchor links
+function initSmoothScroll() {
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            
+            const targetId = this.getAttribute('href');
+            if (targetId === '#') return;
+            
+            const targetElement = document.querySelector(targetId);
+            if (targetElement) {
+                targetElement.scrollIntoView({
+                    behavior: 'smooth'
+                });
+            }
+        });
+    });
+}
+
+// Initialize all functions
+document.addEventListener('DOMContentLoaded', async () => {
+    await loadComponents();
+    
+    // Re-initialize functions after components are loaded
+    setTimeout(() => {
+        initScrollAnimations();
+        initMobileMenu();
+        initDotGridParallax();
+        initSmoothScroll();
+    }, 200);
+});

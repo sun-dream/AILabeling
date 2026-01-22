@@ -1,60 +1,60 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>DIGISTUDIO - Custom Crafted Websites & Innovative Web Applications</title>
-  <!-- Tailwind CSS v3 -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Lucide Icons -->
-  <script src="https://unpkg.com/lucide@latest"></script>
-  <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Work+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
-  <!-- Custom CSS -->
-  <link rel="stylesheet" href="style.css">
-  <!-- Tailwind Config -->
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            primary: '#00ABEB',
-            background: '#F2EFEC',
-            dark: '#141414',
-            text: '#666666'
-          },
-          fontFamily: {
-            poppins: ['Poppins', 'sans-serif'],
-            'work-sans': ['Work Sans', 'sans-serif']
-          }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Agency</title>
+    <!-- Tailwind CSS v3 -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Custom Tailwind Config -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#00ABEB',
+                        dark: '#141414',
+                        light: '#F2EFEC',
+                        gray: '#666666'
+                    },
+                    fontFamily: {
+                        poppins: ['Poppins', 'sans-serif'],
+                        worksans: ['Work Sans', 'sans-serif']
+                    }
+                }
+            }
         }
-      }
-    }
-  </script>
+    </script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Work+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
 </head>
-<body class="bg-[#F2EFEC]">
-  <!-- Navigation -->
-  <div id="nav-container"></div>
-  
-  <!-- Hero Section -->
-  <div id="hero-container"></div>
-  
-  <!-- Services Section -->
-  <div id="services-container"></div>
-  
-  <!-- Approach Section -->
-  <div id="approach-container"></div>
-  
-  <!-- Pricing Section -->
-  <div id="pricing-container"></div>
-  
-  <!-- Portfolio Section -->
-  <div id="portfolio-container"></div>
-  
-  <!-- Contact Section -->
-  <div id="contact-container"></div>
-  
-  <!-- Main Script -->
-  <script src="script.js"></script>
+<body class="bg-light font-worksans text-gray">
+    <!-- Header -->
+    <header id="header"></header>
+
+    <!-- Hero Section -->
+    <section id="hero"></section>
+
+    <!-- Services Section -->
+    <section id="services"></section>
+
+    <!-- Approach Section -->
+    <section id="approach"></section>
+
+    <!-- Portfolio Section -->
+    <section id="portfolio"></section>
+
+    <!-- Contact Section -->
+    <section id="contact"></section>
+
+    <!-- Footer -->
+    <footer id="footer"></footer>
+
+    <!-- JavaScript -->
+    <script src="script.js"></script>
 </body>
 </html>
