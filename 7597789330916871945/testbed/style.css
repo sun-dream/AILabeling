@@ -1,3 +1,30 @@
+:root {
+    --white: #fafafa;
+    --black: #161616;
+    --black-light: #1d2d35;
+    --beige: #f5f5dc;
+    --accent-blue: #00aeef;
+    --white-pastel: #f1edeb;
+    --dot-bg: #f1edeb;
+    --dot-color: #1d2d35;
+    --dot-size: 0.07em;
+    --dot-space: 20px;
+}
+/* 通用箭头样式 */
+.nav-arrow {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1024 1024'%3E%3Cpath d='M512 170.666667a42.666667 42.666667 0 0 1 42.666667 42.666666v494.336l183.168-183.168a42.666667 42.666667 0 1 1 60.330666 60.330667l-256 256a42.666667 42.666667 0 0 1-60.330666 0l-256-256a42.666667 42.666667 0 1 1 60.330666-60.330667L469.333333 707.669333V213.333333a42.666667 42.666667 0 0 1 42.666667-42.666666z' fill='%23333333'/%3E%3C/svg%3E");
+    width: 30px;
+    height: 30px;
+    opacity: 0;
+    transform: translate(-50%, -10px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.group:hover .nav-arrow {
+    opacity: 1;
+    transform: translate(-50%, 0);
+}
+
 /* Custom Styles */
 .hero-title {
     font-size: clamp(2.5rem, 8vw, 6rem);
@@ -18,8 +45,9 @@ html {
 
 /* Dot grid pattern */
 .dot-grid {
-    background-image: radial-gradient(rgba(0, 0, 0, 0.1) 1px, transparent 1px);
-    background-size: 20px 20px;
+    background:linear-gradient(90deg, var(--dot-bg) calc(var(--dot-space) - var(--dot-size)), transparent 1%) center / var(--dot-space) var(--dot-space),
+		linear-gradient(var(--dot-bg) calc(var(--dot-space) - var(--dot-size)), transparent 1%) center / var(--dot-space) var(--dot-space),
+		var(--dot-color)
 }
 
 /* Hover line effect */
@@ -102,4 +130,9 @@ html {
     outline: none;
     border-color: #00ABEB;
     box-shadow: 0 0 0 3px rgba(0, 171, 235, 0.1);
+}
+.approach-bg{
+    background-color: var(--white-pastel);
+    background-size: 14px 14px;
+    background-image: repeating-linear-gradient(-45deg, #1d2d35 0, #1d2d35 0.02em, #f1edeb 0, #f1edeb 50%);
 }

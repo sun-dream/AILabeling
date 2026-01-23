@@ -34,4 +34,9 @@
 
 ## 5. 生成的资源链接
 *   **Logo 生成链接**：`https://aidp.juejin.cn/agentic/api/v1/tool/text2image?prompt=Bold+sans-serif+letters+RLCR+in+2x2+grid+on+black+background+Top-left+Cyan+R+with+water+drop+Top-right+White+L+Bottom-left+White+C+Bottom-right+Grey+R&width=80&height=80`
-
+*   **ViDDOO Logo 生成链接**：`https://aidp.juejin.cn/agentic/api/v1/tool/text2image?prompt=ViDDOO%20logo%20white%20text%20stylized%20on%20black%20background&width=300&height=58`
+*   **TRANSLINES Logo 生成链接**：`https://aidp.juejin.cn/agentic/api/v1/tool/text2image?prompt=TRANSLINES%20logo%20truck%20icon%20white%20and%20grey%20on%20black%20background&width=233&height=150`
+*   **transmotion Logo 生成链接**：`https://aidp.juejin.cn/agentic/api/v1/tool/text2image?prompt=transmotion%20logo%20white%20text%20modern%20on%20black%20background&width=300&height=40`
+*   **FlytStikr Logo 生成链接**：`https://aidp.juejin.cn/agentic/api/v1/tool/text2image?prompt=FlytStikr%20logo%20white%20text%20paper%20plane%20icon%20on%20black%20background&width=227&height=150`
+*   **Laura Bublé Logo 生成链接**：`https://aidp.juejin.cn/agentic/api/v1/tool/text2image?prompt=Laura%20Buble%20REALTOR%20logo%20black%20serif%20text%20on%20white%20background&width=150&height=150`
+*   **Simplex Logo 生成链接**：`https://aidp.juejin.cn/agentic/api/v1/tool/text2image?prompt=Simplex%20logo%20white%20thin%20text%20minimal%20on%20black%20background&width=300&height=71`

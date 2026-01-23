@@ -1,17 +1,37 @@
-<section class="pt-32 pb-20 md:pt-40 md:pb-28 dot-grid">
+<section class="h-screen flex items-center justify-center dot-grid relative">
     <div class="container mx-auto px-4 md:px-8">
         <div class="max-w-5xl mx-auto text-center">
-            <h1 class="hero-title font-poppins font-bold text-dark mb-8 relative inline-block">
-                <span class="relative z-10">Custom Crafted Websites &</span>
-                <br>
-                <span class="relative z-10">Innovative Web Applications</span>
-                <!-- Underline effect -->
-                <span class="absolute bottom-8 left-1/4 right-1/4 h-3 bg-primary/20 z-0"></span>
+            <!-- Brand Title with Shadow Effect -->
+            <div class="relative inline-block">
+                <h2
+                    class="font-poppins font-black text-4xl md:text-6xl uppercase tracking-wider relative z-20 text-primary">
+                    Rainland Creatives
+                </h2>
+                <h2 class="font-poppins font-black text-4xl md:text-6xl uppercase tracking-wider absolute top-[1px] left-[1px] text-white z-10 select-none w-full"
+                    aria-hidden="true">
+                    Rainland Creatives
+                </h2>
+                <h2 class="font-poppins font-black text-4xl md:text-6xl uppercase tracking-wider absolute top-[5px] left-[5px] text-dark z-0 select-none w-full"
+                    aria-hidden="true">
+                    Rainland Creatives
+                </h2>
+            </div>
+
+            <!-- Main Headline -->
+            <h1
+                class="hero-title py-8 font-poppins font-bold text-3xl md:text-5xl text-dark mb-10 leading-normal md:leading-normal">
+                Custom Crafted<br class="hidden md:block">
+                Websites & Innovative<br class="hidden md:block">
+                Web Applications
             </h1>
+
+            <!-- CTA Link -->
             <div class="flex justify-center">
-                <a href="#services" class="hover-line text-dark font-medium text-lg inline-flex items-center group">
+                <a href="#services"
+                    class="relative group py-1 px-1 text-dark font-bold text-lg hover:text-primary transition-colors tracking-wide">
                     Learn More
-                    <i data-lucide="arrow-right" class="ml-2 h-5 w-5 transition-transform duration-300 group-hover:translate-x-1"></i>
+                    <span class="absolute bottom-0 left-0 h-1 bg-primary transition-all duration-300 w-full"></span>
+                    <span class="absolute top-full left-1/2 mt-1 nav-arrow"></span>
                 </a>
             </div>
         </div>

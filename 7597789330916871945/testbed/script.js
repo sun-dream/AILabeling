@@ -5,9 +5,9 @@ async function loadComponents() {
         { id: 'hero', path: 'components/hero.html' },
         { id: 'services', path: 'components/services.html' },
         { id: 'approach', path: 'components/approach.html' },
+        { id: 'pricing', path: 'components/pricing.html' },
         { id: 'portfolio', path: 'components/portfolio.html' },
         { id: 'contact', path: 'components/contact.html' },
-        { id: 'footer', path: 'components/footer.html' }
     ];
 
     for (const component of components) {
@@ -59,7 +59,7 @@ function initDotGridParallax() {
     window.addEventListener('scroll', () => {
         const scrollY = window.scrollY;
         const dotGrids = document.querySelectorAll('.dot-grid');
-        
+
         dotGrids.forEach(grid => {
             const speed = 0.02;
             grid.style.transform = `translateY(${scrollY * speed}px)`;
@@ -72,10 +72,10 @@ function initSmoothScroll() {
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
             e.preventDefault();
-            
+
             const targetId = this.getAttribute('href');
             if (targetId === '#') return;
-            
+
             const targetElement = document.querySelector(targetId);
             if (targetElement) {
                 targetElement.scrollIntoView({
@@ -89,11 +89,10 @@ function initSmoothScroll() {
 // Initialize all functions
 document.addEventListener('DOMContentLoaded', async () => {
     await loadComponents();
-    
+
     // Re-initialize functions after components are loaded
     setTimeout(() => {
         initScrollAnimations();
-        initMobileMenu();
         initDotGridParallax();
         initSmoothScroll();
     }, 200);
