@@ -1,0 +1,19 @@
+| 组件文件名                | 核心功能说明                  |
+|---------------------------|-------------------------------|
+| header.html               | （导航）                      |
+| banner.html               | （banner）                    |
+| consultation-form.html    | （咨询表单）                  |
+| service-intro-pic.html    | （服务介绍图片展示）          |
+| service-intro-text.html   | （服务介绍文字说明）          |
+| contact-card-phone.html   | （电话联系卡片）              |
+| fire-repair.html          | （火灾修复服务展示）          |
+| repair-service.html       | （修复服务详情）              |
+| risk-reminder.html        | （风险提醒提示）              |
+| contact-card-link.html    | （链接类联系卡片）            |
+| customer-showcase.html    | （客户案例展示）              |
+| faq.html                  | （问题解答/常见问题）         |
+| contact-price-phone.html  | （电话咨询价格展示）          |
+| contact-text-phone.html   | （电话联系文字说明）          |
+| contact-text-form.html    | （表单联系文字说明）          |
+| footer.html               | （页脚信息）                  |
+| contact-us.html           | （联系我们固定定位组件）        |

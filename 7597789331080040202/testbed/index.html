@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zicklin Contracting - 专业火灾修复服务</title>
+    <!-- Tailwind CSS v3 -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide 图标库 -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- 自定义 Tailwind 配置 -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#8E312A', // 熟赭色
+                        secondary: '#101828', // 深海蓝黑
+                        light: '#F9FAFB', // 烟雾灰
+                        border: '#EAECF0', // 晨曦灰
+                    },
+                    fontFamily: {
+                        inter: ['Inter', 'sans-serif'],
+                        maven: ['Maven Pro', 'sans-serif'],
+                    },
+                },
+            }
+        }
+    </script>
+    <!-- 自定义样式 -->
+    <link rel="stylesheet" href="style.css">
+    <!-- Google Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Maven+Pro:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+</head>
+
+<body class="font-inter text-secondary">
+    <!-- 组件容器 -->
+    <div id="app">
+        <!-- 头部导航 -->
+        <header id="header" class="sticky top-0 z-50 w-full"></header>
+
+        <!-- Hero 区域 -->
+        <section id="banner"></section>
+
+        <!-- 快速咨询表单 -->
+        <section id="consultation-form"></section>
+
+        <!-- 服务介绍图片 -->
+        <section id="service-intro-pic"></section>
+
+        <!-- 服务介绍文字 -->
+        <section id="service-intro-text"></section>
+
+        <!-- 联系卡片-电话 -->
+        <section id="contact-card-phone"></section>
+
+        <!-- 火灾修复 -->
+        <section id="fire-repair"></section>
+
+        <!-- 修复服务 -->
+        <section id="repair-service"></section>
+
+        <!-- 风险提醒 -->
+        <section id="risk-reminder"></section>
+
+        <!-- 联系卡片-链接 -->
+        <section id="contact-card-link"></section>
+
+        <!-- 客户展示 -->
+        <section id="customer-showcase"></section>
+
+        <!-- 常见问题 -->
+        <section id="faq"></section>
+
+        <!-- 联系价格-电话 -->
+        <section id="contact-price-phone"></section>
+
+        <!-- 联系文字-电话 -->
+        <section id="contact-text-phone"></section>
+
+        <!-- 联系文字-表单 -->
+        <section id="contact-text-form"></section>
+
+        <!-- 页脚 -->
+        <footer id="footer"></footer>
+
+        <!-- 联系我们 -->
+        <section id="contact-us"></section>
+    </div>
+
+    <!-- 悬浮紧急呼叫按钮 -->
+    <div class="fixed bottom-8 right-8 z-50 flex flex-col gap-4">
+        <button
+            class="bg-primary text-white rounded-full w-16 h-16 flex items-center justify-center shadow-lg hover:shadow-xl transition-all duration-300 animate-pulse">
+            <i data-lucide="phone"></i>
+        </button>
+        <button
+            class="bg-green-500 text-white rounded-full w-16 h-16 flex items-center justify-center shadow-lg hover:shadow-xl transition-all duration-300 animate-pulse delay-300">
+            <i data-lucide="message-square"></i>
+        </button>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="script.js"></script>
+</body>
+
+</html>

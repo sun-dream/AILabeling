@@ -1,0 +1,84 @@
+<!-- 快速咨询表单 -->
+<section class="py-16 bg-white">
+    <div class="container mx-auto px-4">
+        <div class="max-w-4xl mx-auto bg-light rounded-2xl p-8 md:p-12 shadow-lg">
+            <div class="text-center mb-10">
+                <h2 class="text-2xl md:text-3xl font-bold font-maven text-secondary mb-4">Request a Free Consultation</h2>
+                <p class="text-gray-600">Fill out the form below to get a free estimate for your fire damage restoration needs</p>
+            </div>
+            
+            <form class="space-y-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="relative">
+                        <input 
+                            type="text" 
+                            id="name" 
+                            class="form-input w-full px-4 py-3 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all duration-300"
+                            placeholder=" "
+                        >
+                        <label for="name" class="form-label absolute left-4 top-3 text-gray-500 transition-all duration-300 pointer-events-none">
+                            Name
+                        </label>
+                    </div>
+                    <div class="relative">
+                        <input 
+                            type="email" 
+                            id="email" 
+                            class="form-input w-full px-4 py-3 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all duration-300"
+                            placeholder=" "
+                        >
+                        <label for="email" class="form-label absolute left-4 top-3 text-gray-500 transition-all duration-300 pointer-events-none">
+                            Email (you@company.com)
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="relative">
+                        <input 
+                            type="tel" 
+                            id="phone" 
+                            class="form-input w-full px-4 py-3 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all duration-300"
+                            placeholder=" "
+                        >
+                        <label for="phone" class="form-label absolute left-4 top-3 text-gray-500 transition-all duration-300 pointer-events-none">
+                            Phone
+                        </label>
+                    </div>
+                    <div class="relative">
+                        <input 
+                            type="text" 
+                            id="zip" 
+                            class="form-input w-full px-4 py-3 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all duration-300"
+                            placeholder=" "
+                        >
+                        <label for="zip" class="form-label absolute left-4 top-3 text-gray-500 transition-all duration-300 pointer-events-none">
+                            Zip Code
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="relative">
+                    <textarea 
+                        id="message" 
+                        rows="4" 
+                        class="form-input w-full px-4 py-3 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all duration-300"
+                        placeholder=" "
+                    ></textarea>
+                    <label for="message" class="form-label absolute left-4 top-3 text-gray-500 transition-all duration-300 pointer-events-none">
+                        Project feedback
+                    </label>
+                </div>
+                
+                <div class="flex items-center gap-2">
+                    <input type="checkbox" id="terms" class="w-4 h-4 text-primary focus:ring-primary/50 border-border rounded">
+                    <label for="terms" class="text-sm text-gray-600">I agree to the terms and conditions</label>
+                </div>
+                
+                <button type="submit" class="w-full bg-primary text-white px-6 py-4 rounded-md font-medium hover:bg-opacity-90 transition-all duration-300 transform hover:-translate-y-1">
+                    Submit Request
+                </button>
+            </form>
+        </div>
+    </div>
+</section>

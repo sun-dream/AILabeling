@@ -40,3 +40,10 @@
 *   **FlytStikr Logo 生成链接**：`https://aidp.juejin.cn/agentic/api/v1/tool/text2image?prompt=FlytStikr%20logo%20white%20text%20paper%20plane%20icon%20on%20black%20background&width=227&height=150`
 *   **Laura Bublé Logo 生成链接**：`https://aidp.juejin.cn/agentic/api/v1/tool/text2image?prompt=Laura%20Buble%20REALTOR%20logo%20black%20serif%20text%20on%20white%20background&width=150&height=150`
 *   **Simplex Logo 生成链接**：`https://aidp.juejin.cn/agentic/api/v1/tool/text2image?prompt=Simplex%20logo%20white%20thin%20text%20minimal%20on%20black%20background&width=300&height=71`
+
+## 6. 原图片链接备份 (Replaced by API Links)
+*   **TRANSLINES**: `https://p3-aidp.byteimg.com/tos-cn-i-979rioudue/477b24a5a1b64bec8678bf7647fb219e~tplv-979rioudue-resize_image.image`
+*   **transmotion**: `https://p3-aidp.byteimg.com/tos-cn-i-979rioudue/5735ce5350934e04892f413b6e506037~tplv-979rioudue-resize_image.image`
+*   **FlytStikr**: `https://p3-aidp.byteimg.com/tos-cn-i-979rioudue/6e160ebe3a2b4a15adaff11b9771995a~tplv-979rioudue-resize_image.image`
+*   **Laura Bublé**: `https://p3-aidp.byteimg.com/tos-cn-i-979rioudue/0ae0bfabbe3c4eb18831e87311851642~tplv-979rioudue-resize_image.image`
+*   **Simplex**: `https://p3-aidp.byteimg.com/tos-cn-i-979rioudue/a5e6a0e753e94ef6b9d879a17e4dffcc~tplv-979rioudue-resize_image.image`
