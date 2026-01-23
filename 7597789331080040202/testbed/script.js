@@ -26,7 +26,29 @@ async function loadComponents() {
         try {
             const response = await fetch(`components/${component.file}`);
             const content = await response.text();
-            document.getElementById(component.id).innerHTML = content;
+            const container = document.getElementById(component.id);
+            if (container) {
+                container.innerHTML = content;
+                
+                // 执行加载内容中的脚本
+                const scripts = container.querySelectorAll('script');
+                scripts.forEach(script => {
+                    const newScript = document.createElement('script');
+                    if (script.src) {
+                        newScript.src = script.src;
+                    } else {
+                        newScript.textContent = script.innerHTML;
+                    }
+                    // 保留属性
+                    Array.from(script.attributes).forEach(attr => {
+                        if (attr.name !== 'src') {
+                            newScript.setAttribute(attr.name, attr.value);
+                        }
+                    });
+                    
+                    document.body.appendChild(newScript);
+                });
+            }
         } catch (error) {
             console.error(`Failed to load component ${component.id}:`, error);
         }
@@ -44,10 +66,12 @@ function initInteractions() {
     // 导航栏滚动效果
     window.addEventListener('scroll', function() {
         const header = document.getElementById('header');
-        if (window.scrollY > 100) {
-            header.classList.add('navbar-scrolled');
-        } else {
-            header.classList.remove('navbar-scrolled');
+        if (header) {
+             if (window.scrollY > 100) {
+                header.classList.add('navbar-scrolled');
+            } else {
+                header.classList.remove('navbar-scrolled');
+            }
         }
     });
     
