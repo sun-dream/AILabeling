@@ -42,6 +42,7 @@
 *   **Simplex Logo 生成链接**：`https://aidp.juejin.cn/agentic/api/v1/tool/text2image?prompt=Simplex%20logo%20white%20thin%20text%20minimal%20on%20black%20background&width=300&height=71`
 
 ## 6. 原图片链接备份 (Replaced by API Links)
+*   **ViDDOO**: `https://p3-aidp.byteimg.com/tos-cn-i-979rioudue/0610c5add4bd4f2a9a74d65781da570b~tplv-979rioudue-resize_image.image`
 *   **TRANSLINES**: `https://p3-aidp.byteimg.com/tos-cn-i-979rioudue/477b24a5a1b64bec8678bf7647fb219e~tplv-979rioudue-resize_image.image`
 *   **transmotion**: `https://p3-aidp.byteimg.com/tos-cn-i-979rioudue/5735ce5350934e04892f413b6e506037~tplv-979rioudue-resize_image.image`
 *   **FlytStikr**: `https://p3-aidp.byteimg.com/tos-cn-i-979rioudue/6e160ebe3a2b4a15adaff11b9771995a~tplv-979rioudue-resize_image.image`
