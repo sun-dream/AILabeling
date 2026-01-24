@@ -1,94 +1,131 @@
-<!-- 页脚 -->
-<footer class="bg-secondary text-white pt-16 pb-8">
+<footer class="bg-[#0B1221] text-gray-400 py-16 font-sans">
     <div class="container mx-auto px-4">
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
-            <!-- 公司信息 -->
-            <div>
-                <a href="#" class="text-2xl font-bold font-maven text-white mb-6 inline-block">Zicklin Contracting</a>
-                <p class="text-gray-400 mb-6 leading-relaxed">
-                    With over 37 years of experience, Zicklin Contracting is a trusted leader in fire damage restoration services. We are committed to providing exceptional service and support to our clients during their time of need.
+        <!-- Main Footer Content -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-y-12 lg:gap-8 mb-16">
+
+            <!-- Col 1: Logo & Description (Span 3) -->
+            <div class="lg:col-span-3">
+                <a href="#" class="block mb-8">
+                    <img src="https://cdn-ildpmmp.nitrocdn.com/AMiutLZIERmywvLxUwscmRkyAarnfjmd/assets/images/source/rev-f80340c/www.zicklincontracting.com/wp-content/uploads/2025/04/logo-footer.svg"
+                        alt="Zicklin Contracting" class="h-12 w-auto">
+                </a>
+                <p class="text-sm leading-7 pr-4">
+                    We are a family-owned general contracting company serving the five boroughs of New York City and
+                    parts of Nassau and Westchester counties for over 37 years.
                 </p>
-                <div class="flex gap-4">
-                    <a href="#" class="text-gray-400 hover:text-white transition-colors">
-                        <i data-lucide="facebook"></i>
-                    </a>
-                    <a href="#" class="text-gray-400 hover:text-white transition-colors">
-                        <i data-lucide="twitter"></i>
-                    </a>
-                    <a href="#" class="text-gray-400 hover:text-white transition-colors">
-                        <i data-lucide="instagram"></i>
-                    </a>
-                    <a href="#" class="text-gray-400 hover:text-white transition-colors">
-                        <i data-lucide="linkedin"></i>
-                    </a>
+            </div>
+
+            <!-- Col 2: Links (Span 2) -->
+            <div class="lg:col-span-2">
+                <h4 class="text-white font-bold text-lg mb-8">Links</h4>
+                <ul class="space-y-4 text-sm">
+                    <li><a href="#" class="hover:text-white transition-colors">About us</a></li>
+                    <li><a href="#" class="hover:text-white transition-colors">Projects</a></li>
+                    <li><a href="#" class="hover:text-white transition-colors">Contact Us</a></li>
+                    <li><a href="#" class="hover:text-white transition-colors">Blog</a></li>
+                    <li><a href="#" class="hover:text-white transition-colors">Privacy Policy</a></li>
+                </ul>
+            </div>
+
+            <!-- Col 3: Services (Span 3) -->
+            <div class="lg:col-span-3">
+                <h4 class="text-white font-bold text-lg mb-8">Services</h4>
+                <ul class="space-y-4 text-sm">
+                    <li><a href="#" class="hover:text-white transition-colors">NYC Basement Remodeling</a></li>
+                    <li><a href="#" class="hover:text-white transition-colors">Construction Project Management</a></li>
+                    <li><a href="#" class="hover:text-white transition-colors">Exterior</a></li>
+                    <li><a href="#" class="hover:text-white transition-colors">Home Renovation NYC</a></li>
+                    <li><a href="#" class="hover:text-white transition-colors">Interior NYC</a></li>
+                    <li><a href="#" class="hover:text-white transition-colors">Leak Detection/Waterproofing</a></li>
+                    <li><a href="#" class="hover:text-white transition-colors">Local Law 10/11</a></li>
+                    <li><a href="#" class="hover:text-white transition-colors">Roofing</a></li>
+                </ul>
+            </div>
+
+            <!-- Col 4: Contacts & Addresses (Span 4) -->
+            <div class="lg:col-span-4 space-y-12">
+                <!-- Contacts -->
+                <div>
+                    <h4 class="text-white font-bold text-lg mb-8">Contacts</h4>
+                    <ul class="space-y-6 text-sm">
+                        <li class="flex items-start gap-3">
+                            <i data-lucide="map-pin" class="w-4 h-4 mt-1 flex-shrink-0"></i>
+                            <span>99 Wall St Suite 172, New York</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <i data-lucide="phone" class="w-4 h-4 mt-1 flex-shrink-0"></i>
+                            <div class="flex flex-col gap-1">
+                                <a href="#" class="hover:text-white transition-colors">+1-347-495-4959</a>
+                                <a href="#" class="hover:text-white transition-colors">+1-718-550-2779</a>
+                            </div>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <i data-lucide="clock" class="w-4 h-4 mt-1 flex-shrink-0"></i>
+                            <div>
+                                <p>Available 24/7 for Emergency Services*</p>
+                                <p class="mt-1">Regular Hours: Mon-Fri, 8 AM to 5 PM.</p>
+                            </div>
+                        </li>
+                    </ul>
                 </div>
-            </div>
-            
-            <!-- 服务 -->
-            <div>
-                <h3 class="text-lg font-bold mb-6">Services</h3>
-                <ul class="space-y-4">
-                    <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Emergency Response</a></li>
-                    <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Smoke and Soot Removal</a></li>
-                    <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Structural Cleaning</a></li>
-                    <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Insurance Claim Assistance</a></li>
-                    <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Water Extraction and Drying</a></li>
-                    <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Structural Repair</a></li>
-                </ul>
-            </div>
-            
-            <!-- 联系我们 -->
-            <div>
-                <h3 class="text-lg font-bold mb-6">Contact Us</h3>
-                <ul class="space-y-4">
-                    <li class="flex items-start gap-3">
-                        <i data-lucide="phone" class="text-gray-400 w-5 h-5 mt-1"></i>
-                        <span class="text-gray-400">1-800-123-4567</span>
-                    </li>
-                    <li class="flex items-start gap-3">
-                        <i data-lucide="mail" class="text-gray-400 w-5 h-5 mt-1"></i>
-                        <span class="text-gray-400">info@zicklincontracting.com</span>
-                    </li>
-                    <li class="flex items-start gap-3">
-                        <i data-lucide="map-pin" class="text-gray-400 w-5 h-5 mt-1"></i>
-                        <span class="text-gray-400">Serving all five boroughs of New York City</span>
-                    </li>
-                </ul>
-            </div>
-            
-            <!-- 办公地址 -->
-            <div>
-                <h3 class="text-lg font-bold mb-6">Office Locations</h3>
-                <ul class="space-y-4">
-                    <li class="text-gray-400">
-                        <strong>Manhattan:</strong> 123 Main St, New York, NY 10001
-                    </li>
-                    <li class="text-gray-400">
-                        <strong>Brooklyn:</strong> 456 Broadway, Brooklyn, NY 11201
-                    </li>
-                    <li class="text-gray-400">
-                        <strong>Queens:</strong> 789 Queens Blvd, Queens, NY 11374
-                    </li>
-                    <li class="text-gray-400">
-                        <strong>Bronx:</strong> 321 Fordham Rd, Bronx, NY 10458
-                    </li>
-                    <li class="text-gray-400">
-                        <strong>Staten Island:</strong> 654 Victory Blvd, Staten Island, NY 10314
-                    </li>
-                </ul>
+
+                <!-- Addresses -->
+                <div>
+                    <h4 class="text-white font-bold text-lg mb-8">Addresses</h4>
+                    <ul class="space-y-6 text-sm">
+                        <li class="flex items-start gap-3">
+                            <i data-lucide="map-pin" class="w-4 h-4 mt-1 flex-shrink-0"></i>
+                            <div>
+                                <span class="block text-white mb-1">Bronx</span>
+                                <a href="#" class="hover:text-white transition-colors">
+                                    967 Longfellow Ave, Bronx NY 10474
+                                </a>
+                            </div>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <i data-lucide="map-pin" class="w-4 h-4 mt-1 flex-shrink-0"></i>
+                            <div>
+                                <span class="block text-white mb-1">Queens</span>
+                                <a href="#" class="hover:text-white transition-colors">
+                                    28-25 119th Street, Flushing, NY, 11354
+                                </a>
+                            </div>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <i data-lucide="map-pin" class="w-4 h-4 mt-1 flex-shrink-0"></i>
+                            <div>
+                                <span class="block text-white mb-1">Brooklyn</span>
+                                <a href="#" class="hover:text-white transition-colors">
+                                    18 Steuben St, Brooklyn, NY 11205
+                                </a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- License -->
+                <div class="text-xs space-y-1 pt-4">
+                    <p>DCA License #2107837-DCA</p>
+                    <p>Contractor ID (DOB):#617843</p>
+                </div>
             </div>
         </div>
-        
-        <div class="border-t border-gray-800 pt-8">
-            <div class="flex flex-col md:flex-row justify-between items-center">
-                <div class="text-gray-400 text-sm mb-4 md:mb-0">
-                    &copy; 2023 Zicklin Contracting. All rights reserved. | DCA License: 123456
-                </div>
-                <div class="flex gap-6">
-                    <a href="#" class="text-gray-400 hover:text-white transition-colors text-sm">Privacy Policy</a>
-                    <a href="#" class="text-gray-400 hover:text-white transition-colors text-sm">Terms of Service</a>
-                    <a href="#" class="text-gray-400 hover:text-white transition-colors text-sm">Sitemap</a>
-                </div>
+
+        <!-- Footer Bottom: Socials -->
+        <div class="border-t border-white/10 pt-8">
+            <div class="flex items-center gap-6">
+                <a href="#" class="text-gray-400 hover:text-white transition-colors" aria-label="WhatsApp">
+                    <i data-lucide="message-circle" class="w-5 h-5"></i>
+                </a>
+                <a href="#" class="text-gray-400 hover:text-white transition-colors" aria-label="Facebook">
+                    <i data-lucide="facebook" class="w-5 h-5"></i>
+                </a>
+                <a href="#" class="text-gray-400 hover:text-white transition-colors" aria-label="Twitter">
+                    <i data-lucide="twitter" class="w-5 h-5"></i>
+                </a>
+                <a href="#" class="text-gray-400 hover:text-white transition-colors" aria-label="Instagram">
+                    <i data-lucide="instagram" class="w-5 h-5"></i>
+                </a>
             </div>
         </div>
     </div>

@@ -1,44 +1,180 @@
-<!-- 服务介绍文字 -->
-<section class="py-16 bg-white">
-    <div class="container mx-auto px-4">
-        <div class="max-w-3xl mx-auto text-center space-y-6">
-            <h2 class="text-3xl md:text-4xl font-bold font-maven text-secondary mb-8">Our Commitment to Excellence</h2>
-            <p class="text-lg text-gray-600 leading-relaxed">
-                With over 37 years of experience in the industry, Zicklin Contracting has established itself as a trusted 
-                leader in fire damage restoration services. We understand the emotional and financial toll that fire damage 
-                can take on homeowners and business owners, which is why we are dedicated to providing compassionate, 
-                efficient, and comprehensive restoration services.
-            </p>
-            <p class="text-lg text-gray-600 leading-relaxed">
-                Our team of certified technicians is trained to handle all aspects of fire damage restoration, from 
-                emergency board-up and water extraction to smoke removal and complete structural repair. We work closely 
-                with insurance companies to streamline the claims process and ensure that our clients receive the 
-                maximum coverage possible.
-            </p>
-            <div class="flex flex-wrap justify-center gap-6 pt-8">
-                <div class="flex items-center gap-3">
-                    <div class="bg-primary/10 p-3 rounded-full">
-                        <i data-lucide="shield-check" class="text-primary"></i>
-                    </div>
-                    <span class="font-medium">Expertise</span>
+<!-- Service Intro Text Component -->
+<section class="py-16 md:py-20 relative overflow-hidden" id="service-intro-text">
+    <!-- Blueprint Background Image -->
+    <div class="absolute top-0 left-1/2 -translate-x-1/2 z-0 top-auto h-full ">
+        <img src="https://p3-aidp.byteimg.com/tos-cn-i-979rioudue/0b62eca52d3243d2a18a8d40f1752321~tplv-979rioudue-resize_image.image"
+            alt="background blueprint"
+            class="translate-y-[-60%] rotate-[200deg] w-[1200px] h-full object-cover opacity-60" />
+    </div>
+
+    <div class="container mx-auto px-4 relative z-10">
+        <div class="flex flex-col lg:flex-row">
+            <!-- Sidebar Label -->
+            <div class="hidden lg:block lg:w-[17%] pt-2">
+                <div class="text-primary font-maven text-md font-bold uppercase tracking-widest">
+                    IMPORTANT THINGS
                 </div>
-                <div class="flex items-center gap-3">
-                    <div class="bg-primary/10 p-3 rounded-full">
-                        <i data-lucide="layers" class="text-primary"></i>
-                    </div>
-                    <span class="font-medium">Full-Service Restoration</span>
+            </div>
+
+            <!-- Main Content -->
+            <div class="flex-1 lg:w-[83%]">
+                <h2 class="text-[2rem] md:text-[2.5rem] font-bold font-maven text-secondary mb-6 leading-tight">
+                    Our Fire Damage Services
+                </h2>
+
+                <div class="text-gray-600 text-lg mb-16 leading-relaxed">
+                    <p>
+                        Zicklin Contracting offers fire damage restoration services to residences
+                        and commercial establishments. Our services include:
+                    </p>
                 </div>
-                <div class="flex items-center gap-3">
-                    <div class="bg-primary/10 p-3 rounded-full">
-                        <i data-lucide="cog" class="text-primary"></i>
+
+                <!-- Services Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-10">
+                    <!-- Item 1 -->
+                    <div class="flex gap-4">
+                        <div class="flex-shrink-0 mt-1">
+                            <div class="bg-primary rounded-full p-1">
+                                <i data-lucide="check" class="w-4 h-4 text-white"></i>
+                            </div>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-bold text-secondary mb-3">Emergency Response</h3>
+                            <p class="text-[#101828] leading-relaxed">
+                                Fires always happen without prior notice, and remedying the damage as quickly as
+                                possible is important. By teaming up with an emergency team available 24/7, you will
+                                only need to make a phone call, and the response will be immediate. We will close off
+                                your property, assess the damages, and commence fire damage repair right away.
+                            </p>
+                        </div>
                     </div>
-                    <span class="font-medium">Advanced Technology</span>
-                </div>
-                <div class="flex items-center gap-3">
-                    <div class="bg-primary/10 p-3 rounded-full">
-                        <i data-lucide="star" class="text-primary"></i>
+
+                    <!-- Item 2 -->
+                    <div class="flex gap-4">
+                        <div class="flex-shrink-0 mt-1">
+                            <div class="bg-primary rounded-full p-1">
+                                <i data-lucide="check" class="w-4 h-4 text-white"></i>
+                            </div>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-bold text-secondary mb-3">Damage Assessment and Inspection</h3>
+                            <p class="text-[#101828] leading-relaxed">
+                                Our professionally trained and certified personnel will thoroughly inspect your property
+                                and assess the extent of your fire and smoke damage, allowing us to develop a
+                                comprehensive fire and smoke damage plan specific to your needs. In addition,
+                                documentation designed to keep you informed and detail your scope of loss will be
+                                created when your property is under our care.
+                            </p>
+                        </div>
                     </div>
-                    <span class="font-medium">Customer Satisfaction</span>
+
+                    <!-- Item 3 -->
+                    <div class="flex gap-4">
+                        <div class="flex-shrink-0 mt-1">
+                            <div class="bg-primary rounded-full p-1">
+                                <i data-lucide="check" class="w-4 h-4 text-white"></i>
+                            </div>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-bold text-secondary mb-3">Smoke and Soot Removal</h3>
+                            <p class="text-[#101828] leading-relaxed">
+                                Smoke and soot can damage your property and cause health problems for you and your
+                                family. We remove all residual smoke and soot in the affected areas. Advanced removal
+                                techniques and equipment are used to remove all smoke and soot residues, and the air is
+                                tested to ensure that all fine particles are removed for safe air quality.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Item 4 -->
+                    <div class="flex gap-4">
+                        <div class="flex-shrink-0 mt-1">
+                            <div class="bg-primary rounded-full p-1">
+                                <i data-lucide="check" class="w-4 h-4 text-white"></i>
+                            </div>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-bold text-secondary mb-3">Structural Cleaning and Restoration</h3>
+                            <p class="text-[#101828] leading-relaxed">
+                                Fires can compromise the integrity of your structure. We will clean, rebuild, and
+                                restore all structural parts, including walls, ceilings, floors, and roofs, to ensure
+                                your home is as safe as possible. We will use durable and environmentally friendly
+                                materials.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Item 5 -->
+                    <div class="flex gap-4">
+                        <div class="flex-shrink-0 mt-1">
+                            <div class="bg-primary rounded-full p-1">
+                                <i data-lucide="check" class="w-4 h-4 text-white"></i>
+                            </div>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-bold text-secondary mb-3">Content Cleaning and Restoration</h3>
+                            <p class="text-[#101828] leading-relaxed">
+                                We understand that your personal or business belongings are important to you. Our
+                                specialists will clean and restore salvageable items such as furniture, electronics,
+                                documents, and textiles and store them securely.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Item 6 -->
+                    <div class="flex gap-4">
+                        <div class="flex-shrink-0 mt-1">
+                            <div class="bg-primary rounded-full p-1">
+                                <i data-lucide="check" class="w-4 h-4 text-white"></i>
+                            </div>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-bold text-secondary mb-3">Odor Removal and Deodorization</h3>
+                            <p class="text-[#101828] leading-relaxed">
+                                If you own a home or office space and suffer from pervasive smoke odors, they can be
+                                hard to eliminate. Our deodorization experts can use state-of-the-art techniques to
+                                remove odors from your space, leaving it fresh and sanitized. We use environmentally
+                                safe products so that you won’t be left with harmful chemicals when we are finished with
+                                smoke damage restoration.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Item 7 -->
+                    <div class="flex gap-4">
+                        <div class="flex-shrink-0 mt-1">
+                            <div class="bg-primary rounded-full p-1">
+                                <i data-lucide="check" class="w-4 h-4 text-white"></i>
+                            </div>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-bold text-secondary mb-3">Reconstruction and Renovation</h3>
+                            <p class="text-[#101828] leading-relaxed">
+                                In other, more serious cases, repairs need to be linked to reconstructions. Zicklin will
+                                take care of all your reconstruction and renovation needs. We will perform all repairs
+                                and renovation work in a way that returns your property to pre-damage condition or
+                                better. We work with you to incorporate whatever design requirements you have.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Item 8 -->
+                    <div class="flex gap-4">
+                        <div class="flex-shrink-0 mt-1">
+                            <div class="bg-primary rounded-full p-1">
+                                <i data-lucide="check" class="w-4 h-4 text-white"></i>
+                            </div>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-bold text-secondary mb-3">Insurance Claim Assistance</h3>
+                            <p class="text-[#101828] leading-relaxed">
+                                The insurance claims process can often be confusing. We will help you document your
+                                loss, collect all relevant information, and deal directly with your insurance company.
+                                We will endeavor to simplify the claims process and ensure you receive maximum
+                                compensation for your loss.
+                            </p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

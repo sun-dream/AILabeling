@@ -1,76 +1,118 @@
-<!-- 常见问题 -->
-<section class="py-16 bg-light">
-    <div class="container mx-auto px-4">
-        <div class="text-center mb-16">
-            <h2 class="text-3xl md:text-4xl font-bold font-maven text-secondary mb-4">Frequently Asked Questions</h2>
-            <p class="text-gray-600 max-w-2xl mx-auto">
-                Find answers to common questions about our fire damage restoration services.
-            </p>
-        </div>
-        
-        <div class="max-w-3xl mx-auto space-y-4">
-            <!-- FAQ 项目 1 -->
-            <div class="bg-white rounded-xl shadow-md overflow-hidden">
-                <button class="faq-question w-full px-6 py-4 text-left font-medium flex justify-between items-center hover:bg-primary/5 transition-colors">
-                    <span>How quickly can you respond to a fire damage emergency?</span>
-                    <i data-lucide="chevron-down" class="w-5 h-5 text-gray-500 transition-transform duration-300"></i>
-                </button>
-                <div class="faq-panel px-6 py-4 bg-light/50">
-                    <p class="text-gray-600">
-                        Our emergency response team is available 24/7 and will arrive at your property within 30 minutes of your call. We understand the urgency of fire damage situations and prioritize immediate assistance.
-                    </p>
-                </div>
+<section class="relative py-24 overflow-hidden bg-white">
+    <!-- Background Image -->
+    <div class="absolute inset-0 z-0 pointer-events-none">
+        <img src="https://cdn-ildpmmp.nitrocdn.com/AMiutLZIERmywvLxUwscmRkyAarnfjmd/assets/images/optimized/rev-f80340c/www.zicklincontracting.com/wp-content/themes/zicklin/images/bg-faq.webp"
+            alt="Blueprint Background" class="w-full h-full object-cover opacity-30">
+    </div>
+
+    <div class="container mx-auto px-4 relative z-10">
+        <!-- Grid Layout: Label | Title | Accordion -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-y-12 lg:gap-x-8">
+            <!-- Col 1: Label (Span 2) -->
+            <div class="lg:col-span-2">
+                <span class="text-primary font-bold tracking-[0.2em] uppercase text-xs block lg:pt-3">FAQ</span>
             </div>
-            
-            <!-- FAQ 项目 2 -->
-            <div class="bg-white rounded-xl shadow-md overflow-hidden">
-                <button class="faq-question w-full px-6 py-4 text-left font-medium flex justify-between items-center hover:bg-primary/5 transition-colors">
-                    <span>Will my insurance cover the cost of fire damage restoration?</span>
-                    <i data-lucide="chevron-down" class="w-5 h-5 text-gray-500 transition-transform duration-300"></i>
-                </button>
-                <div class="faq-panel px-6 py-4 bg-light/50">
-                    <p class="text-gray-600">
-                        Most standard homeowners' and business insurance policies cover fire damage restoration. We work closely with insurance companies to streamline the claims process and ensure that you receive the maximum coverage possible. Our team can help you document the damage and prepare the necessary paperwork for your insurance claim.
-                    </p>
-                </div>
+
+            <!-- Col 2: Title (Span 4) -->
+            <div class="lg:col-span-4">
+                <h2 class="text-3xl md:text-4xl lg:text-[42px] font-bold text-secondary font-maven leading-[1.15]">
+                    Frequently<br>asked questions
+                </h2>
             </div>
-            
-            <!-- FAQ 项目 3 -->
-            <div class="bg-white rounded-xl shadow-md overflow-hidden">
-                <button class="faq-question w-full px-6 py-4 text-left font-medium flex justify-between items-center hover:bg-primary/5 transition-colors">
-                    <span>How long does the fire damage restoration process take?</span>
-                    <i data-lucide="chevron-down" class="w-5 h-5 text-gray-500 transition-transform duration-300"></i>
-                </button>
-                <div class="faq-panel px-6 py-4 bg-light/50">
-                    <p class="text-gray-600">
-                        The duration of the restoration process depends on the extent of the damage. Minor smoke damage can be restored in a few days, while more extensive damage may take several weeks. Our team will provide you with a detailed timeline after assessing the damage to your property.
-                    </p>
-                </div>
-            </div>
-            
-            <!-- FAQ 项目 4 -->
-            <div class="bg-white rounded-xl shadow-md overflow-hidden">
-                <button class="faq-question w-full px-6 py-4 text-left font-medium flex justify-between items-center hover:bg-primary/5 transition-colors">
-                    <span>What steps do you take to remove smoke and odor?</span>
-                    <i data-lucide="chevron-down" class="w-5 h-5 text-gray-500 transition-transform duration-300"></i>
-                </button>
-                <div class="faq-panel px-6 py-4 bg-light/50">
-                    <p class="text-gray-600">
-                        We use advanced equipment and techniques to remove smoke and odor from your property. This includes air scrubbers, ozone generators, and thermal fogging machines. Our technicians are trained to identify and treat all surfaces affected by smoke and soot residues, ensuring that your property is thoroughly cleaned and deodorized.
-                    </p>
-                </div>
-            </div>
-            
-            <!-- FAQ 项目 5 -->
-            <div class="bg-white rounded-xl shadow-md overflow-hidden">
-                <button class="faq-question w-full px-6 py-4 text-left font-medium flex justify-between items-center hover:bg-primary/5 transition-colors">
-                    <span>Do you offer any guarantees on your work?</span>
-                    <i data-lucide="chevron-down" class="w-5 h-5 text-gray-500 transition-transform duration-300"></i>
-                </button>
-                <div class="faq-panel px-6 py-4 bg-light/50">
-                    <p class="text-gray-600">
-                        Yes, we offer a 100% satisfaction guarantee on all of our fire damage restoration services. If you are not completely satisfied with the results, we will work with you to make it right. Our goal is to exceed your expectations and restore your property to its pre-damage condition.
-                    </p>
+
+            <!-- Col 3: Accordion (Span 6) -->
+            <div class="lg:col-span-6">
+                <div class="divide-y divide-gray-200 border-t border-b border-gray-200">
+                    <!-- Item 1 -->
+                    <div class="faq-item group">
+                        <button
+                            class="w-full py-6 flex items-start justify-between text-left focus:outline-none cursor-pointer">
+                            <span
+                                class="text-lg md:text-xl font-medium text-secondary group-hover:text-primary transition-colors pr-8 leading-snug">How
+                                soon will you start work on my project?</span>
+                            <i data-lucide="plus-circle"
+                                class="w-6 h-6 text-primary flex-shrink-0 transition-transform duration-300 mt-1"></i>
+                        </button>
+                        <div class="faq-content overflow-hidden max-h-0 transition-all duration-300 ease-in-out">
+                            <div class="pb-6 text-gray-600 leading-relaxed">
+                                We will begin working on your project as soon as the initial inspection is done and we
+                                agree upon the scope of work along with the budget.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Item 2 -->
+                    <div class="faq-item group">
+                        <button
+                            class="w-full py-6 flex items-start justify-between text-left focus:outline-none cursor-pointer">
+                            <span
+                                class="text-lg md:text-xl font-medium text-secondary group-hover:text-primary transition-colors pr-8 leading-snug">Is
+                                your crew licensed and certified?</span>
+                            <i data-lucide="plus-circle"
+                                class="w-6 h-6 text-primary flex-shrink-0 transition-transform duration-300 mt-1"></i>
+                        </button>
+                        <div class="faq-content overflow-hidden max-h-0 transition-all duration-300 ease-in-out">
+                            <div class="pb-6 text-gray-600 leading-relaxed">
+                                Yes, all members of our crew are licensed and certified. They have been with our
+                                organization for many years and have expertise in their area of speciality.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Item 3 -->
+                    <div class="faq-item group">
+                        <button
+                            class="w-full py-6 flex items-start justify-between text-left focus:outline-none cursor-pointer">
+                            <span
+                                class="text-lg md:text-xl font-medium text-secondary group-hover:text-primary transition-colors pr-8 leading-snug">How
+                                will you communicate with us throughout the project?</span>
+                            <i data-lucide="plus-circle"
+                                class="w-6 h-6 text-primary flex-shrink-0 transition-transform duration-300 mt-1"></i>
+                        </button>
+                        <div class="faq-content overflow-hidden max-h-0 transition-all duration-300 ease-in-out">
+                            <div class="pb-6 text-gray-600 leading-relaxed">
+                                We will assign a project manager to your construction project. That project manager will
+                                update you regularly on the progress of your project as well as share progress reports
+                                periodically.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Item 4 -->
+                    <div class="faq-item group">
+                        <button
+                            class="w-full py-6 flex items-start justify-between text-left focus:outline-none cursor-pointer">
+                            <span
+                                class="text-lg md:text-xl font-medium text-secondary group-hover:text-primary transition-colors pr-8 leading-snug">How
+                                long will it take for us to get an estimate?</span>
+                            <i data-lucide="plus-circle"
+                                class="w-6 h-6 text-primary flex-shrink-0 transition-transform duration-300 mt-1"></i>
+                        </button>
+                        <div class="faq-content overflow-hidden max-h-0 transition-all duration-300 ease-in-out">
+                            <div class="pb-6 text-gray-600 leading-relaxed">
+                                We generally provide an estimate within 48 hours of inspecting the work site and
+                                understanding your requirement. We provide a written estimate for every project.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Item 5 -->
+                    <div class="faq-item group">
+                        <button
+                            class="w-full py-6 flex items-start justify-between text-left focus:outline-none cursor-pointer">
+                            <span
+                                class="text-lg md:text-xl font-medium text-secondary group-hover:text-primary transition-colors pr-8 leading-snug">Do
+                                you employ subcontractors on your projects?</span>
+                            <i data-lucide="plus-circle"
+                                class="w-6 h-6 text-primary flex-shrink-0 transition-transform duration-300 mt-1"></i>
+                        </button>
+                        <div class="faq-content overflow-hidden max-h-0 transition-all duration-300 ease-in-out">
+                            <div class="pb-6 text-gray-600 leading-relaxed">
+                                Based on the requirements of each individual project, we sometimes utilize
+                                subcontractors but they are all licensed and have been working with us for a long time.
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

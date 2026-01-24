@@ -1,78 +1,343 @@
-<!-- 联系文字-表单 -->
-<section class="py-16 bg-light">
+<section class="py-24 bg-[#EDF0F2]" id="contact">
     <div class="container mx-auto px-4">
-        <div class="max-w-4xl mx-auto">
-            <div class="text-center mb-12">
-                <h2 class="text-3xl md:text-4xl font-bold font-maven text-secondary mb-4">Request a Free Consultation</h2>
-                <p class="text-gray-600">
-                    Fill out the form below to get a free estimate for your fire damage restoration needs.
-                </p>
+        <!-- Grid Layout: Label | Content (Info + Form) -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-y-12 lg:gap-x-8">
+            <!-- Col 1: Label (Span 2) -->
+            <div class="lg:col-span-2">
+                <span class="text-primary font-bold tracking-[0.2em] uppercase text-xs block lg:pt-3">CONTACT US</span>
             </div>
-            
-            <form class="bg-white rounded-2xl p-8 md:p-12 shadow-lg space-y-6">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                        <label for="full-name" class="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
-                        <input 
-                            type="text" 
-                            id="full-name" 
-                            class="w-full px-4 py-3 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all duration-300"
-                            placeholder="Your full name"
-                        >
+
+            <!-- Col 2: Content (Span 10) -->
+            <div class="lg:col-span-10">
+                <h2
+                    class="text-3xl md:text-4xl lg:text-[42px] font-bold text-secondary font-maven leading-[1.15] mb-12">
+                    Reach out to us
+                </h2>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-16">
+                    <!-- Left Column: Info -->
+                    <div class="space-y-12">
+                        <!-- Visit us -->
+                        <div>
+                            <div class="mb-6">
+                                <h3 class="text-xl font-bold text-secondary mb-1">Visit us</h3>
+                                <p class="text-gray-500 text-sm">Chat to us in person</p>
+                            </div>
+                            <div class="space-y-6">
+                                <!-- Bronx -->
+                                <div class="flex items-start gap-3 group">
+                                    <div
+                                        class="w-8 h-8 rounded-full bg-[#E8DED9] flex items-center justify-center flex-shrink-0 text-primary mt-1">
+                                        <i data-lucide="map-pin" class="w-4 h-4"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-bold text-secondary text-lg">Bronx</h4>
+                                        <a href="https://maps.app.goo.gl/AcTtmqYphpm5mpoS6" target="_blank"
+                                            class="text-gray-600 hover:text-primary transition-colors text-sm">
+                                            967 Longfellow Ave, Bronx NY 10474
+                                        </a>
+                                    </div>
+                                </div>
+                                <!-- Queens -->
+                                <div class="flex items-start gap-3 group">
+                                    <div
+                                        class="w-8 h-8 rounded-full bg-[#E8DED9] flex items-center justify-center flex-shrink-0 text-primary mt-1">
+                                        <i data-lucide="map-pin" class="w-4 h-4"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-bold text-secondary text-lg">Queens</h4>
+                                        <a href="https://maps.app.goo.gl/AfmQzG8deH9yJMWh9" target="_blank"
+                                            class="text-gray-600 hover:text-primary transition-colors text-sm">
+                                            28-25 119th Street, Flushing, NY, 11354
+                                        </a>
+                                    </div>
+                                </div>
+                                <!-- Brooklyn -->
+                                <div class="flex items-start gap-3 group">
+                                    <div
+                                        class="w-8 h-8 rounded-full bg-[#E8DED9] flex items-center justify-center flex-shrink-0 text-primary mt-1">
+                                        <i data-lucide="map-pin" class="w-4 h-4"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-bold text-secondary text-lg">Brooklyn</h4>
+                                        <a href="https://maps.app.goo.gl/s65dbo2nzZ4bzbWR7" target="_blank"
+                                            class="text-gray-600 hover:text-primary transition-colors text-sm">
+                                            18 Steuben St, Brooklyn, NY 11205
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Call us -->
+                        <div>
+                            <div class="mb-6">
+                                <h3 class="text-xl font-bold text-secondary mb-1">Call us</h3>
+                                <p class="text-gray-500 text-sm">Call our team Mon-Fri 8am to 5pm.</p>
+                            </div>
+                            <div class="space-y-4">
+                                <div class="flex items-center gap-3">
+                                    <i data-lucide="phone" class="w-5 h-5 text-primary"></i>
+                                    <a href="tel:+1-347-495-4959"
+                                        class="text-secondary font-bold hover:text-primary transition-colors">
+                                        +1-347-495-4959
+                                    </a>
+                                </div>
+                                <div class="flex items-center gap-3">
+                                    <i data-lucide="phone" class="w-5 h-5 text-primary"></i>
+                                    <a href="tel:+1-718-550-2779"
+                                        class="text-secondary font-bold hover:text-primary transition-colors">
+                                        +1-718-550-2779
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Email us -->
+                        <div>
+                            <div class="mb-6">
+                                <h3 class="text-xl font-bold text-secondary mb-1">Email us</h3>
+                                <p class="text-gray-500 text-sm">Call our team Mon-Fri 8am to 5pm.</p>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <i data-lucide="mail" class="w-5 h-5 text-primary"></i>
+                                <a href="mailto:zicklin@zicklincontracting.com"
+                                    class="text-secondary font-bold hover:text-primary transition-colors">
+                                    zicklin@zicklincontracting.com
+                                </a>
+                            </div>
+                        </div>
                     </div>
+
+                    <!-- Right Column: Form -->
                     <div>
-                        <label for="phone-number" class="block text-sm font-medium text-gray-700 mb-2">Phone Number</label>
-                        <input 
-                            type="tel" 
-                            id="phone-number" 
-                            class="w-full px-4 py-3 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all duration-300"
-                            placeholder="Your phone number"
-                        >
+                        <form id="contactForm" class="space-y-6" novalidate>
+                            <!-- Name -->
+                            <div>
+                                <label for="full-name" class="block text-sm font-bold text-secondary mb-2">Name</label>
+                                <input type="text" id="full-name" name="full-name" required
+                                    class="w-full px-4 py-3 bg-white border-0 rounded text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all"
+                                    placeholder="Your name">
+                                <p class="text-red-500 text-xs mt-1 hidden error-msg">This field is required</p>
+                            </div>
+
+                            <!-- Email -->
+                            <div>
+                                <label for="email" class="block text-sm font-bold text-secondary mb-2">Email</label>
+                                <input type="email" id="email" name="email" required
+                                    class="w-full px-4 py-3 bg-white border-0 rounded text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all"
+                                    placeholder="you@company.com">
+                                <p class="text-red-500 text-xs mt-1 hidden error-msg">Please enter a valid email address</p>
+                            </div>
+
+                            <!-- Phone -->
+                            <div>
+                                <label for="phone" class="block text-sm font-bold text-secondary mb-2">Phone
+                                    number</label>
+                                <input type="tel" id="phone" name="phone" required
+                                    class="w-full px-4 py-3 bg-white border-0 rounded text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all"
+                                    placeholder="+1 (555) 000-0000">
+                                <p class="text-red-500 text-xs mt-1 hidden error-msg">This field is required</p>
+                            </div>
+
+                            <!-- Message -->
+                            <div>
+                                <label for="message" class="block text-sm font-bold text-secondary mb-2">How can we
+                                    help?</label>
+                                <textarea id="message" name="message" rows="4" required
+                                    class="w-full px-4 py-3 bg-white border-0 rounded text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all resize-none"
+                                    placeholder="Tell us a little about the project..."></textarea>
+                                <p class="text-red-500 text-xs mt-1 hidden error-msg">This field is required</p>
+                            </div>
+
+                            <!-- Services -->
+                            <div>
+                                <label class="block text-sm font-bold text-secondary mb-4">Services</label>
+                                <div class="grid grid-cols-2 gap-4">
+                                    <label class="flex items-center space-x-3 cursor-pointer group">
+                                        <div class="relative flex items-center">
+                                            <input type="checkbox" name="services[]" value="Roofing"
+                                                class="peer h-5 w-5 border border-gray-300 rounded bg-white checked:bg-primary checked:border-primary focus:outline-none transition-all appearance-none cursor-pointer">
+                                            <i data-lucide="check"
+                                                class="absolute w-3.5 h-3.5 text-white pointer-events-none opacity-0 peer-checked:opacity-100 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 transition-opacity"></i>
+                                        </div>
+                                        <span
+                                            class="text-sm text-secondary group-hover:text-primary transition-colors">Roofing</span>
+                                    </label>
+                                    <label class="flex items-center space-x-3 cursor-pointer group">
+                                        <div class="relative flex items-center">
+                                            <input type="checkbox" name="services[]" value="Interior"
+                                                class="peer h-5 w-5 border border-gray-300 rounded bg-white checked:bg-primary checked:border-primary focus:outline-none transition-all appearance-none cursor-pointer">
+                                            <i data-lucide="check"
+                                                class="absolute w-3.5 h-3.5 text-white pointer-events-none opacity-0 peer-checked:opacity-100 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 transition-opacity"></i>
+                                        </div>
+                                        <span
+                                            class="text-sm text-secondary group-hover:text-primary transition-colors">Interior</span>
+                                    </label>
+                                    <label class="flex items-center space-x-3 cursor-pointer group">
+                                        <div class="relative flex items-center">
+                                            <input type="checkbox" name="services[]" value="Waterproofing"
+                                                class="peer h-5 w-5 border border-gray-300 rounded bg-white checked:bg-primary checked:border-primary focus:outline-none transition-all appearance-none cursor-pointer">
+                                            <i data-lucide="check"
+                                                class="absolute w-3.5 h-3.5 text-white pointer-events-none opacity-0 peer-checked:opacity-100 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 transition-opacity"></i>
+                                        </div>
+                                        <span
+                                            class="text-sm text-secondary group-hover:text-primary transition-colors">Waterproofing</span>
+                                    </label>
+                                    <label class="flex items-center space-x-3 cursor-pointer group">
+                                        <div class="relative flex items-center">
+                                            <input type="checkbox" name="services[]" value="Home Renovation"
+                                                class="peer h-5 w-5 border border-gray-300 rounded bg-white checked:bg-primary checked:border-primary focus:outline-none transition-all appearance-none cursor-pointer">
+                                            <i data-lucide="check"
+                                                class="absolute w-3.5 h-3.5 text-white pointer-events-none opacity-0 peer-checked:opacity-100 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 transition-opacity"></i>
+                                        </div>
+                                        <span
+                                            class="text-sm text-secondary group-hover:text-primary transition-colors">Home
+                                            Renovation</span>
+                                    </label>
+                                    <label class="flex items-center space-x-3 cursor-pointer group">
+                                        <div class="relative flex items-center">
+                                            <input type="checkbox" name="services[]" value="Masonry"
+                                                class="peer h-5 w-5 border border-gray-300 rounded bg-white checked:bg-primary checked:border-primary focus:outline-none transition-all appearance-none cursor-pointer">
+                                            <i data-lucide="check"
+                                                class="absolute w-3.5 h-3.5 text-white pointer-events-none opacity-0 peer-checked:opacity-100 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 transition-opacity"></i>
+                                        </div>
+                                        <span
+                                            class="text-sm text-secondary group-hover:text-primary transition-colors">Masonry</span>
+                                    </label>
+                                    <label class="flex items-center space-x-3 cursor-pointer group">
+                                        <div class="relative flex items-center">
+                                            <input type="checkbox" name="services[]" value="Remodeling"
+                                                class="peer h-5 w-5 border border-gray-300 rounded bg-white checked:bg-primary checked:border-primary focus:outline-none transition-all appearance-none cursor-pointer">
+                                            <i data-lucide="check"
+                                                class="absolute w-3.5 h-3.5 text-white pointer-events-none opacity-0 peer-checked:opacity-100 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 transition-opacity"></i>
+                                        </div>
+                                        <span
+                                            class="text-sm text-secondary group-hover:text-primary transition-colors">Remodeling</span>
+                                    </label>
+                                    <label class="flex items-center space-x-3 cursor-pointer group">
+                                        <div class="relative flex items-center">
+                                            <input type="checkbox" name="services[]" value="Exterior"
+                                                class="peer h-5 w-5 border border-gray-300 rounded bg-white checked:bg-primary checked:border-primary focus:outline-none transition-all appearance-none cursor-pointer">
+                                            <i data-lucide="check"
+                                                class="absolute w-3.5 h-3.5 text-white pointer-events-none opacity-0 peer-checked:opacity-100 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 transition-opacity"></i>
+                                        </div>
+                                        <span
+                                            class="text-sm text-secondary group-hover:text-primary transition-colors">Exterior</span>
+                                    </label>
+                                    <label class="flex items-center space-x-3 cursor-pointer group">
+                                        <div class="relative flex items-center">
+                                            <input type="checkbox" name="services[]" value="Other"
+                                                class="peer h-5 w-5 border border-gray-300 rounded bg-white checked:bg-primary checked:border-primary focus:outline-none transition-all appearance-none cursor-pointer">
+                                            <i data-lucide="check"
+                                                class="absolute w-3.5 h-3.5 text-white pointer-events-none opacity-0 peer-checked:opacity-100 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 transition-opacity"></i>
+                                        </div>
+                                        <span
+                                            class="text-sm text-secondary group-hover:text-primary transition-colors">Other</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- Submit Button -->
+                            <button type="submit" id="submitBtn"
+                                class="w-full bg-primary text-white py-4 rounded font-bold hover:bg-opacity-90 transition-all duration-300 transform hover:-translate-y-1">
+                                Send message
+                            </button>
+                        </form>
                     </div>
                 </div>
-                
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                        <label for="email-address" class="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
-                        <input 
-                            type="email" 
-                            id="email-address" 
-                            class="w-full px-4 py-3 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all duration-300"
-                            placeholder="Your email address"
-                        >
-                    </div>
-                    <div>
-                        <label for="zip-code" class="block text-sm font-medium text-gray-700 mb-2">Zip Code</label>
-                        <input 
-                            type="text" 
-                            id="zip-code" 
-                            class="w-full px-4 py-3 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all duration-300"
-                            placeholder="Your zip code"
-                        >
-                    </div>
-                </div>
-                
-                <div>
-                    <label for="project-details" class="block text-sm font-medium text-gray-700 mb-2">Project Details</label>
-                    <textarea 
-                        id="project-details" 
-                        rows="4" 
-                        class="w-full px-4 py-3 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all duration-300"
-                        placeholder="Please provide details about your fire damage restoration needs"
-                    ></textarea>
-                </div>
-                
-                <div class="flex items-center gap-2">
-                    <input type="checkbox" id="consent" class="w-4 h-4 text-primary focus:ring-primary/50 border-border rounded">
-                    <label for="consent" class="text-sm text-gray-600">
-                        I consent to receiving communications from Zicklin Contracting regarding my fire damage restoration needs.
-                    </label>
-                </div>
-                
-                <button type="submit" class="w-full bg-primary text-white px-6 py-4 rounded-md font-medium hover:bg-opacity-90 transition-all duration-300 transform hover:-translate-y-1">
-                    Submit Request
-                </button>
-            </form>
+            </div>
         </div>
     </div>
+
+    <!-- Inline Script for Form Validation and Submission -->
+    <script>
+        (function () {
+            const form = document.getElementById('contactForm');
+            const submitBtn = document.getElementById('submitBtn');
+
+            if (!form || !submitBtn) return;
+
+            // Helper: Validate a single field
+            const validateField = (input) => {
+                const errorMsg = input.parentElement.querySelector('.error-msg');
+                let isValid = true;
+
+                // Reset styles
+                input.classList.remove('ring-2', 'ring-red-500', 'border-red-500');
+                if (errorMsg) errorMsg.classList.add('hidden');
+
+                // Check required
+                if (input.hasAttribute('required') && !input.value.trim()) {
+                    isValid = false;
+                    if (errorMsg) errorMsg.textContent = 'This field is required';
+                }
+                // Check email
+                else if (input.type === 'email' && input.value.trim()) {
+                    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                    if (!emailPattern.test(input.value)) {
+                        isValid = false;
+                        if (errorMsg) errorMsg.textContent = 'Please enter a valid email address';
+                    }
+                }
+
+                if (!isValid) {
+                    input.classList.add('ring-2', 'ring-red-500');
+                    if (errorMsg) errorMsg.classList.remove('hidden');
+                }
+
+                return isValid;
+            };
+
+            // Real-time validation
+            const inputs = form.querySelectorAll('input[required], textarea[required]');
+            inputs.forEach(input => {
+                input.addEventListener('blur', () => validateField(input));
+                input.addEventListener('input', () => {
+                    // If already showing error, re-validate on input to clear it
+                    if (input.classList.contains('ring-red-500')) {
+                        validateField(input);
+                    }
+                });
+            });
+
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+
+                let isFormValid = true;
+                inputs.forEach(input => {
+                    if (!validateField(input)) {
+                        isFormValid = false;
+                    }
+                });
+
+                if (isFormValid) {
+                    // Simulate submission
+                    const originalBtnText = submitBtn.innerText;
+                    const originalBtnClasses = submitBtn.className;
+                    
+                    submitBtn.innerText = 'Sending...';
+                    submitBtn.disabled = true;
+                    submitBtn.classList.add('opacity-75', 'cursor-not-allowed');
+
+                    // Simulate network delay
+                    await new Promise(resolve => setTimeout(resolve, 1500));
+
+                    // Success state
+                    submitBtn.innerText = 'Sent!';
+                    submitBtn.classList.remove('bg-primary', 'hover:bg-opacity-90');
+                    submitBtn.classList.add('bg-green-600', 'hover:bg-green-700');
+                    
+                    form.reset();
+
+                    // Restore button after 3 seconds
+                    setTimeout(() => {
+                        submitBtn.innerText = originalBtnText;
+                        submitBtn.disabled = false;
+                        submitBtn.className = originalBtnClasses;
+                    }, 3000);
+                }
+            });
+        })();
+    </script>
 </section>

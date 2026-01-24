@@ -1,33 +1,190 @@
-<!-- 服务介绍图片 -->
-<section class="py-16 bg-light">
-    <div class="container mx-auto px-4">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div class="relative overflow-hidden rounded-xl shadow-lg">
-                <img 
-                    src="https://aidp.juejin.cn/agentic/api/v1/tool/text2image?prompt=fire%20damage%20restoration%20process%20before%20and%20after&size=1024x1024" 
-                    alt="Fire Damage Restoration Before and After" 
-                    class="w-full h-auto transition-transform duration-500 hover:scale-105"
-                >
-                <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end">
-                    <div class="p-6 text-white">
-                        <h3 class="text-xl font-bold mb-2">专业修复流程</h3>
-                        <p class="text-sm opacity-90">从评估到完成，我们提供全方位的火灾修复服务</p>
-                    </div>
+<!-- Service Intro Pic Component -->
+<section class="py-16 md:py-20 bg-[#f4f6f9] overflow-hidden" id="service-intro-pic">
+    <div class="container mx-auto px-4 mb-12">
+        <div class="flex flex-col lg:flex-row">
+            <!-- Sidebar Label -->
+            <div class="hidden lg:block lg:w-[17%] pt-2">
+                <div class="text-primary font-maven text-xl font-bold uppercase tracking-widest">
+                    ABOUT
                 </div>
             </div>
-            <div class="relative overflow-hidden rounded-xl shadow-lg">
-                <img 
-                    src="https://aidp.juejin.cn/agentic/api/v1/tool/text2image?prompt=professional%20technician%20using%20advanced%20equipment%20for%20fire%20damage%20restoration&size=1024x1024" 
-                    alt="Professional Technician at Work" 
-                    class="w-full h-auto transition-transform duration-500 hover:scale-105"
-                >
-                <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end">
-                    <div class="p-6 text-white">
-                        <h3 class="text-xl font-bold mb-2">先进设备</h3>
-                        <p class="text-sm opacity-90">使用最新技术和设备，确保修复效果最佳</p>
-                    </div>
+
+            <!-- Main Content -->
+            <div class="flex-1 lg:w-[83%]">
+                <h2 class="text-[2rem] md:text-[2.5rem] font-bold mb-6 leading-tight">
+                    Why Choose Zicklin Contracting for Fire Damage Restoration of Fire Damage Near Me?
+                </h2>
+
+                <div class="text-gray-600 text-md mb-8 leading-relaxed pl-[2em]">
+                    <p class="mb-6">
+                        Zicklin Contracting provides the finest fire damage restoration services.
+                        When disaster strikes, call on our team to restore your property to its
+                        pre-damage condition while minimizing delays to your daily life. Here’s
+                        why you should call us:
+                    </p>
+
+                    <ul class="space-y-4 list-none">
+                        <li class="pl-0">
+                            <span class="text-primary font-bold">Expertise:</span>
+                            With years of experience in fire water damage clean up, our team is knowledgeable and
+                            experienced with all levels of fire damage restoration.
+                        </li>
+                        <li class="pl-0">
+                            <span class="text-primary font-bold">Full-Service Restoration:</span>
+                            We cover all aspects of fire damage from initial assessment to final restoration.
+                        </li>
+                        <li class="pl-0">
+                            <span class="text-primary font-bold">Advanced Technology:</span>
+                            We utilize state-of-the-art equipment and techniques to ensure efficient and effective
+                            restoration.
+                        </li>
+                        <li class="pl-0">
+                            <span class="text-primary font-bold">Customer Satisfaction:</span>
+                            Your satisfaction is our primary concern. We strive to maintain a close dialogue through all
+                            stages of fire restoration york so we can address your needs and expectations.
+                        </li>
+                    </ul>
                 </div>
+
+                <a href="#consultation-form"
+                    class="ml-[2em] inline-block bg-primary text-white font-bold py-3 px-8 rounded hover:bg-[#7a2a24] transition-colors shadow-sm">
+                    Get a Quote
+                </a>
             </div>
         </div>
     </div>
+
+    <!-- Infinite Carousel -->
+    <div class="w-full relative group">
+        <!-- Carousel Track -->
+        <div class="carousel-container overflow-hidden w-full">
+            <div class="carousel-track flex transition-transform duration-500 ease-in-out" id="gallery-track">
+                <!-- Items will be injected by JS -->
+            </div>
+        </div>
+
+        <!-- Navigation Buttons -->
+        <div class="flex justify-center gap-14 mt-8">
+            <button
+                class="carousel-prev w-14 h-14 flex items-center justify-center bg-white hover:bg-gray-100 text-secondary rounded-full shadow-md transition-all">
+                <i data-lucide="arrow-left" class="w-5 h-5"></i>
+            </button>
+            <button
+                class="carousel-next w-14 h-14 flex items-center justify-center bg-white hover:bg-gray-100 text-secondary rounded-full shadow-md transition-all">
+                <i data-lucide="arrow-right" class="w-5 h-5"></i>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        (function () {
+            const track = document.getElementById('gallery-track');
+            const prevBtn = document.querySelector('.carousel-prev');
+            const nextBtn = document.querySelector('.carousel-next');
+
+            // Image sources
+            const images = [
+                "https://p3-aidp.byteimg.com/tos-cn-i-979rioudue/1839b2c9fa014a248cc3f60352e12901~tplv-979rioudue-resize_image.image",
+                "https://aidp.juejin.cn/agentic/api/v1/tool/text2image?prompt=professional%20technician%20using%20advanced%20equipment%20for%20fire%20damage%20restoration&size=1024x1024"
+            ];
+
+            // Configuration
+            const itemsToShow = 4; // Show 4 images at a time (responsive adjustments below)
+            let currentIndex = 0;
+            let autoPlayInterval;
+
+            // Build carousel items
+            // Duplicate images to create a long strip for infinite scrolling illusion
+            // We need enough copies to fill the screen + buffer
+            const displayImages = [...images, ...images, ...images, ...images, ...images, ...images];
+
+            displayImages.forEach((src, index) => {
+                const item = document.createElement('div');
+                item.className = 'w-full md:w-1/3 lg:w-1/4 flex-shrink-0 px-2'; // 1 col mobile, 3 tablet, 4 desktop
+                item.innerHTML = `
+                    <div class="aspect-[4/3] overflow-hidden rounded-lg">
+                        <img src="${src}" alt="Gallery Image ${index}" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500">
+                    </div>
+                `;
+                track.appendChild(item);
+            });
+
+            // Initialize Lucide icons for the buttons
+            if (window.lucide) {
+                lucide.createIcons();
+            }
+
+            // Carousel Logic
+            function updateCarousel() {
+                const itemWidth = track.children[0].offsetWidth;
+                track.style.transform = `translateX(-${currentIndex * itemWidth}px)`;
+
+                // Reset if reached end (infinite loop illusion)
+                if (currentIndex >= displayImages.length - itemsToShow) {
+                    setTimeout(() => {
+                        track.style.transition = 'none';
+                        currentIndex = 0;
+                        track.style.transform = `translateX(0)`;
+                        setTimeout(() => {
+                            track.style.transition = 'transform 0.5s ease-in-out';
+                        }, 50);
+                    }, 500);
+                }
+            }
+
+            function nextSlide() {
+                currentIndex++;
+                updateCarousel();
+            }
+
+            function prevSlide() {
+                if (currentIndex > 0) {
+                    currentIndex--;
+                } else {
+                    // Jump to end
+                    track.style.transition = 'none';
+                    currentIndex = displayImages.length - itemsToShow - 1;
+                    const itemWidth = track.children[0].offsetWidth;
+                    track.style.transform = `translateX(-${(currentIndex + 1) * itemWidth}px)`;
+                    setTimeout(() => {
+                        track.style.transition = 'transform 0.5s ease-in-out';
+                        updateCarousel();
+                    }, 50);
+                    return;
+                }
+                updateCarousel();
+            }
+
+            // Event Listeners
+            nextBtn.addEventListener('click', () => {
+                nextSlide();
+                resetAutoPlay();
+            });
+
+            prevBtn.addEventListener('click', () => {
+                prevSlide();
+                resetAutoPlay();
+            });
+
+            // Auto Play
+            function startAutoPlay() {
+                autoPlayInterval = setInterval(nextSlide, 3000);
+            }
+
+            function resetAutoPlay() {
+                clearInterval(autoPlayInterval);
+                startAutoPlay();
+            }
+
+            // Resize handler
+            window.addEventListener('resize', updateCarousel);
+
+            // Start
+            startAutoPlay();
+
+            // Pause on hover
+            track.addEventListener('mouseenter', () => clearInterval(autoPlayInterval));
+            track.addEventListener('mouseleave', startAutoPlay);
+        })();
+    </script>
 </section>

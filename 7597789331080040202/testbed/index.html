@@ -10,7 +10,7 @@
     <!-- Lucide 图标库 -->
     <script src="https://unpkg.com/lucide@latest"></script>
     <!-- 自定义 Tailwind 配置 -->
-    <script> 
+    <script>
         tailwind.config = {
             theme: {
                 extend: {
@@ -36,71 +36,71 @@
         rel="stylesheet">
 </head>
 
-<body class="font-inter text-secondary">
+<body class="font-inter text-secondary w-full overflow-x-hidden">
     <!-- 组件容器 -->
     <div id="app">
         <!-- 头部导航 -->
         <header id="header" class="w-full"></header>
-
         <!-- Hero 区域 -->
         <section id="banner"></section>
-
         <!-- 快速咨询表单 -->
         <section id="consultation-form"></section>
 
+        <hr class="border-border border-t-2 mb-4 mt-14" />
         <!-- 服务介绍图片 -->
         <section id="service-intro-pic"></section>
-
         <!-- 服务介绍文字 -->
         <section id="service-intro-text"></section>
-
         <!-- 联系卡片-电话 -->
         <section id="contact-card-phone"></section>
-
-        <!-- 火灾修复 -->
-        <section id="fire-repair"></section>
-
-        <!-- 修复服务 -->
-        <section id="repair-service"></section>
-
-        <!-- 风险提醒 -->
-        <section id="risk-reminder"></section>
-
-        <!-- 联系卡片-链接 -->
-        <section id="contact-card-link"></section>
-
+        <!-- Service Details (Residential, Commercial, Why Crucial) -->
+        <div id="service-details"></div>
+        <!-- 客户评价 -->
+        <section id="customer-review"></section>
+        <!-- 常见问题 -->
+        <section id="fire-faq"></section>
+        <!-- 联系-我们团队 -->
+        <section id="contact-customer-service-team"></section>
         <!-- 客户展示 -->
         <section id="customer-showcase"></section>
-
         <!-- 常见问题 -->
         <section id="faq"></section>
-
-        <!-- 联系价格-电话 -->
-        <section id="contact-price-phone"></section>
-
+        <!-- 联系卡片-电话 -->
+        <section id="contact-card-phone2"></section>
         <!-- 联系文字-电话 -->
         <section id="contact-text-phone"></section>
-
         <!-- 联系文字-表单 -->
         <section id="contact-text-form"></section>
-
         <!-- 页脚 -->
         <footer id="footer"></footer>
-
-        <!-- 联系我们 -->
-        <section id="contact-us"></section>
     </div>
-
     <!-- 悬浮紧急呼叫按钮 -->
-    <div class="fixed bottom-8 right-8 z-50 flex flex-col gap-4">
-        <button
-            class="bg-primary text-white rounded-full w-16 h-16 flex items-center justify-center shadow-lg hover:shadow-xl transition-all duration-300 animate-pulse">
-            <i data-lucide="phone"></i>
-        </button>
-        <button
-            class="bg-green-500 text-white rounded-full w-16 h-16 flex items-center justify-center shadow-lg hover:shadow-xl transition-all duration-300 animate-pulse delay-300">
-            <i data-lucide="message-square"></i>
-        </button>
+    <div class="fixed bottom-8 right-8 z-50 flex flex-row gap-4">
+        <!-- WhatsApp Link -->
+        <a href="#" target="_blank"
+            class="bg-[#8e312a] text-white rounded-full w-16 h-16 flex items-center justify-center shadow-lg hover:shadow-xl transition-all duration-300">
+            <svg width="35" height="35" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <g clip-path="url(#clip0_815_1448)">
+                    <path
+                        d="M12.003 0H11.997C5.3805 0 0 5.382 0 12C0 14.625 0.846 17.058 2.2845 19.0335L0.789 23.4915L5.4015 22.017C7.299 23.274 9.5625 24 12.003 24C18.6195 24 24 18.6165 24 12C24 5.3835 18.6195 0 12.003 0ZM18.9855 16.9455C18.696 17.763 17.547 18.441 16.6305 18.639C16.0035 18.7725 15.1845 18.879 12.4275 17.736C8.901 16.275 6.63 12.6915 6.453 12.459C6.2835 12.2265 5.028 10.5615 5.028 8.8395C5.028 7.1175 5.9025 6.279 6.255 5.919C6.5445 5.6235 7.023 5.4885 7.482 5.4885C7.6305 5.4885 7.764 5.496 7.884 5.502C8.2365 5.517 8.4135 5.538 8.646 6.0945C8.9355 6.792 9.6405 8.514 9.7245 8.691C9.81 8.868 9.8955 9.108 9.7755 9.3405C9.663 9.5805 9.564 9.687 9.387 9.891C9.21 10.095 9.042 10.251 8.865 10.47C8.703 10.6605 8.52 10.8645 8.724 11.217C8.928 11.562 9.633 12.7125 10.671 13.6365C12.0105 14.829 13.0965 15.21 13.485 15.372C13.7745 15.492 14.1195 15.4635 14.331 15.2385C14.5995 14.949 14.931 14.469 15.2685 13.9965C15.5085 13.6575 15.8115 13.6155 16.1295 13.7355C16.4535 13.848 18.168 14.6955 18.5205 14.871C18.873 15.048 19.1055 15.132 19.191 15.2805C19.275 15.429 19.275 16.1265 18.9855 16.9455Z"
+                        fill="#fff" />
+                </g>
+                <defs>
+                    <clipPath id="clip0_815_1448">
+                        <rect width="24" height="24" fill="white" />
+                    </clipPath>
+                </defs>
+            </svg>
+        </a>
+        <!-- Phone Link -->
+        <a href="tel:+1-718-550-2779"
+            class="bg-[#8e312a] text-white rounded-full w-16 h-16 flex items-center justify-center shadow-lg hover:shadow-xl transition-all duration-300">
+            <svg width="35" height="35" viewBox="0 0 21 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path
+                    d="M18.8334 14.1001V16.6001C18.8344 16.8322 18.7868 17.0619 18.6939 17.2745C18.6009 17.4872 18.4645 17.6781 18.2935 17.835C18.1225 17.9919 17.9206 18.1113 17.7007 18.1857C17.4809 18.26 17.2479 18.2876 17.0168 18.2667C14.4525 17.9881 11.9893 17.1119 9.82511 15.7084C7.81163 14.429 6.10455 12.7219 4.82511 10.7084C3.41676 8.53441 2.54031 6.05923 2.26677 3.4834C2.24595 3.25296 2.27334 3.0207 2.34719 2.80142C2.42105 2.58214 2.53975 2.38064 2.69575 2.20975C2.85174 2.03886 3.04161 1.90233 3.25327 1.80884C3.46492 1.71535 3.69372 1.66696 3.92511 1.66674H6.42511C6.82953 1.66276 7.2216 1.80597 7.52824 2.06968C7.83488 2.33339 8.03517 2.69961 8.09177 3.10007C8.19729 3.90013 8.39298 4.68568 8.67511 5.44174C8.78723 5.74001 8.81149 6.06417 8.74503 6.3758C8.67857 6.68744 8.52416 6.9735 8.30011 7.20007L7.24177 8.2584C8.42807 10.3447 10.1555 12.0721 12.2418 13.2584L13.3001 12.2001C13.5267 11.976 13.8127 11.8216 14.1244 11.7551C14.436 11.6887 14.7602 11.713 15.0584 11.8251C15.8115 12.1072 16.6001 12.3029 17.4001 12.4084C17.8049 12.4655 18.1746 12.6694 18.4389 12.9813C18.7032 13.2932 18.8436 13.6914 18.8334 14.1001Z"
+                    stroke="white" stroke-width="1.66667" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+        </a>
     </div>
 
     <!-- JavaScript -->

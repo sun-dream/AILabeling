@@ -1,84 +1,105 @@
-<!-- 快速咨询表单 -->
-<section class="py-16 bg-white">
-    <div class="container mx-auto px-4">
-        <div class="max-w-4xl mx-auto bg-light rounded-2xl p-8 md:p-12 shadow-lg">
-            <div class="text-center mb-10">
-                <h2 class="text-2xl md:text-3xl font-bold font-maven text-secondary mb-4">Request a Free Consultation</h2>
-                <p class="text-gray-600">Fill out the form below to get a free estimate for your fire damage restoration needs</p>
+<!-- Consultation Form Component -->
+<section class="py-16 md:py-20 relative " id="consultation-form">
+    <!-- Blueprint Background Image -->
+    <div class="absolute inset-0 z-0 top-auto">
+        <img src="https://p3-aidp.byteimg.com/tos-cn-i-979rioudue/0b62eca52d3243d2a18a8d40f1752321~tplv-979rioudue-resize_image.image"
+            alt="background blueprint" class="rotate-[-5deg] w-[1200px] h-full object-cover opacity-100" />
+    </div>
+
+    <div class="container mx-auto px-4 relative z-10">
+        <div class="flex flex-col lg:flex-row">
+            <!-- Sidebar Label (Desktop only) -->
+            <div class="hidden lg:block lg:w-[17%] pt-4">
+                <div class="text-primary font-maven text-xl font-bold uppercase">
+                    Contact us
+                </div>
             </div>
-            
-            <form class="space-y-6">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div class="relative">
-                        <input 
-                            type="text" 
-                            id="name" 
-                            class="form-input w-full px-4 py-3 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all duration-300"
-                            placeholder=" "
-                        >
-                        <label for="name" class="form-label absolute left-4 top-3 text-gray-500 transition-all duration-300 pointer-events-none">
-                            Name
-                        </label>
+
+            <!-- Main Content Area -->
+            <div class="flex-1 lg:w-[83%] flex flex-col lg:flex-row gap-12">
+                <!-- Left Column: Title & Text -->
+                <div class="lg:w-1/2 pt-2">
+                    <!-- Mobile Label -->
+                    <div class="lg:hidden mb-4">
+                        <span class="text-primary font-bold uppercase tracking-widest text-xs">CONTACT US</span>
                     </div>
-                    <div class="relative">
-                        <input 
-                            type="email" 
-                            id="email" 
-                            class="form-input w-full px-4 py-3 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all duration-300"
-                            placeholder=" "
-                        >
-                        <label for="email" class="form-label absolute left-4 top-3 text-gray-500 transition-all duration-300 pointer-events-none">
-                            Email (you@company.com)
-                        </label>
+
+                    <h2 class="text-[2.5rem] md:text-[3.25rem] font-bold font-maven text-secondary mb-6 leading-[1.1]">
+                        Request a <span class="text-primary">Free Consultation</span>
+                    </h2>
+
+                    <div class="text-gray-600 text-lg">
+                        <span>You can reach us anytime via</span>
+                        <a href="mailto:zicklin@zicklincontracting.com" class="hover:underline transition-colors">
+                            zicklin@zicklincontracting.com
+                        </a>
                     </div>
                 </div>
-                
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div class="relative">
-                        <input 
-                            type="tel" 
-                            id="phone" 
-                            class="form-input w-full px-4 py-3 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all duration-300"
-                            placeholder=" "
-                        >
-                        <label for="phone" class="form-label absolute left-4 top-3 text-gray-500 transition-all duration-300 pointer-events-none">
-                            Phone
-                        </label>
-                    </div>
-                    <div class="relative">
-                        <input 
-                            type="text" 
-                            id="zip" 
-                            class="form-input w-full px-4 py-3 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all duration-300"
-                            placeholder=" "
-                        >
-                        <label for="zip" class="form-label absolute left-4 top-3 text-gray-500 transition-all duration-300 pointer-events-none">
-                            Zip Code
-                        </label>
-                    </div>
+
+                <!-- Right Column: Form -->
+                <div class="lg:w-1/2">
+                    <form class="space-y-5">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                            <!-- First Name -->
+                            <div>
+                                <label class="block text-sm font-bold text-secondary mb-2" for="first-name">
+                                    First name <span class="text-primary">*</span>
+                                </label>
+                                <input type="text" id="first-name"
+                                    class="w-full px-4 py-3 bg-white border border-gray-300 rounded-lg focus:ring-1 focus:ring-primary focus:border-primary outline-none transition-all placeholder-gray-400"
+                                    placeholder="First name" required>
+                            </div>
+                            <!-- Zip Code -->
+                            <div>
+                                <label class="block text-sm font-bold text-secondary mb-2" for="zip-code">
+                                    Enter Zip Code <span class="text-primary">*</span>
+                                </label>
+                                <input type="text" id="zip-code"
+                                    class="w-full px-4 py-3 bg-white border border-gray-300 rounded-lg focus:ring-1 focus:ring-primary focus:border-primary outline-none transition-all placeholder-gray-400"
+                                    placeholder="Zip Code" required>
+                            </div>
+                        </div>
+
+                        <!-- Email -->
+                        <div>
+                            <label class="block text-sm font-bold text-secondary mb-2" for="email">
+                                Email <span class="text-primary">*</span>
+                            </label>
+                            <input type="email" id="email"
+                                class="w-full px-4 py-3 bg-white border border-gray-300 rounded-lg focus:ring-1 focus:ring-primary focus:border-primary outline-none transition-all placeholder-gray-400"
+                                placeholder="you@company.com" required>
+                        </div>
+
+                        <!-- Phone -->
+                        <div>
+                            <label class="block text-sm font-bold text-secondary mb-2" for="phone">
+                                Phone number
+                            </label>
+                            <input type="tel" id="phone"
+                                class="w-full px-4 py-3 bg-white border border-gray-300 rounded-lg focus:ring-1 focus:ring-primary focus:border-primary outline-none transition-all placeholder-gray-400"
+                                placeholder="+1 (555) 000-0000">
+                        </div>
+
+                        <!-- Message -->
+                        <div>
+                            <label class="block text-sm font-bold text-secondary mb-2" for="message">
+                                Tell us about your project <span class="text-primary">*</span>
+                            </label>
+                            <textarea id="message" rows="5"
+                                class="w-full px-4 py-3 bg-white border border-gray-300 rounded-lg focus:ring-1 focus:ring-primary focus:border-primary outline-none transition-all placeholder-gray-400 resize-none"
+                                placeholder="Leave us a message..." required></textarea>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <div>
+                            <button type="submit"
+                                class="bg-primary text-white font-bold py-3 px-8 rounded hover:bg-[#7a2a24] transition-colors shadow-sm">
+                                Send my request
+                            </button>
+                        </div>
+                    </form>
                 </div>
-                
-                <div class="relative">
-                    <textarea 
-                        id="message" 
-                        rows="4" 
-                        class="form-input w-full px-4 py-3 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all duration-300"
-                        placeholder=" "
-                    ></textarea>
-                    <label for="message" class="form-label absolute left-4 top-3 text-gray-500 transition-all duration-300 pointer-events-none">
-                        Project feedback
-                    </label>
-                </div>
-                
-                <div class="flex items-center gap-2">
-                    <input type="checkbox" id="terms" class="w-4 h-4 text-primary focus:ring-primary/50 border-border rounded">
-                    <label for="terms" class="text-sm text-gray-600">I agree to the terms and conditions</label>
-                </div>
-                
-                <button type="submit" class="w-full bg-primary text-white px-6 py-4 rounded-md font-medium hover:bg-opacity-90 transition-all duration-300 transform hover:-translate-y-1">
-                    Submit Request
-                </button>
-            </form>
+            </div>
         </div>
     </div>
 </section>
