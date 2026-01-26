@@ -32,7 +32,7 @@
                                     </div>
                                     <div>
                                         <h4 class="font-bold text-secondary text-lg">Bronx</h4>
-                                        <a href="https://maps.app.goo.gl/AcTtmqYphpm5mpoS6" target="_blank"
+                                        <a href="#" target="_blank"
                                             class="text-gray-600 hover:text-primary transition-colors text-sm">
                                             967 Longfellow Ave, Bronx NY 10474
                                         </a>
@@ -46,7 +46,7 @@
                                     </div>
                                     <div>
                                         <h4 class="font-bold text-secondary text-lg">Queens</h4>
-                                        <a href="https://maps.app.goo.gl/AfmQzG8deH9yJMWh9" target="_blank"
+                                        <a href="#" target="_blank"
                                             class="text-gray-600 hover:text-primary transition-colors text-sm">
                                             28-25 119th Street, Flushing, NY, 11354
                                         </a>
@@ -60,7 +60,7 @@
                                     </div>
                                     <div>
                                         <h4 class="font-bold text-secondary text-lg">Brooklyn</h4>
-                                        <a href="https://maps.app.goo.gl/s65dbo2nzZ4bzbWR7" target="_blank"
+                                        <a href="#" target="_blank"
                                             class="text-gray-600 hover:text-primary transition-colors text-sm">
                                             18 Steuben St, Brooklyn, NY 11205
                                         </a>
@@ -127,7 +127,8 @@
                                 <input type="email" id="email" name="email" required
                                     class="w-full px-4 py-3 bg-white border-0 rounded text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all"
                                     placeholder="you@company.com">
-                                <p class="text-red-500 text-xs mt-1 hidden error-msg">Please enter a valid email address</p>
+                                <p class="text-red-500 text-xs mt-1 hidden error-msg">Please enter a valid email address
+                                </p>
                             </div>
 
                             <!-- Phone -->
@@ -315,7 +316,7 @@
                     // Simulate submission
                     const originalBtnText = submitBtn.innerText;
                     const originalBtnClasses = submitBtn.className;
-                    
+
                     submitBtn.innerText = 'Sending...';
                     submitBtn.disabled = true;
                     submitBtn.classList.add('opacity-75', 'cursor-not-allowed');
@@ -327,7 +328,7 @@
                     submitBtn.innerText = 'Sent!';
                     submitBtn.classList.remove('bg-primary', 'hover:bg-opacity-90');
                     submitBtn.classList.add('bg-green-600', 'hover:bg-green-700');
-                    
+
                     form.reset();
 
                     // Restore button after 3 seconds

@@ -1,0 +1,31 @@
+<section class="relative h-screen flex items-center justify-center overflow-hidden">
+    <!-- 视频背景 -->
+    <video class="video-bg" autoplay muted loop>
+        <source src="https://aidp.juejin.cn/agentic/api/v1/tool/text2image?prompt=high%20fidelity%20audio%20equipment%20in%20modern%20studio%20setting&size=1920x1080" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+    
+    <!-- 渐变叠加 -->
+    <div class="absolute inset-0 bg-gradient-to-b from-dark/70 via-dark/50 to-dark/80"></div>
+    
+    <!-- 内容 -->
+    <div class="container mx-auto px-4 z-10 text-center">
+        <h1 class="text-[clamp(2.5rem,6vw,4.5rem)] font-futura font-bold text-light mb-6 text-shadow-lg animate-fade-in">
+            HiFi Pawlak! Ihr High-End HiFi Spezialist in Essen.
+        </h1>
+        <p class="text-[clamp(1.2rem,3vw,1.8rem)] text-light mb-12 text-shadow animate-slide-up">
+            Das Erlebnis Klang – persönlich, individuell, verlässlich.
+        </p>
+        <button class="btn-primary bg-primary hover:bg-primary/90 text-light font-bold py-4 px-8 rounded-full text-lg transition-all duration-300">
+            Video ansehen
+        </button>
+    </div>
+    
+    <!-- 滚动指示 -->
+    <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce">
+        <i data-lucide="chevron-down" class="w-8 h-8 text-light"></i>
+    </div>
+</section>
+
+<!-- 波浪分割线 -->
+<div class="wave-divider wave-bg"></div>
