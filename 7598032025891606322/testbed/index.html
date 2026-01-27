@@ -82,12 +82,65 @@
     </style>
     <link rel="stylesheet" href="style.css">
 </head>
-<body class="bg-dark text-light font-inter">
+<body class="text-dark font-inter">
     <!-- 组件将通过 JavaScript 动态加载 -->
     <div id="app">
+        <!-- 组件容器 -->
+        <div id="header-component"></div>
+        <div id="topnews-component"></div>
+        <div id="services-home-component"></div>
+        <div id="special-offer-musicians-component"></div>
+        <div id="range-teaser-question-component"></div>
+        <div id="special-offer-client-component"></div>
+        <div id="range-teaser-answer-component"></div>
+        <div id="product-component"></div>
+        <div id="announcement-component"></div>
+        <div id="quote-component"></div>
+        <div id="footer-component"></div>
+        <div id="dialog-component"></div>
+
         <!-- 加载指示器 -->
         <div class="fixed inset-0 flex items-center justify-center bg-dark z-50" id="loader">
             <div class="w-16 h-16 border-4 border-gray-700 border-t-primary rounded-full animate-spin"></div>
+        </div>
+    </div>
+    <!-- Newsletter Popup Component -->
+    <div id="newsletter-popup" class="fixed inset-0 z-[100] flex items-center justify-center bg-black bg-opacity-50 hidden opacity-0 transition-opacity duration-300" role="dialog" aria-modal="true">
+        <div class="bg-white w-full max-w-xl mx-4 md:mx-auto relative shadow-2xl transform scale-95 transition-transform duration-300 p-8">
+            <!-- Close Button -->
+            <button id="newsletter-close-btn" class="absolute top-2 right-2 p-2 text-gray-400 hover:text-dark transition-colors focus:outline-none" aria-label="Close">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+            </button>
+
+            <!-- Content -->
+            <div class="text-left mb-6">
+                <h2 class="text-3xl md:text-4xl font-futura font-bold leading-tight">
+                    <span class="text-primary block">Newsletter</span> bestellen
+                </h2>
+            </div>
+
+            <form method="post" action="https://flow.cleverreach.com/fl/e34c24ff-a864-4cc6-9838-3b0ad5b9a76c/confirm" target="_blank" id="newsletter-form">
+                <input type="text" tabindex="-1" autocomplete="off" class="hidden" name="email_confirm" />
+                
+                <div class="mb-4 text-left">
+                    <label for="newsletter-email" class="block text-dark font-medium mb-1">E-Mail <span class="text-primary">*</span></label>
+                    <input type="email" id="newsletter-email" name="email" required class="w-full border border-gray-300 px-4 py-3 focus:outline-none focus:border-primary transition-colors" placeholder="">
+                </div>
+
+                <div class="mb-6 text-left">
+                    <div class="flex items-start gap-3">
+                        <input type="checkbox" id="newsletter-consent" name="tags[]" value="accept" required class="mt-1 w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary">
+                        <label for="newsletter-consent" class="text-sm text-gray-600 leading-snug">
+                            Ich willige ein, dass meine Daten zur Personalisierung des Newsletters verwendet werden.
+                            Mehr Infos in der <a href="https://hifi-pawlak.de/impressum-datenschutz/" target="_blank" class="underline hover:text-primary transition-colors">Datenschutzerklärung</a>.
+                        </label>
+                    </div>
+                </div>
+
+                <button type="submit" class="w-full bg-primary text-white font-futura font-bold text-lg py-3 hover:bg-[#b02e1a] transition-colors shadow-md hover:shadow-lg transform hover:-translate-y-0.5 active:translate-y-0 duration-200">
+                    Jetzt anmelden
+                </button>
+            </form>
         </div>
     </div>
     <script src="script.js"></script>

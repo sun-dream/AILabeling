@@ -1,24 +1,205 @@
-<header class="fixed top-0 left-0 w-full z-40 transition-all duration-300">
-    <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+<header class="fixed top-0 left-0 w-full z-50 bg-white shadow-md transition-all duration-300">
+    <!-- Main Navigation Area -->
+    <div id="nav-container" class="container mx-auto px-4 h-[82px] flex justify-between items-center relative z-20 transition-all duration-300">
+        <!-- Logo -->
         <div class="flex items-center">
-            <a href="#" class="text-2xl font-futura font-bold text-light">
-                HiFi <span class="text-primary">Pawlak</span>
+            <a href="#" class="block">
+                <svg class="h-10 md:h-11 w-auto transition-all duration-300 ease-in-out" viewBox="0 0 237 44" xmlns="http://www.w3.org/2000/svg" version="1.1" style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd" xmlns:xlink="http://www.w3.org/1999/xlink">
+                    <title>HiFi Pawlak</title>
+                    <g><path style="opacity:0.693" fill="#000000" d="M 31.5,-0.5 C 32.5,-0.5 33.5,-0.5 34.5,-0.5C 38.8807,3.60356 38.214,6.9369 32.5,9.5C 27.5476,6.60959 27.2143,3.27626 31.5,-0.5 Z"/></g>
+                    <g><path style="opacity:0.716" fill="#000000" d="M 60.5,-0.5 C 61.5,-0.5 62.5,-0.5 63.5,-0.5C 67.697,3.61455 67.0303,6.94789 61.5,9.5C 56.6681,6.40262 56.3348,3.06929 60.5,-0.5 Z"/></g>
+                    <g><path style="opacity:0.848" fill="#000000" d="M 163.5,-0.5 C 165.833,-0.5 168.167,-0.5 170.5,-0.5C 170.5,9.83333 170.5,20.1667 170.5,30.5C 168.167,30.5 165.833,30.5 163.5,30.5C 163.666,24.4908 163.499,18.4908 163,12.5C 160.088,18.6581 156.921,24.6581 153.5,30.5C 151.5,31.8333 149.5,31.8333 147.5,30.5C 146.236,27.8747 145.069,25.2081 144,22.5C 142.103,25.1274 140.603,27.9607 139.5,31C 136.482,31.7723 133.815,31.1056 131.5,29C 131.833,28.6667 132.167,28.3333 132.5,28C 129.872,23.2451 127.372,18.4118 125,13.5C 124.501,19.4908 124.334,25.4908 124.5,31.5C 118.599,30.8138 112.599,30.6471 106.5,31C 105.627,29.955 104.627,29.1217 103.5,28.5C 101.746,24.7424 101.079,20.7424 101.5,16.5C 102.977,14.193 104.977,12.3597 107.5,11C 114.559,10.8655 121.559,10.6988 128.5,10.5C 130.1,10.5507 131.6,10.8841 133,11.5C 134.333,14.1667 135.667,16.8333 137,19.5C 138.333,16.8333 139.667,14.1667 141,11.5C 142.814,10.2404 144.647,10.2404 146.5,11.5C 147.747,14.3286 149.247,16.9952 151,19.5C 151.892,16.7163 153.058,14.0496 154.5,11.5C 157.428,10.5159 160.428,10.1826 163.5,10.5C 163.5,6.83333 163.5,3.16667 163.5,-0.5 Z M 111.5,17.5 C 112.397,18.5981 113.23,18.5981 114,17.5C 117.015,19.5161 117.182,21.6828 114.5,24C 109.148,24.1754 108.148,22.0087 111.5,17.5 Z"/></g>
+                    <g><path style="opacity:0.817" fill="#000000" d="M 197.5,-0.5 C 200.167,-0.5 202.833,-0.5 205.5,-0.5C 205.334,5.17645 205.501,10.8431 206,16.5C 210.355,10.5426 215.855,9.04255 222.5,12C 220.676,12.66 219.343,13.8267 218.5,15.5C 216.521,16.8121 214.855,18.4788 213.5,20.5C 216.5,23.8333 219.5,27.1667 222.5,30.5C 217.561,32.0399 212.895,31.5399 208.5,29C 208.833,28.6667 209.167,28.3333 209.5,28C 205.753,23.6893 204.419,24.856 205.5,31.5C 202.833,31.5 200.167,31.5 197.5,31.5C 197.5,20.8333 197.5,10.1667 197.5,-0.5 Z"/></g>
+                    <g><path style="opacity:0.851" fill="#000000" d="M 0.5,2.5 C 3.16667,2.5 5.83333,2.5 8.5,2.5C 8.5,5.83333 8.5,9.16667 8.5,12.5C 11.5,12.5 14.5,12.5 17.5,12.5C 17.5,9.16667 17.5,5.83333 17.5,2.5C 20.5,2.5 23.5,2.5 26.5,2.5C 26.5,12.1667 26.5,21.8333 26.5,31.5C 23.5525,31.2229 20.7191,31.5562 18,32.5C 17.5,32 17,31.5 16.5,31C 17.4558,27.6064 17.7892,24.1064 17.5,20.5C 14.5,20.5 11.5,20.5 8.5,20.5C 8.5,24.1667 8.5,27.8333 8.5,31.5C 5.83333,31.5 3.16667,31.5 0.5,31.5C 0.5,21.8333 0.5,12.1667 0.5,2.5 Z"/></g>
+                    <g><path style="opacity:0.821" fill="#000000" d="M 39.5,2.5 C 45.1667,2.5 50.8333,2.5 56.5,2.5C 56.5,4.83333 56.5,7.16667 56.5,9.5C 53.8333,9.5 51.1667,9.5 48.5,9.5C 48.5,10.5 48.5,11.5 48.5,12.5C 51.1667,12.5 53.8333,12.5 56.5,12.5C 56.5,15.1667 56.5,17.8333 56.5,20.5C 53.8333,20.5 51.1667,20.5 48.5,20.5C 48.5,24.1667 48.5,27.8333 48.5,31.5C 45.5,31.5 42.5,31.5 39.5,31.5C 39.5,21.8333 39.5,12.1667 39.5,2.5 Z"/></g>
+                    <g><path style="opacity:0.895" fill="#000000" d="M 101.5,16.5 C 98.0646,21.0316 93.3979,22.6982 87.5,21.5C 87.5,24.8333 87.5,28.1667 87.5,31.5C 84.8333,31.5 82.1667,31.5 79.5,31.5C 79.5,21.8333 79.5,12.1667 79.5,2.5C 85.5092,2.33385 91.5092,2.50051 97.5,3C 101.096,6.73465 102.429,11.2346 101.5,16.5 Z M 87.5,8.5 C 91.4459,8.48769 93.1126,10.4877 92.5,14.5C 90.8333,14.5 89.1667,14.5 87.5,14.5C 87.5,12.5 87.5,10.5 87.5,8.5 Z"/></g>
+                    <g><path style="opacity:0.903" fill="#000000" d="M 227.5,22.5 C 226.711,22.2172 226.044,21.7172 225.5,21C 226.476,14.9242 226.81,8.75757 226.5,2.5C 229.167,2.5 231.833,2.5 234.5,2.5C 234.5,8.83333 234.5,15.1667 234.5,21.5C 231.941,21.1984 229.607,21.5318 227.5,22.5 Z"/></g>
+                    <g><path style="opacity:0.792" fill="#000000" d="M 29.5,10.5 C 32.1194,10.2317 34.6194,10.565 37,11.5C 37.4996,18.1583 37.6663,24.825 37.5,31.5C 34.8333,31.5 32.1667,31.5 29.5,31.5C 29.5,24.5 29.5,17.5 29.5,10.5 Z"/></g>
+                    <g><path style="opacity:0.785" fill="#000000" d="M 58.5,10.5 C 60.8333,10.5 63.1667,10.5 65.5,10.5C 65.5,17.5 65.5,24.5 65.5,31.5C 62.4816,31.6646 59.4816,31.498 56.5,31C 57.1841,24.1677 57.8508,17.3344 58.5,10.5 Z"/></g>
+                    <g><path style="opacity:0.851" fill="#000000" d="M 179.5,10.5 C 184.833,11.8333 190.167,11.8333 195.5,10.5C 195.5,17.5 195.5,24.5 195.5,31.5C 189.84,30.3486 184.174,30.182 178.5,31C 173.965,28.0751 172.132,23.9084 173,18.5C 173.273,16.6711 174.107,15.1711 175.5,14C 175.167,13.6667 174.833,13.3333 174.5,13C 176.491,12.6264 178.158,11.793 179.5,10.5 Z M 182.5,17.5 C 185.55,16.9232 187.55,18.0899 188.5,21C 185.7,25.6205 183.033,25.6205 180.5,21C 180.978,19.6974 181.645,18.5307 182.5,17.5 Z"/></g>
+                    <g><path style="opacity:0.008" fill="#000000" d="M 218.5,15.5 C 219.833,16.1667 219.833,16.1667 218.5,15.5 Z"/></g>
+                    <g><path style="opacity:0.776" fill="#000000" d="M 227.5,22.5 C 233.496,21.3327 235.996,23.6661 235,29.5C 232,33.5 229,33.5 226,29.5C 225.167,26.829 225.667,24.4957 227.5,22.5 Z"/></g>
+                    <g><path style="opacity:0.008" fill="#000000" d="M 103.5,28.5 C 102.833,29.1667 102.833,29.1667 103.5,28.5 Z"/></g>
+                    <g><path style="opacity:1" fill="#e42000" d="M -0.5,36.5 C 78.5,36.5 157.5,36.5 236.5,36.5C 236.5,38.8333 236.5,41.1667 236.5,43.5C 157.5,43.5 78.5,43.5 -0.5,43.5C -0.5,41.1667 -0.5,38.8333 -0.5,36.5 Z"/></g>
+                </svg>
             </a>
         </div>
 
-        <!-- 桌面导航 -->
-        <nav class="hidden md:flex items-center space-x-8">
-            <a href="#" class="text-light hover:text-primary transition-colors duration-300 font-medium">Home</a>
-            <a href="#" class="text-light hover:text-primary transition-colors duration-300 font-medium">Sortiment</a>
-            <a href="#"
-                class="text-light hover:text-primary transition-colors duration-300 font-medium">Dienstleistungen</a>
-            <a href="#" class="text-light hover:text-primary transition-colors duration-300 font-medium">Über uns</a>
-            <a href="#" class="text-light hover:text-primary transition-colors duration-300 font-medium">Kontakt</a>
-        </nav>
+        <!-- Desktop Navigation & Socials -->
+        <div class="hidden lg:flex items-center">
+            <nav class="flex items-center space-x-6 mr-8">
+                <a href="#services" class="text-dark hover:text-primary font-futura text-lg transition-all duration-300">Service</a>
+                <a href="#range" class="text-dark hover:text-primary font-futura text-lg transition-all duration-300">Sortiment</a>
+                <a href="#offers" class="text-dark hover:text-primary font-futura text-lg transition-all duration-300">Angebote</a>
+                <a href="#" class="text-dark hover:text-primary font-futura text-lg transition-all duration-300">Unternehmen</a>
+                <a href="#" class="text-dark hover:text-primary font-futura text-lg transition-all duration-300">Blog</a>
+                <a href="#contact" class="text-dark hover:text-primary font-futura text-lg transition-all duration-300">Kontakt</a>
+            </nav>
+            
+            <!-- Social Icons -->
+            <div class="flex items-center space-x-3 border-l border-gray-200 pl-6">
+                <a href="#" class="hover:opacity-80 transition-opacity">
+                    <i data-lucide="instagram" class="w-6 h-6"></i>
+                </a>
+                <a href="#" class="hover:opacity-80 transition-opacity">
+                    <i data-lucide="facebook" class="w-6 h-6"></i>
+                </a>
+                <a href="#" class="hover:opacity-80 transition-opacity">
+                    <i data-lucide="youtube" class="w-6 h-6"></i>
+                </a>
+            </div>
+        </div>
 
-        <!-- 移动端菜单按钮 -->
-        <button class="md:hidden text-light focus:outline-none">
-            <i data-lucide="menu" class="w-6 h-6"></i>
+        <!-- Mobile Menu Button -->
+        <button id="mobile-menu-btn" class="lg:hidden text-dark focus:outline-none" aria-label="Toggle menu">
+            <i data-lucide="menu" class="w-8 h-8"></i>
         </button>
     </div>
+
+    <!-- Contact Bar (Red) -->
+    <div class="bg-primary text-white py-2 relative z-10">
+        <div class="container mx-auto px-4 flex justify-center md:justify-end items-center">
+            <div class="flex items-center font-futura font-bold text-lg md:text-xl">
+                <i data-lucide="phone" class="w-5 h-5 mr-3 fill-current"></i>
+                <span class="mr-2">Rufen Sie uns an:</span>
+                <a href="tel:+49201236388" class="hover:underline">0201 2363-88</a>
+            </div>
+        </div>
+    </div>
+    <!-- Top 40 Badge -->
+    <!-- <a href="https://verband.highendsociety.de/%C3%BCbersicht-aller-top-40-h%C3%A4ndler.html" 
+       target="_blank" 
+       rel="noopener" 
+       class="absolute right-4 md:right-8 top-[85%] z-30 w-20 md:w-24 hover:scale-105 transition-transform duration-300">
+        <img src="https://hifi-pawlak.de/wp-content/images/badge_top_40_haendler_2x.png" alt="Top 40 Händler">
+    </a> -->
 </header>
+
+<!-- Mobile Menu Overlay (Moved outside header to avoid positioning issues) -->
+<div id="mobile-menu" class="fixed inset-0 bg-white z-[60] transform -translate-y-full transition-transform duration-300 flex flex-col">
+    <!-- Header in Overlay -->
+    <div class="container mx-auto px-4 py-4 flex flex-col">
+        <!-- Close Button Row -->
+        <div class="w-full flex justify-end">
+            <button id="close-menu-btn" class="text-dark focus:outline-none p-2">
+                <i data-lucide="x" class="w-8 h-8"></i>
+            </button>
+        </div>
+
+        <!-- Logo Row -->
+        <div class="w-full flex justify-center mt-2">
+            <a href="#" class="block">
+                <svg class="h-12 w-auto" viewBox="0 0 237 44" xmlns="http://www.w3.org/2000/svg" version="1.1" style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd" xmlns:xlink="http://www.w3.org/1999/xlink">
+                    <title>HiFi Pawlak</title>
+                    <g><path style="opacity:0.693" fill="#000000" d="M 31.5,-0.5 C 32.5,-0.5 33.5,-0.5 34.5,-0.5C 38.8807,3.60356 38.214,6.9369 32.5,9.5C 27.5476,6.60959 27.2143,3.27626 31.5,-0.5 Z"/></g>
+                    <g><path style="opacity:0.716" fill="#000000" d="M 60.5,-0.5 C 61.5,-0.5 62.5,-0.5 63.5,-0.5C 67.697,3.61455 67.0303,6.94789 61.5,9.5C 56.6681,6.40262 56.3348,3.06929 60.5,-0.5 Z"/></g>
+                    <g><path style="opacity:0.848" fill="#000000" d="M 163.5,-0.5 C 165.833,-0.5 168.167,-0.5 170.5,-0.5C 170.5,9.83333 170.5,20.1667 170.5,30.5C 168.167,30.5 165.833,30.5 163.5,30.5C 163.666,24.4908 163.499,18.4908 163,12.5C 160.088,18.6581 156.921,24.6581 153.5,30.5C 151.5,31.8333 149.5,31.8333 147.5,30.5C 146.236,27.8747 145.069,25.2081 144,22.5C 142.103,25.1274 140.603,27.9607 139.5,31C 136.482,31.7723 133.815,31.1056 131.5,29C 131.833,28.6667 132.167,28.3333 132.5,28C 129.872,23.2451 127.372,18.4118 125,13.5C 124.501,19.4908 124.334,25.4908 124.5,31.5C 118.599,30.8138 112.599,30.6471 106.5,31C 105.627,29.955 104.627,29.1217 103.5,28.5C 101.746,24.7424 101.079,20.7424 101.5,16.5C 102.977,14.193 104.977,12.3597 107.5,11C 114.559,10.8655 121.559,10.6988 128.5,10.5C 130.1,10.5507 131.6,10.8841 133,11.5C 134.333,14.1667 135.667,16.8333 137,19.5C 138.333,16.8333 139.667,14.1667 141,11.5C 142.814,10.2404 144.647,10.2404 146.5,11.5C 147.747,14.3286 149.247,16.9952 151,19.5C 151.892,16.7163 153.058,14.0496 154.5,11.5C 157.428,10.5159 160.428,10.1826 163.5,10.5C 163.5,6.83333 163.5,3.16667 163.5,-0.5 Z M 111.5,17.5 C 112.397,18.5981 113.23,18.5981 114,17.5C 117.015,19.5161 117.182,21.6828 114.5,24C 109.148,24.1754 108.148,22.0087 111.5,17.5 Z"/></g>
+                    <g><path style="opacity:0.817" fill="#000000" d="M 197.5,-0.5 C 200.167,-0.5 202.833,-0.5 205.5,-0.5C 205.334,5.17645 205.501,10.8431 206,16.5C 210.355,10.5426 215.855,9.04255 222.5,12C 220.676,12.66 219.343,13.8267 218.5,15.5C 216.521,16.8121 214.855,18.4788 213.5,20.5C 216.5,23.8333 219.5,27.1667 222.5,30.5C 217.561,32.0399 212.895,31.5399 208.5,29C 208.833,28.6667 209.167,28.3333 209.5,28C 205.753,23.6893 204.419,24.856 205.5,31.5C 202.833,31.5 200.167,31.5 197.5,31.5C 197.5,20.8333 197.5,10.1667 197.5,-0.5 Z"/></g>
+                    <g><path style="opacity:0.851" fill="#000000" d="M 0.5,2.5 C 3.16667,2.5 5.83333,2.5 8.5,2.5C 8.5,5.83333 8.5,9.16667 8.5,12.5C 11.5,12.5 14.5,12.5 17.5,12.5C 17.5,9.16667 17.5,5.83333 17.5,2.5C 20.5,2.5 23.5,2.5 26.5,2.5C 26.5,12.1667 26.5,21.8333 26.5,31.5C 23.5525,31.2229 20.7191,31.5562 18,32.5C 17.5,32 17,31.5 16.5,31C 17.4558,27.6064 17.7892,24.1064 17.5,20.5C 14.5,20.5 11.5,20.5 8.5,20.5C 8.5,24.1667 8.5,27.8333 8.5,31.5C 5.83333,31.5 3.16667,31.5 0.5,31.5C 0.5,21.8333 0.5,12.1667 0.5,2.5 Z"/></g>
+                    <g><path style="opacity:0.821" fill="#000000" d="M 39.5,2.5 C 45.1667,2.5 50.8333,2.5 56.5,2.5C 56.5,4.83333 56.5,7.16667 56.5,9.5C 53.8333,9.5 51.1667,9.5 48.5,9.5C 48.5,10.5 48.5,11.5 48.5,12.5C 51.1667,12.5 53.8333,12.5 56.5,12.5C 56.5,15.1667 56.5,17.8333 56.5,20.5C 53.8333,20.5 51.1667,20.5 48.5,20.5C 48.5,24.1667 48.5,27.8333 48.5,31.5C 45.5,31.5 42.5,31.5 39.5,31.5C 39.5,21.8333 39.5,12.1667 39.5,2.5 Z"/></g>
+                    <g><path style="opacity:0.895" fill="#000000" d="M 101.5,16.5 C 98.0646,21.0316 93.3979,22.6982 87.5,21.5C 87.5,24.8333 87.5,28.1667 87.5,31.5C 84.8333,31.5 82.1667,31.5 79.5,31.5C 79.5,21.8333 79.5,12.1667 79.5,2.5C 85.5092,2.33385 91.5092,2.50051 97.5,3C 101.096,6.73465 102.429,11.2346 101.5,16.5 Z M 87.5,8.5 C 91.4459,8.48769 93.1126,10.4877 92.5,14.5C 90.8333,14.5 89.1667,14.5 87.5,14.5C 87.5,12.5 87.5,10.5 87.5,8.5 Z"/></g>
+                    <g><path style="opacity:0.903" fill="#000000" d="M 227.5,22.5 C 226.711,22.2172 226.044,21.7172 225.5,21C 226.476,14.9242 226.81,8.75757 226.5,2.5C 229.167,2.5 231.833,2.5 234.5,2.5C 234.5,8.83333 234.5,15.1667 234.5,21.5C 231.941,21.1984 229.607,21.5318 227.5,22.5 Z"/></g>
+                    <g><path style="opacity:0.792" fill="#000000" d="M 29.5,10.5 C 32.1194,10.2317 34.6194,10.565 37,11.5C 37.4996,18.1583 37.6663,24.825 37.5,31.5C 34.8333,31.5 32.1667,31.5 29.5,31.5C 29.5,24.5 29.5,17.5 29.5,10.5 Z"/></g>
+                    <g><path style="opacity:0.785" fill="#000000" d="M 58.5,10.5 C 60.8333,10.5 63.1667,10.5 65.5,10.5C 65.5,17.5 65.5,24.5 65.5,31.5C 62.4816,31.6646 59.4816,31.498 56.5,31C 57.1841,24.1677 57.8508,17.3344 58.5,10.5 Z"/></g>
+                    <g><path style="opacity:0.851" fill="#000000" d="M 179.5,10.5 C 184.833,11.8333 190.167,11.8333 195.5,10.5C 195.5,17.5 195.5,24.5 195.5,31.5C 189.84,30.3486 184.174,30.182 178.5,31C 173.965,28.0751 172.132,23.9084 173,18.5C 173.273,16.6711 174.107,15.1711 175.5,14C 175.167,13.6667 174.833,13.3333 174.5,13C 176.491,12.6264 178.158,11.793 179.5,10.5 Z M 182.5,17.5 C 185.55,16.9232 187.55,18.0899 188.5,21C 185.7,25.6205 183.033,25.6205 180.5,21C 180.978,19.6974 181.645,18.5307 182.5,17.5 Z"/></g>
+                    <g><path style="opacity:0.008" fill="#000000" d="M 218.5,15.5 C 219.833,16.1667 219.833,16.1667 218.5,15.5 Z"/></g>
+                    <g><path style="opacity:0.776" fill="#000000" d="M 227.5,22.5 C 233.496,21.3327 235.996,23.6661 235,29.5C 232,33.5 229,33.5 226,29.5C 225.167,26.829 225.667,24.4957 227.5,22.5 Z"/></g>
+                    <g><path style="opacity:0.008" fill="#000000" d="M 103.5,28.5 C 102.833,29.1667 102.833,29.1667 103.5,28.5 Z"/></g>
+                    <g><path style="opacity:1" fill="#e42000" d="M -0.5,36.5 C 78.5,36.5 157.5,36.5 236.5,36.5C 236.5,38.8333 236.5,41.1667 236.5,43.5C 157.5,43.5 78.5,43.5 -0.5,43.5C -0.5,41.1667 -0.5,38.8333 -0.5,36.5 Z"/></g>
+                </svg>
+            </a>
+        </div>
+    </div>
+
+    <!-- Menu Links -->
+    <div class="flex-1 overflow-y-auto py-8 px-4 flex flex-col items-center">
+        <nav class="flex flex-col space-y-8 text-center w-full">
+            <a href="#services" class="mobile-link text-2xl font-futura font-medium text-dark hover:text-primary transition-colors">Service</a>
+            <a href="#range" class="mobile-link text-2xl font-futura font-medium text-dark hover:text-primary transition-colors">Sortiment</a>
+            <a href="#offers" class="mobile-link text-2xl font-futura font-medium text-dark hover:text-primary transition-colors">Angebote</a>
+            <a href="#" class="mobile-link text-2xl font-futura font-medium text-dark hover:text-primary transition-colors">Unternehmen</a>
+            <a href="#" class="mobile-link text-2xl font-futura font-medium text-dark hover:text-primary transition-colors">Blog</a>
+            <a href="#contact" class="mobile-link text-2xl font-futura font-medium text-dark hover:text-primary transition-colors">Kontakt</a>
+        </nav>
+        
+        <!-- Social Icons Mobile -->
+        <div class="mt-12 flex flex-col items-center space-y-6">
+            <a href="#" class="hover:opacity-80 transition-opacity">
+                <i data-lucide="instagram" class="w-8 h-8"></i>
+            </a>
+            <a href="#" class="hover:opacity-80 transition-opacity">
+                <i data-lucide="facebook" class="w-8 h-8"></i>
+            </a>
+            <a href="#" class="hover:opacity-80 transition-opacity">
+                <i data-lucide="youtube" class="w-8 h-8"></i>
+            </a>
+        </div>
+    </div>
+    
+    <!-- Bottom Wave SVG -->
+    <div class="w-full">
+        <svg class="w-full h-auto block" viewBox="0 0 375 31" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg"><g fill="none" fill-rule="evenodd"><path d="m0-636h375v667h-375z" fill="#fff"/><g transform="translate(-263 -636)"><path d="m263 0h375v667h-375z" fill="#fff"/><path d="m900.5 1108.77302c-75.876465 18.5487-179.443359 27.08106-280.625 23.05921s-227.062988-33.81642-325.327148-40.35362c-98.264161-6.53719-174.812012-1.3804-294.047852 34.58882v-466.949009c97.7954102-24.020762 192.785645-25.777225 294.047852-21.43786s209.182128 21.491905 325.327148 15.673057 196.530762-17.294408 280.625-40.353618z" fill="#e52000"/></g></g></svg>
+    </div>
+</div>
+<script>
+    (function() {
+        function initNavbarScroll() {
+            const navbar = document.querySelector('header');
+            const navContainer = document.getElementById('nav-container');
+            const logoSvg = document.querySelector('header .container a svg');
+            
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 50) {
+                    if (navbar) navbar.classList.add('nav-scrolled');
+                    if (navContainer) {
+                        navContainer.classList.remove('h-[82px]');
+                        navContainer.classList.add('h-[49px]');
+                    }
+                    if (logoSvg) {
+                        logoSvg.classList.add('h-8');
+                        logoSvg.classList.remove('h-10', 'md:h-11');
+                    }
+                } else {
+                    if (navbar) navbar.classList.remove('nav-scrolled');
+                    if (navContainer) {
+                        navContainer.classList.remove('h-[49px]');
+                        navContainer.classList.add('h-[82px]');
+                    }
+                    if (logoSvg) {
+                        logoSvg.classList.remove('h-8');
+                        logoSvg.classList.add('h-10', 'md:h-11');
+                    }
+                }
+            });
+        }
+
+        function initMobileMenu() {
+            const menuBtn = document.getElementById('mobile-menu-btn');
+            const closeBtn = document.getElementById('close-menu-btn');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const mobileLinks = document.querySelectorAll('.mobile-link');
+            
+            if (menuBtn && mobileMenu && closeBtn) {
+                menuBtn.addEventListener('click', () => {
+                    mobileMenu.classList.remove('-translate-y-full');
+                    document.body.style.overflow = 'hidden';
+                });
+                
+                closeBtn.addEventListener('click', () => {
+                    mobileMenu.classList.add('-translate-y-full');
+                    document.body.style.overflow = '';
+                });
+                
+                mobileLinks.forEach(link => {
+                    link.addEventListener('click', () => {
+                        mobileMenu.classList.add('-translate-y-full');
+                        document.body.style.overflow = '';
+                    });
+                });
+            }
+        }
+
+        initNavbarScroll();
+        initMobileMenu();
+    })();
+</script>
