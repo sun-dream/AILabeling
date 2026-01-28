@@ -28,30 +28,17 @@ async function loadComponents() {
             const container = document.getElementById(component.id);
             if (container) {
                 container.innerHTML = content;
-
-                // 执行加载内容中的脚本
-                const scripts = container.querySelectorAll('script');
-                scripts.forEach(script => {
-                    const newScript = document.createElement('script');
-                    if (script.src) {
-                        newScript.src = script.src;
-                    } else {
-                        newScript.textContent = script.innerHTML;
-                    }
-                    // 保留属性
-                    Array.from(script.attributes).forEach(attr => {
-                        if (attr.name !== 'src') {
-                            newScript.setAttribute(attr.name, attr.value);
-                        }
-                    });
-
-                    document.body.appendChild(newScript);
-                });
             }
         } catch (error) {
             console.error(`Failed to load component ${component.id}:`, error);
         }
     }
+
+    // 初始化组件逻辑
+    if (window.initHeader) window.initHeader();
+    if (window.initCustomerReview) window.initCustomerReview();
+    if (window.initContactForm) window.initContactForm();
+    if (window.initServiceIntroPic) window.initServiceIntroPic();
 
     // 初始化 Lucide 图标
     if (window.lucide) {
