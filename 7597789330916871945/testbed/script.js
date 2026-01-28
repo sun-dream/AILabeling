@@ -28,9 +28,9 @@ async function loadComponents() {
     }
 
     // Initialize Lucide icons after components are loaded
-    setTimeout(() => {
+    if (window.lucide) {
         lucide.createIcons();
-    }, 100);
+    }
 }
 
 // Scroll animation

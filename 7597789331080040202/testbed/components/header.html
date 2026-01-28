@@ -67,8 +67,8 @@
                             <i data-lucide="chevron-down" class="w-4 h-4"></i>
                         </a>
                         <!-- Mega Menu Dropdown -->
-                        <div id="mega-menu-container" style="display: none;"
-                            class="w-[940px] absolute top-full left-0 bg-white shadow-xl border-t-4 border-primary z-50 opacity-0 invisible pointer-events-none group-hover:opacity-100 group-hover:visible group-hover:pointer-events-auto transition-all duration-300 transform origin-top translate-y-2 group-hover:translate-y-0">
+                        <div id="mega-menu-container"
+                            class="hidden w-[940px] absolute top-full left-0 bg-white shadow-xl border-t-4 border-primary z-50 opacity-0 invisible pointer-events-none group-hover:opacity-100 group-hover:visible group-hover:pointer-events-auto transition-all duration-300 transform origin-top translate-y-2 group-hover:translate-y-0">
                             <!-- JS will inject content here -->
                         </div>
                     </div>
@@ -235,7 +235,7 @@
         renderMegaMenu(container);
         // 渲染完成后，移除 display: none，允许 CSS 控制显隐
         // 使用 setTimeout 确保渲染帧已更新，防止 FOUC
-        setTimeout(() => (container.style.display = ''), 100);
+        setTimeout(() => (container.classList.remove('hidden')), 100);
         const triggers = container.querySelectorAll('.mega-menu-trigger');
         const contents = container.querySelectorAll('.mega-menu-content');
         // 辅助函数：切换 Tab
