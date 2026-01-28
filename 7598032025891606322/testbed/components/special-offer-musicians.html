@@ -1,91 +1,75 @@
-<section class="bg-dark text-light py-20">
-    <div class="container mx-auto px-4">
-        <div class="text-center mb-16">
-            <h2 class="text-[clamp(2rem,4vw,3.5rem)] font-futura font-bold mb-6 scroll-reveal">
-                HiFi Pawlak präsentiert Musikmenschen
-            </h2>
-            <p class="text-lg text-gray-400 max-w-3xl mx-auto scroll-reveal">
-                Entdecken Sie die Geschichten hinter den Musikern und erfahren Sie, wie sie unsere High-End-Audio-Systeme nutzen, um ihre künstlerische Vision zum Leben zu erwecken.
+<section id="special-offer"
+    class="relative flex items-center justify-center overflow-hidden text-white bg-black h-[19.375rem] min-[480px]:h-[25.625rem] sm:h-[23.75rem] min-[760px]:h-[33.75rem] min-[960px]:h-[41.25rem] xl:h-[47.6875rem] 2xl:h-[76.25rem] overflow-hidden">
+    <!-- Background Video -->
+    <div class="absolute inset-0 z-0">
+        <video autoplay loop muted playsinline class="w-full h-[120%] object-cover">
+            <source src="https://hifi-pawlak.de/wp-content/images/video-musikmenschen.mp4" type="video/mp4">
+            <!-- Fallback background if video fails to load -->
+            <div class="absolute inset-0 bg-gray-900"></div>
+        </video>
+        <!-- Overlay -->
+        <div class="absolute inset-0 bg-black/30"></div>
+    </div>
+
+    <!-- Top Wave Divider (White, Rotated to hang from top) -->
+    <div class="absolute top-0 left-0 w-full  z-20">
+
+        <svg viewBox="0 0 2880 94" xmlns="http://www.w3.org/2000/svg">
+            <path
+                d="m0 0v90c530.27-65.52 698.39-57.9 839.51-62.21 362.32-11.06 772.42 60.39 1153.32 61.5 294 .85 671.34-26.77 887.17-55.86v-33.43z"
+                fill="#fff" />
+            <path
+                d="m1992.83 86.21c-213.23 0-441.21-30.58-613.16-48.44-204.39-21.24-307.91-34.51-538.84-30.53-181.14 3.12-300.47 7.91-440.62 22.56-205.27 21.46-348.8 47.53-400.21 57.07v7.13c530.27-65.52 698.39-57.9 839.51-62.21 362.32-11.06 772.42 60.39 1153.32 61.5 294 .85 671.34-26.77 887.17-55.86v-31.2c-217.16 42.38-609.45 79.98-887.17 79.98z"
+                fill="#e52000" />
+        </svg>
+    </div>
+
+    <!-- Content -->
+    <div class="relative z-30 container mx-auto px-4 text-center text-white scroll-reveal">
+        <!-- Title Section -->
+        <div class="mb-40 w-[800px] mx-auto">
+            <p class="text-xl text-left md:text-2xl font-futura font-medium mb-2 tracking-wide text-shadow">
+                HiFi Pawlak! präsentiert
             </p>
+            <h2 class="text-5xl md:text-7xl lg:text-8xl font-futura font-bold tracking-wider uppercase text-shadow-lg">
+                MUSIKMENSCHEN
+            </h2>
         </div>
-        
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <!-- 视频 1 -->
-            <div class="scroll-reveal card-hover relative rounded-xl overflow-hidden group">
-                <div class="aspect-video bg-gray-800 flex items-center justify-center">
-                    <button class="absolute inset-0 flex items-center justify-center bg-dark/50 hover:bg-dark/30 transition-all duration-300" data-video="video-1">
-                        <div class="w-20 h-20 bg-primary rounded-full flex items-center justify-center transform group-hover:scale-110 transition-transform duration-300">
-                            <i data-lucide="play" class="w-10 h-10 text-white ml-1"></i>
-                        </div>
-                    </button>
-                    <img src="https://aidp.juejin.cn/agentic/api/v1/tool/text2image?prompt=musician%20in%20recording%20studio%20with%20high%20fidelity%20audio%20equipment&size=800x600" alt="Musikmensch Folge 1" class="w-full h-full object-cover">
-                </div>
-                <div class="p-4 bg-gray-900">
-                    <h3 class="font-futura font-bold mb-2">Folge 1</h3>
-                    <p class="text-sm text-gray-400">Interview mit einem renommierten Toningenieur</p>
-                </div>
-            </div>
-            
-            <!-- 视频 2 -->
-            <div class="scroll-reveal card-hover relative rounded-xl overflow-hidden group">
-                <div class="aspect-video bg-gray-800 flex items-center justify-center">
-                    <button class="absolute inset-0 flex items-center justify-center bg-dark/50 hover:bg-dark/30 transition-all duration-300" data-video="video-2">
-                        <div class="w-20 h-20 bg-primary rounded-full flex items-center justify-center transform group-hover:scale-110 transition-transform duration-300">
-                            <i data-lucide="play" class="w-10 h-10 text-white ml-1"></i>
-                        </div>
-                    </button>
-                    <img src="https://aidp.juejin.cn/agentic/api/v1/tool/text2image?prompt=musician%20playing%20guitar%20in%20home%20studio&size=800x600" alt="Musikmensch Folge 2" class="w-full h-full object-cover">
-                </div>
-                <div class="p-4 bg-gray-900">
-                    <h3 class="font-futura font-bold mb-2">Folge 2</h3>
-                    <p class="text-sm text-gray-400">Ein Singer-Songwriter und sein Setup</p>
-                </div>
-            </div>
-            
-            <!-- 视频 3 -->
-            <div class="scroll-reveal card-hover relative rounded-xl overflow-hidden group">
-                <div class="aspect-video bg-gray-800 flex items-center justify-center">
-                    <button class="absolute inset-0 flex items-center justify-center bg-dark/50 hover:bg-dark/30 transition-all duration-300" data-video="video-3">
-                        <div class="w-20 h-20 bg-primary rounded-full flex items-center justify-center transform group-hover:scale-110 transition-transform duration-300">
-                            <i data-lucide="play" class="w-10 h-10 text-white ml-1"></i>
-                        </div>
-                    </button>
-                    <img src="https://aidp.juejin.cn/agentic/api/v1/tool/text2image?prompt=classical%20musician%20with%20high-end%20audio%20system&size=800x600" alt="Musikmensch Folge 3" class="w-full h-full object-cover">
-                </div>
-                <div class="p-4 bg-gray-900">
-                    <h3 class="font-futura font-bold mb-2">Folge 3</h3>
-                    <p class="text-sm text-gray-400">Klassikmusiker und die Liebe zum Detail</p>
-                </div>
-            </div>
-            
-            <!-- 视频 4 -->
-            <div class="scroll-reveal card-hover relative rounded-xl overflow-hidden group">
-                <div class="aspect-video bg-gray-800 flex items-center justify-center">
-                    <button class="absolute inset-0 flex items-center justify-center bg-dark/50 hover:bg-dark/30 transition-all duration-300" data-video="video-4">
-                        <div class="w-20 h-20 bg-primary rounded-full flex items-center justify-center transform group-hover:scale-110 transition-transform duration-300">
-                            <i data-lucide="play" class="w-10 h-10 text-white ml-1"></i>
-                        </div>
-                    </button>
-                    <img src="https://aidp.juejin.cn/agentic/api/v1/tool/text2image?prompt=electronic%20music%20producer%20in%20studio&size=800x600" alt="Musikmensch Folge 4" class="w-full h-full object-cover">
-                </div>
-                <div class="p-4 bg-gray-900">
-                    <h3 class="font-futura font-bold mb-2">Folge 4</h3>
-                    <p class="text-sm text-gray-400">Elektronische Musikproduktion und HiFi</p>
-                </div>
-            </div>
-        </div>
-        
-        <!-- 视频容器 -->
-        <div id="video-1" class="mt-16 scroll-reveal">
-            <div class="aspect-video bg-gray-900 rounded-xl overflow-hidden">
-                <video class="w-full h-full" controls>
-                    <source src="#" type="video/mp4">
-                    Your browser does not support the video tag.
-                </video>
-            </div>
+
+        <!-- Buttons -->
+        <div class="flex flex-wrap justify-center gap-4 md:gap-6">
+            <button
+                class="px-8 py-3 bg-primary text-white font-futura font-bold rounded-full hover:bg-[#b02e1a] transition-all duration-300 min-w-[140px] transform hover:scale-105 shadow-lg"
+                data-video-id="4ffqpUTrQY8" data-video-url="https://www.youtube.com/embed/4ffqpUTrQY8">
+                Folge 1
+            </button>
+            <button
+                class="px-8 py-3 bg-primary text-white font-futura font-bold rounded-full hover:bg-[#b02e1a] transition-all duration-300 min-w-[140px] transform hover:scale-105 shadow-lg"
+                data-video-id="QqzVR8W6gJQ" data-video-url="https://www.youtube.com/embed/QqzVR8W6gJQ">
+                Folge 2
+            </button>
+            <button
+                class="px-8 py-3 bg-primary text-white font-futura font-bold rounded-full hover:bg-[#b02e1a] transition-all duration-300 min-w-[140px] transform hover:scale-105 shadow-lg"
+                data-video-id="lByb-C31PC0" data-video-url="https://www.youtube.com/embed/lByb-C31PC0">
+                Folge 3
+            </button>
+            <button
+                class="px-8 py-3 bg-primary text-white font-futura font-bold rounded-full hover:bg-[#b02e1a] transition-all duration-300 min-w-[140px] transform hover:scale-105 shadow-lg"
+                data-video-id="ATjRqtb_Omw" data-video-url="https://www.youtube.com/embed/ATjRqtb_Omw">
+                Folge 4
+            </button>
         </div>
     </div>
-</section>
 
-<!-- 波浪分割线 -->
-<div class="wave-divider wave-bg"></div>
+    <!-- Bottom Wave Divider (White, Rising from bottom) -->
+    <div class="absolute bottom-[-1px] left-0 w-full  z-20">
+        <svg viewBox="0 0 2880 90" xmlns="http://www.w3.org/2000/svg">
+            <path
+                d="m2880 90v-88c-530.27 65.52-770.55 64.1-911.72 65.65-363.65 4-676.2-65.05-1081.11-64.94-301.17.09-654.85 27.78-887.17 59.86v27.43z"
+                fill="#fff" />
+            <path
+                d="m887.17 3.79c213.23.41 440 31 611.16 48.44 199.86 20.36 295.42 34 540.84 30.53 181.15-2.54 303.47-7.9 443.62-22.56 208.14-21.78 323.61-44.34 397.21-56.07v-4.13c-530.27 65.52-770.55 60.1-911.72 61.65-363.65 4-676.2-61-1081.11-60.94-301.17.09-654.85 23.78-887.17 55.86v27.2c217.16-42.38 603.27-80.52 887.17-79.98z"
+                fill="#e52000" />
+        </svg>
+    </div>
+</section>

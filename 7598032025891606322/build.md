@@ -84,3 +84,33 @@ https://aidp.juejin.cn/agentic/api/v1/tool/text2image?prompt=尺寸为:1430*919�
 ### 导航徽章
 https://p3-aidp.byteimg.com/tos-cn-i-979rioudue/4c4ea37589d64686b48d993969508380~tplv-979rioudue-resize_image.image
 https://aidp.juejin.cn/agentic/api/v1/tool/text2image?prompt=尺寸为:生成一张高端奖章风格的徽章图像，画面为正方形构图，整体背景由两块大色面斜向分割组成，左下区域为纯黑色，右上区域为高饱和度正红色，分割线为清晰、笔直的对角线；画面中央居中放置一枚圆形金属质感奖章，奖章整体呈深蓝色到蓝灰色的细腻渐变，具有明显的立体高光和边缘阴影，外圈为略浅的金属描边，体现厚重与质感；奖章内部上方居中位置有一个简洁的白色品牌标志图形，其下方以大号、粗体、白色无衬线字体写有“TOP 40”，文字清晰、居中、具有权威感，下方以较小字号白色字体写有“HIFI-HÄNDLER”，再下方为更小的年份文字“2022/23”；奖章左右两侧对称分布一圈月桂叶图案，颜色为浅灰或银色，环绕文字形成经典荣誉徽章结构；整体风格正式、权威、高端、偏欧洲奖项设计语言，画面干净利落，无人物、无多余装饰、无复杂纹理，适用于高端音响行业评选、榜单或认证标识的视觉呈现。&width=430&height=430
+### quote 图片
+#### 背景图
+https://p3-aidp.byteimg.com/tos-cn-i-979rioudue/3e086426eef24078a8432bedd25abb76~tplv-979rioudue-resize_image.image
+https://aidp.juejin.cn/agentic/api/v1/tool/text2image?prompt=这是一张横向长幅高清室内人像图，像素尺寸 1891×960，宽高比约 1.97:1（宽度远大于高度，极致横向比例），采用横向左右分栏的舒展构图，左侧为大面积留白区域，右侧为核心视觉区，整体横向延展感极强，无竖向紧凑或竖图视觉倾向；画面为浅景深拍摄，浅暖柔和色调，左侧是浅米色纹理墙面（留白充足，无多余元素），右侧摆放白色唱片 / 书籍架；前景主体是金发小女孩，佩戴黑色头戴式大耳机，身着白色上衣，面带微笑看向画面右侧，背景是模糊的成年男性（浅蓝上衣，同样佩戴耳机），整体氛围温馨治愈，展现亲子间音乐分享的互动场景，光线自然柔和，人物与物品细节清晰细腻，视觉重心偏右，左侧留白适配文字或信息排版，横向构图舒展大气。&width=1891&height=960
+
+#### 圆形头像图
+https://p3-aidp.byteimg.com/tos-cn-i-979rioudue/6aca92d03c5f4209aba5a9f1016d0411~tplv-979rioudue-resize_image.image
+
+https://aidp.juejin.cn/agentic/api/v1/tool/text2image?prompt=这是一张500×500 像素正方形构图的圆形裁切头像照，边缘为纯白色圆形轮廓，内部为人物肖像；主体是金发女性，中短发带自然微卷，发丝浅金偏棕，面部正视镜头，蓝绿色眼眸，妆容自然，佩戴小巧银色耳钉，身着白色翻领衬衫，神情沉稳平和；人物后方为深灰色纯色背景，无多余元素，浅景深效果突出主体，光线均匀柔和，面部细节清晰，色彩自然真实，整体风格简洁专业，为标准的商务 / 个人头像照&width=500&height=500
+
+### footer 图片
+https://aidp.juejin.cn/agentic/api/v1/tool/text2image?prompt=这是一张 450×450 像素的临街 HiFi 音响专卖店实景图，以平视视角呈现店铺外立面与橱窗全貌，店铺位于现代风格临街建筑一层，外立面为浅灰色石材 / 混凝土材质并搭配深灰色边框的长方形玻璃窗，顶部是白色长条形招牌，用黑色粗体无衬线大写字母标注 “Werner Pawlak HiFi-”（末尾字符略有裁切），招牌下方贯穿一条红色细横线，黑红白配色对比强烈使品牌标识更醒目，大面积透明玻璃橱窗内规整陈列着黑色、银色的功放机、音箱、黑胶唱片机、耳机等高端 HiFi 设备，橱窗内灯光清晰照亮产品，店铺前是浅灰色水泥人行道，地面平整，右侧还可见建筑的金属质感立柱与玻璃门，整体环境整洁，氛围专业，凸显出高端 HiFi 音响专卖店的定位。&width=450&height=450
+
+## 4. 代码优化记录 (Code Optimization Log)
+
+### 4.1 内联样式 Tailwind 化 (Inline Styles to Tailwind)
+为了提升代码的可维护性和一致性，已将以下组件中的静态内联样式替换为 Tailwind CSS 工具类：
+
+- **`components/quote.html`** 
+  - 将背景图片的 `style="background-image: url(...)"` 替换为 `bg-[url('...')]`。
+
+- **`components/services-home.html`**
+  - 将 `style="transition-delay: 200ms"` 等替换为 `delay-200`, `delay-[400ms]`, `delay-[600ms]`。
+
+- **`components/header.html`**
+  - 将 SVG 的内联样式 (如 `shape-rendering`, `text-rendering` 等) 替换为 Tailwind 任意值写法 (如 `[shape-rendering:geometricPrecision]`)。
+  - 将 `opacity` 样式替换为 `opacity-[0.693]`。
+
+- **`components/dialog.html`**
+  - 同样处理了 SVG 的内联样式，统一使用 Tailwind 类名。

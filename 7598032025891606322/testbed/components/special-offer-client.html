@@ -1,51 +1,57 @@
-<section class="bg-dark text-light py-20">
-    <div class="container mx-auto px-4">
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <div class="scroll-reveal">
-                <h2 class="text-[clamp(1.8rem,3vw,3rem)] font-futura font-bold mb-6">
-                    Exklusive Angebote für unsere Kunden
-                </h2>
-                <p class="text-lg text-gray-400 mb-8">
-                    Als Bestandskunde bei HiFi Pawlak genießen Sie exklusive Vorteile, darunter persönliche Beratung, maßgeschneiderte Lösungen und spezielle Angebote zu unseren Premium-Produkten.
-                </p>
-                <ul class="space-y-4 mb-12">
-                    <li class="flex items-start">
-                        <i data-lucide="check-circle" class="w-6 h-6 text-primary mr-3 mt-1"></i>
-                        <span>Persönliche Beratung durch erfahrene HiFi-Experten</span>
-                    </li>
-                    <li class="flex items-start">
-                        <i data-lucide="check-circle" class="w-6 h-6 text-primary mr-3 mt-1"></i>
-                        <span>Maßgeschneiderte Audio-Lösungen für Ihr Zuhause</span>
-                    </li>
-                    <li class="flex items-start">
-                        <i data-lucide="check-circle" class="w-6 h-6 text-primary mr-3 mt-1"></i>
-                        <span>Exklusive Angebote zu Premium-HiFi-Produkten</span>
-                    </li>
-                    <li class="flex items-start">
-                        <i data-lucide="check-circle" class="w-6 h-6 text-primary mr-3 mt-1"></i>
-                        <span>Langfristige technische Unterstützung und Service</span>
-                    </li>
-                </ul>
-                <button class="btn-primary bg-primary hover:bg-primary/90 text-light font-bold py-4 px-8 rounded-full text-lg transition-all duration-300">
-                    Mehr über unsere Kundenangebote erfahren
-                </button>
-            </div>
-            <div class="scroll-reveal">
-                <div class="relative rounded-xl overflow-hidden shadow-2xl">
-                    <img src="https://aidp.juejin.cn/agentic/api/v1/tool/text2image?prompt=luxury%20home%20audio%20system%20in%20modern%20living%20room&size=1200x800" alt="Exklusive HiFi-Lösung" class="w-full h-auto rounded-xl">
-                    <div class="absolute inset-0 bg-gradient-to-t from-dark/80 to-transparent flex items-end">
-                        <div class="p-8">
-                            <p class="text-white font-medium">
-                                "Die beste Entscheidung, die ich getroffen habe, war, mich bei HiFi Pawlak beraten zu lassen. Mein Heimkino-System übertrifft alle Erwartungen."
-                            </p>
-                            <p class="text-gray-300 mt-2">— Thomas M., Stammkunde</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
+<section id="special-offer-client"
+    class="relative flex items-end justify-center overflow-hidden text-white bg-black h-[19.375rem] min-[480px]:h-[25.625rem] sm:h-[23.75rem] min-[760px]:h-[33.75rem] min-[960px]:h-[41.25rem] xl:h-[47.6875rem] 2xl:h-[76.25rem] overflow-hidden">
+    <!-- Top Wave Divider (White, Rotated to hang from top) -->
+    <div class="absolute top-0 left-0 w-full z-20">
+        <svg viewBox="0 0 2880 94" xmlns="http://www.w3.org/2000/svg">
+            <path
+                d="m0 0v90c530.27-65.52 698.39-57.9 839.51-62.21 362.32-11.06 772.42 60.39 1153.32 61.5 294 .85 671.34-26.77 887.17-55.86v-33.43z"
+                fill="#fff" />
+            <path
+                d="m1992.83 86.21c-213.23 0-441.21-30.58-613.16-48.44-204.39-21.24-307.91-34.51-538.84-30.53-181.14 3.12-300.47 7.91-440.62 22.56-205.27 21.46-348.8 47.53-400.21 57.07v7.13c530.27-65.52 698.39-57.9 839.51-62.21 362.32-11.06 772.42 60.39 1153.32 61.5 294 .85 671.34-26.77 887.17-55.86v-31.2c-217.16 42.38-609.45 79.98-887.17 79.98z"
+                fill="#e52000" />
+        </svg>
+    </div>
+
+    <!-- Background Video -->
+    <div class="absolute inset-0 z-0">
+        <video autoplay loop muted playsinline class="w-full h-[120%] object-cover">
+            <source src="https://hifi-pawlak.de/wp-content/images/video-fiese-fragen.mp4" type="video/mp4">
+            <div class="absolute inset-0 bg-gray-900"></div>
+        </video>
+        <div class="absolute inset-0 bg-black/10"></div>
+    </div>
+
+    <!-- Content -->
+    <div class="container relative z-10 flex flex-col items-center justify-end h-full pb-16 md:pb-24">
+        <h2 class="sr-only">Fiese Fragen</h2>
+        <div class="flex flex-wrap justify-center gap-4">
+            <button
+                class="bg-primary hover:bg-[#b02e1a] text-white font-futura font-bold py-3 px-8 rounded-full text-lg transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg"
+                data-video-id="-2meyXByBv0" data-video-url="https://www.youtube.com/embed/-2meyXByBv0">
+                Folge 1
+            </button>
+            <button
+                class="bg-primary hover:bg-[#b02e1a] text-white font-futura font-bold py-3 px-8 rounded-full text-lg transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg"
+                data-video-id="P8Oq8zooZB8" data-video-url="https://www.youtube.com/embed/P8Oq8zooZB8">
+                Folge 2
+            </button>
+            <button
+                class="bg-primary hover:bg-[#b02e1a] text-white font-futura font-bold py-3 px-8 rounded-full text-lg transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg"
+                data-video-id="uE6vhCbnPqo" data-video-url="https://www.youtube.com/embed/uE6vhCbnPqo">
+                Folge 3
+            </button>
         </div>
     </div>
-</section>
 
-<!-- 波浪分割线 -->
-<div class="wave-divider wave-bg"></div>
+    <!-- Bottom Wave Divider (White, Rising from bottom) -->
+    <div class="absolute bottom-[-1px] left-0 w-full z-20">
+        <svg viewBox="0 0 2880 90" xmlns="http://www.w3.org/2000/svg">
+            <path
+                d="m2880 90v-88c-530.27 65.52-770.55 64.1-911.72 65.65-363.65 4-676.2-65.05-1081.11-64.94-301.17.09-654.85 27.78-887.17 59.86v27.43z"
+                fill="#fff" />
+            <path
+                d="m887.17 3.79c213.23.41 440 31 611.16 48.44 199.86 20.36 295.42 34 540.84 30.53 181.15-2.54 303.47-7.9 443.62-22.56 208.14-21.78 323.61-44.34 397.21-56.07v-4.13c-530.27 65.52-770.55 60.1-911.72 61.65-363.65 4-676.2-61-1081.11-60.94-301.17.09-654.85 23.78-887.17 55.86v27.2c217.16-42.38 603.27-80.52 887.17-79.98z"
+                fill="#e52000" />
+        </svg>
+    </div>
+</section>

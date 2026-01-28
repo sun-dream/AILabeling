@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="de">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -82,6 +83,7 @@
     </style>
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body class="text-dark font-inter">
     <!-- 组件将通过 JavaScript 动态加载 -->
     <div id="app">
@@ -100,16 +102,26 @@
         <div id="dialog-component"></div>
 
         <!-- 加载指示器 -->
-        <div class="fixed inset-0 flex items-center justify-center bg-dark z-50" id="loader">
-            <div class="w-16 h-16 border-4 border-gray-700 border-t-primary rounded-full animate-spin"></div>
+        <div class="fixed inset-0 flex items-center justify-center z-50" id="loader">
+            <div class="w-16 h-16 border-4 border-gray-200 border-t-primary rounded-full animate-spin"></div>
         </div>
     </div>
     <!-- Newsletter Popup Component -->
-    <div id="newsletter-popup" class="fixed inset-0 z-[100] flex items-center justify-center bg-black bg-opacity-50 hidden opacity-0 transition-opacity duration-300" role="dialog" aria-modal="true">
-        <div class="bg-white w-full max-w-xl mx-4 md:mx-auto relative shadow-2xl transform scale-95 transition-transform duration-300 p-8">
+    <div id="newsletter-popup"
+        class="fixed inset-0 z-[100] flex items-center justify-center bg-black bg-opacity-50 hidden opacity-0 transition-opacity duration-300"
+        role="dialog" aria-modal="true">
+        <div
+            class="bg-white w-full max-w-xl mx-4 md:mx-auto relative shadow-2xl transform scale-95 transition-transform duration-300 p-8">
             <!-- Close Button -->
-            <button id="newsletter-close-btn" class="absolute top-2 right-2 p-2 text-gray-400 hover:text-dark transition-colors focus:outline-none" aria-label="Close">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+            <button id="newsletter-close-btn"
+                class="absolute top-2 right-2 p-2 text-gray-400 hover:text-dark transition-colors focus:outline-none"
+                aria-label="Close">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    class="lucide lucide-x">
+                    <path d="M18 6 6 18" />
+                    <path d="m6 6 12 12" />
+                </svg>
             </button>
 
             <!-- Content -->
@@ -118,31 +130,298 @@
                     <span class="text-primary block">Newsletter</span> bestellen
                 </h2>
             </div>
-
-            <form method="post" action="https://flow.cleverreach.com/fl/e34c24ff-a864-4cc6-9838-3b0ad5b9a76c/confirm" target="_blank" id="newsletter-form">
+            <form method="post" id="newsletter-form">
                 <input type="text" tabindex="-1" autocomplete="off" class="hidden" name="email_confirm" />
-                
                 <div class="mb-4 text-left">
-                    <label for="newsletter-email" class="block text-dark font-medium mb-1">E-Mail <span class="text-primary">*</span></label>
-                    <input type="email" id="newsletter-email" name="email" required class="w-full border border-gray-300 px-4 py-3 focus:outline-none focus:border-primary transition-colors" placeholder="">
+                    <label for="newsletter-email" class="block text-dark font-medium mb-1">E-Mail <span
+                            class="text-primary">*</span></label>
+                    <input type="email" id="newsletter-email" name="email" required
+                        class="w-full border border-gray-300 px-4 py-3 focus:outline-none focus:border-primary transition-colors"
+                        placeholder="">
                 </div>
-
                 <div class="mb-6 text-left">
                     <div class="flex items-start gap-3">
-                        <input type="checkbox" id="newsletter-consent" name="tags[]" value="accept" required class="mt-1 w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary">
+                        <input type="checkbox" id="newsletter-consent" name="tags[]" value="accept" required
+                            class="mt-1 w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary">
                         <label for="newsletter-consent" class="text-sm text-gray-600 leading-snug">
                             Ich willige ein, dass meine Daten zur Personalisierung des Newsletters verwendet werden.
-                            Mehr Infos in der <a href="https://hifi-pawlak.de/impressum-datenschutz/" target="_blank" class="underline hover:text-primary transition-colors">Datenschutzerklärung</a>.
+                            Mehr Infos in der <a href="#" target="_blank"
+                                class="underline hover:text-primary transition-colors">Datenschutzerklärung</a>.
                         </label>
                     </div>
                 </div>
-
-                <button type="submit" class="w-full bg-primary text-white font-futura font-bold text-lg py-3 hover:bg-[#b02e1a] transition-colors shadow-md hover:shadow-lg transform hover:-translate-y-0.5 active:translate-y-0 duration-200">
+                <button type="submit"
+                    class="w-full bg-primary text-white font-futura font-bold text-lg py-3 hover:bg-[#b02e1a] transition-colors shadow-md hover:shadow-lg transform hover:-translate-y-0.5 active:translate-y-0 duration-200">
                     Jetzt anmelden
                 </button>
             </form>
         </div>
     </div>
+
+    <!-- GDPR Cookie Info Bar -->
+    <aside id="moove_gdpr_cookie_info_bar"
+        class="fixed bottom-0 left-0 w-full z-[9998] bg-gray text-white p-4 md:p-6 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)] transform transition-transform duration-500 translate-y-full"
+        role="dialog" aria-label="GDPR Cookie-Banner">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6 md:gap-8">
+            <!-- Content -->
+            <div class="text-sm md:text-base text-center md:text-left flex-grow">
+                <p class="mb-2">Wir verwenden Cookies, um dir die bestmögliche Erfahrung auf unserer Website zu bieten.
+                </p>
+                <p>In den <button id="gdpr-settings-trigger"
+                        class="underline hover:text-primary transition-colors font-medium">Einstellungen</button> kannst
+                    du erfahren, welche Cookies wir verwenden oder sie ausschalten.</p>
+            </div>
+            <!-- Buttons -->
+            <div class="flex flex-wrap justify-center md:justify-end gap-3 shrink-0">
+                <button id="gdpr-accept-all"
+                    class="bg-primary hover:bg-[#b02e1a] text-white font-futura font-bold py-2.5 px-6 rounded transition-all duration-300 transform hover:-translate-y-0.5 shadow-md">
+                    Alle akzeptieren
+                </button>
+                <button id="gdpr-reject"
+                    class="bg-primary hover:bg-[#b02e1a] text-white font-futura font-bold py-2.5 px-6 rounded transition-all duration-300 transform hover:-translate-y-0.5 shadow-md">
+                    Ablehnen
+                </button>
+                <button id="gdpr-settings-btn"
+                    class="border border-white hover:bg-white hover:text-dark font-futura font-bold py-2.5 px-6 rounded transition-all duration-300">
+                    Einstellungen
+                </button>
+            </div>
+        </div>
+    </aside>
+    <script>
+        // Global Utility Functions
+        function getCookie(name) {
+            const value = `; ${document.cookie}`;
+            const parts = value.split(`; ${name}=`);
+            if (parts.length === 2) return parts.pop().split(';').shift();
+            return null;
+        }
+
+        function setCookie(name, value, days) {
+            let expires = "";
+            if (days) {
+                const date = new Date();
+                date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+                expires = "; expires=" + date.toUTCString();
+            }
+            document.cookie = `${name}=${value || ""}${expires}; path=/; SameSite=Lax`;
+        }
+
+        // UI Initialization Functions
+        function initScrollReveal() {
+            const revealElements = document.querySelectorAll('.scroll-reveal');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            });
+            revealElements.forEach(element => {
+                observer.observe(element);
+            });
+        }
+
+        function initButtonInteractions() {
+            const buttons = document.querySelectorAll('button');
+            buttons.forEach(button => {
+                button.addEventListener('mouseenter', () => {
+                    button.style.transform = 'translateY(-2px)';
+                });
+                button.addEventListener('mouseleave', () => {
+                    button.style.transform = 'translateY(0)';
+                });
+            });
+        }
+
+        function initNavbarScroll() {
+            const navbar = document.querySelector('header');
+            const navContainer = document.getElementById('nav-container');
+            const logoSvg = document.querySelector('header .container a svg');
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 50) {
+                    if (navbar) navbar.classList.add('nav-scrolled');
+                    if (navContainer) {
+                        navContainer.classList.remove('h-[82px]');
+                        navContainer.classList.add('h-[49px]');
+                    }
+                    if (logoSvg) {
+                        logoSvg.classList.add('h-8');
+                        logoSvg.classList.remove('h-10', 'md:h-11');
+                    }
+                } else {
+                    if (navbar) navbar.classList.remove('nav-scrolled');
+                    if (navContainer) {
+                        navContainer.classList.remove('h-[49px]');
+                        navContainer.classList.add('h-[82px]');
+                    }
+                    if (logoSvg) {
+                        logoSvg.classList.remove('h-8');
+                        logoSvg.classList.add('h-10', 'md:h-11');
+                    }
+                }
+            });
+        }
+
+        function initMobileMenu() {
+            const menuBtn = document.getElementById('mobile-menu-btn');
+            const closeBtn = document.getElementById('close-menu-btn');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const mobileLinks = document.querySelectorAll('.mobile-link');
+            if (menuBtn && mobileMenu && closeBtn) {
+                menuBtn.addEventListener('click', () => {
+                    mobileMenu.classList.remove('-translate-y-full');
+                    document.body.style.overflow = 'hidden';
+                });
+                closeBtn.addEventListener('click', () => {
+                    mobileMenu.classList.add('-translate-y-full');
+                    document.body.style.overflow = '';
+                });
+                mobileLinks.forEach(link => {
+                    link.addEventListener('click', () => {
+                        mobileMenu.classList.add('-translate-y-full');
+                        document.body.style.overflow = '';
+                    });
+                });
+            }
+        }
+
+        function initGDPRInfoBar() {
+            const infoBar = document.getElementById('moove_gdpr_cookie_info_bar');
+            const acceptBtn = document.getElementById('gdpr-accept-all');
+            const rejectBtn = document.getElementById('gdpr-reject');
+            const settingsBtn = document.getElementById('gdpr-settings-btn');
+            const settingsTrigger = document.getElementById('gdpr-settings-trigger');
+            const modal = document.getElementById('moove_gdpr_cookie_modal');
+            if (!infoBar) return;
+            if (!getCookie('moove_gdpr_popup')) {
+                setTimeout(() => {
+                    infoBar.classList.remove('translate-y-full');
+                }, 1000);
+            }
+            function closeBar() {
+                infoBar.classList.add('translate-y-full');
+            }
+            function openModal() {
+                if (modal) {
+                    modal.classList.remove('hidden');
+                    if (typeof modal.showModal === 'function') {
+                        modal.showModal();
+                    } else {
+                        modal.setAttribute('open', '');
+                    }
+                    document.body.style.overflow = 'hidden';
+                }
+            }
+            if (acceptBtn) {
+                acceptBtn.addEventListener('click', () => {
+                    setCookie('moove_gdpr_popup', 'true', 365);
+                    localStorage.setItem('gdpr_consent_youtube', 'true');
+                    localStorage.setItem('gdpr_consent_analytics', 'true');
+                    const yt = document.getElementById('youtube_consent_checkbox');
+                    const analytics = document.getElementById('analytics_consent_checkbox');
+                    if (yt) yt.checked = true;
+                    if (analytics) analytics.checked = true;
+                    closeBar();
+                });
+            }
+            if (rejectBtn) {
+                rejectBtn.addEventListener('click', () => {
+                    setCookie('moove_gdpr_popup', 'true', 365);
+                    localStorage.setItem('gdpr_consent_youtube', 'false');
+                    localStorage.setItem('gdpr_consent_analytics', 'false');
+                    const yt = document.getElementById('youtube_consent_checkbox');
+                    const analytics = document.getElementById('analytics_consent_checkbox');
+                    if (yt) yt.checked = false;
+                    if (analytics) analytics.checked = false;
+                    closeBar();
+                });
+            }
+            if (settingsBtn) {
+                settingsBtn.addEventListener('click', () => {
+                    closeBar();
+                });
+            }
+            if (settingsTrigger) {
+                settingsTrigger.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    closeBar();
+                    openModal();
+                });
+            }
+        }
+
+        function initGDPRModal() {
+            const modal = document.getElementById('moove_gdpr_cookie_modal');
+            const closeBtn = document.getElementById('moove_gdpr_close');
+            const saveBtn = document.getElementById('gdpr_save_settings');
+            const enableAllBtn = document.getElementById('gdpr_enable_all');
+            const tabBtns = document.querySelectorAll('.gdpr-tab-btn');
+            const tabContents = document.querySelectorAll('.gdpr-tab-content');
+            if (!modal) return;
+            const youtubeConsent = localStorage.getItem('gdpr_consent_youtube');
+            const analyticsConsent = localStorage.getItem('gdpr_consent_analytics');
+            if (youtubeConsent === 'true') {
+                const cb = document.getElementById('youtube_consent_checkbox');
+                if (cb) cb.checked = true;
+            }
+            if (analyticsConsent === 'true') {
+                const cb = document.getElementById('analytics_consent_checkbox');
+                if (cb) cb.checked = true;
+            }
+            tabBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const targetId = btn.getAttribute('data-target');
+                    tabBtns.forEach(b => {
+                        b.classList.remove('bg-white', 'shadow-sm', 'font-medium', 'text-primary', 'border-l-4', 'border-primary');
+                        b.classList.add('text-gray-600', 'hover:bg-white', 'hover:shadow-sm');
+                    });
+                    btn.classList.add('bg-white', 'shadow-sm', 'font-medium', 'text-primary', 'border-l-4', 'border-primary');
+                    btn.classList.remove('text-gray-600', 'hover:bg-white', 'hover:shadow-sm');
+                    tabContents.forEach(content => {
+                        content.classList.add('hidden');
+                        if (content.id === targetId) {
+                            content.classList.remove('hidden');
+                        }
+                    });
+                });
+            });
+            function closeGDPRModal() {
+                if (typeof modal.close === 'function') {
+                    modal.close();
+                }
+                modal.removeAttribute('open');
+                modal.classList.add('hidden');
+                document.body.style.overflow = '';
+            }
+            if (closeBtn) closeBtn.addEventListener('click', closeGDPRModal);
+            if (saveBtn) {
+                saveBtn.addEventListener('click', () => {
+                    const yt = document.getElementById('youtube_consent_checkbox').checked;
+                    const analytics = document.getElementById('analytics_consent_checkbox').checked;
+                    localStorage.setItem('gdpr_consent_youtube', yt);
+                    localStorage.setItem('gdpr_consent_analytics', analytics);
+                    closeGDPRModal();
+                });
+            }
+            if (enableAllBtn) {
+                enableAllBtn.addEventListener('click', () => {
+                    localStorage.setItem('gdpr_consent_youtube', 'true');
+                    localStorage.setItem('gdpr_consent_analytics', 'true');
+                    const yt = document.getElementById('youtube_consent_checkbox');
+                    const analytics = document.getElementById('analytics_consent_checkbox');
+                    if (yt) yt.checked = true;
+                    if (analytics) analytics.checked = true;
+                    closeGDPRModal();
+                });
+            }
+        }
+    </script>
     <script src="script.js"></script>
 </body>
+
 </html>

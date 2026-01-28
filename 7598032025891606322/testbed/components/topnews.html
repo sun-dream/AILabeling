@@ -1,175 +1,49 @@
-<section id="topnews" class="relative h-screen min-h-[600px] flex items-center overflow-hidden">
+<section id="topnews" class="relative flex items-center overflow-hidden h-[80vh] ">
     <!-- Video Background -->
     <video id="topnews-video" class="absolute inset-0 w-full h-full object-cover" autoplay muted loop playsinline>
         <source src="https://hifi-pawlak.de/wp-content/images/video-home.mp4" type="video/mp4">
     </video>
-    
+
     <!-- Overlay -->
     <div class="absolute inset-0 bg-black/30"></div>
-    
+
     <!-- Content -->
     <div class="container mx-auto px-4 sm:px-6 lg:px-8 z-10 relative h-full flex flex-col justify-center items-center">
         <div class="w-full max-w-[700px] text-center flex flex-col items-center">
             <h1 class="font-futura font-bold leading-tight mb-4">
                 <span class="block text-primary text-3xl md:text-5xl lg:text-6xl mb-2">HiFi Pawlak!</span>
-                <span class="block text-white text-3xl md:text-5xl lg:text-6xl">Ihr High-End HiFi Spezialist in Essen.</span>
+                <span class="block text-white text-3xl md:text-5xl lg:text-6xl">Ihr High-End HiFi Spezialist in
+                    Essen.</span>
             </h1>
             <h2 class="text-white text-lg md:text-2xl font-medium mb-8 max-w-2xl">
                 Das Erlebnis Klang – persönlich, individuell, verlässlich.
             </h2>
-            <button class="bg-primary hover:bg-[#b02e1a] text-white font-futura font-bold py-3 px-8 rounded-full text-lg transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg flex items-center gap-2 group" data-video-id="5R6HQDgCNcA">
+            <button
+                class="bg-primary hover:bg-[#b02e1a] text-white font-futura font-bold py-3 px-8 rounded-full text-lg transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg flex items-center gap-2 group"
+                data-video-id="5R6HQDgCNcA"
+                data-video-url="https://www.youtube.com/embed/5R6HQDgCNcA?si=IcG2UmNx7p4RhR2G">
                 <span>Video ansehen</span>
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-play group-hover:fill-current transition-all"><polygon points="6 3 20 12 6 21 6 3"/></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    class="lucide lucide-play group-hover:fill-current transition-all">
+                    <polygon points="6 3 20 12 6 21 6 3" />
+                </svg>
             </button>
         </div>
     </div>
-    
+
     <!-- Bottom Wave Divider -->
-    <div class="absolute bottom-0 left-0 w-full leading-none z-20 pointer-events-none">
-        <svg class="block w-full h-16 md:h-24 lg:h-32" viewBox="0 0 1440 320" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-            <path fill="#ffffff" fill-opacity="1" d="M0,256L60,250.7C120,245,240,235,360,208C480,181,600,139,720,138.7C840,139,960,181,1080,208C1200,235,1320,245,1380,250.7L1440,256L1440,320L1380,320C1320,320,1200,320,1080,320C960,320,840,320,720,320C600,320,480,320,360,320C240,320,120,320,60,320L0,320Z"></path>
+    <div class="absolute bottom-[-1px] left-0 w-full leading-none z-20 pointer-events-none">
+
+        <svg viewBox="0 0 2880 90" xmlns="http://www.w3.org/2000/svg">
+            <path
+                d="m2880 90v-88c-530.27 65.52-770.55 64.1-911.72 65.65-363.65 4-676.2-65.05-1081.11-64.94-301.17.09-654.85 27.78-887.17 59.86v27.43z"
+                fill="#fff" />
+            <path
+                d="m887.17 3.79c213.23.41 440 31 611.16 48.44 199.86 20.36 295.42 34 540.84 30.53 181.15-2.54 303.47-7.9 443.62-22.56 208.14-21.78 323.61-44.34 397.21-56.07v-4.13c-530.27 65.52-770.55 60.1-911.72 61.65-363.65 4-676.2-61-1081.11-60.94-301.17.09-654.85 23.78-887.17 55.86v27.2c217.16-42.38 603.27-80.52 887.17-79.98z"
+                fill="#e52000" />
         </svg>
     </div>
 
-   
+
 </section>
- <!-- <script>
-        (function() {
-            // 1. Video Autoplay Logic
-            const video = document.getElementById('topnews-video');
-            if (video) {
-                // Ensure muted for autoplay
-                video.muted = true;
-                
-                const playPromise = video.play();
-                if (playPromise !== undefined) {
-                    playPromise.catch(error => {
-                        console.log('Autoplay prevented:', error);
-                        // Fallback to play on user interaction
-                        const startPlay = () => {
-                            video.play();
-                            document.removeEventListener('click', startPlay);
-                            document.removeEventListener('touchstart', startPlay);
-                            document.removeEventListener('keydown', startPlay);
-                        };
-                        document.addEventListener('click', startPlay);
-                        document.addEventListener('touchstart', startPlay);
-                        document.addEventListener('keydown', startPlay);
-                    });
-                }
-            }
-
-            // 2. Video Modal Logic
-            // Create modal DOM if it doesn't exist
-            if (!document.getElementById('video-modal')) {
-                const modalHtml = `
-                    <div id="video-modal" class="fixed inset-0 z-[200] flex items-center justify-center bg-black/90 hidden opacity-0 transition-opacity duration-300" role="dialog" aria-modal="true">
-                        <button id="video-modal-close" class="absolute top-4 right-4 text-white/70 hover:text-white transition-colors focus:outline-none z-[201]">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-                        </button>
-                        <div class="w-full max-w-5xl aspect-video mx-4 relative bg-black rounded-lg overflow-hidden shadow-2xl">
-                            <iframe id="video-modal-iframe" class="w-full h-full" src="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                        </div>
-                    </div>
-                `;
-                document.body.insertAdjacentHTML('beforeend', modalHtml);
-            }
-
-            const modal = document.getElementById('video-modal');
-            const iframe = document.getElementById('video-modal-iframe');
-            const closeBtn = document.getElementById('video-modal-close');
-            // Select button specifically within this component to avoid conflicts/redundancy if used elsewhere, 
-            // though the ID selector for modal is global.
-            // Using closest to ensure we attach to the button in THIS component instance (though ID/class selectors are global in DOM)
-            const topnewsSection = document.getElementById('topnews');
-            const triggers = topnewsSection ? topnewsSection.querySelectorAll('[data-video-id]') : [];
-
-            function openModal(videoId) {
-                if (!modal || !iframe) return;
-                
-                // Set YouTube URL (enable autoplay)
-                iframe.src = `https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1`;
-                
-                modal.classList.remove('hidden');
-                // Force reflow
-                modal.offsetHeight;
-                modal.classList.remove('opacity-0');
-                document.body.style.overflow = 'hidden';
-            }
-
-            function closeModal() {
-                if (!modal || !iframe) return;
-                
-                modal.classList.add('opacity-0');
-                setTimeout(() => {
-                    modal.classList.add('hidden');
-                    iframe.src = ''; // Stop playback
-                    document.body.style.overflow = '';
-                }, 300);
-            }
-
-            // Bind triggers
-            triggers.forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    const videoId = btn.dataset.videoId;
-                    if (videoId) openModal(videoId);
-                });
-            });
-
-            // Bind global close events (only need to bind once, but safe to add listeners as they are unique objects if not careful, 
-            // but here we are inside a closure that runs once per component load. 
-            // Since ID is unique, we should check if listener is already attached or just rely on the fact that 
-            // this script runs once when component is loaded.)
-            
-            // To avoid duplicate listeners if component is reloaded (though unlikely here), 
-            // we can check if we already attached a property or just leave it as is for this simple case.
-            // However, since 'closeBtn' is a fresh DOM reference each time (if DOM is preserved), 
-            // actually if component is re-inserted, the modal might persist if appended to body.
-            // But here we check `if (!document.getElementById('video-modal'))`, so modal is created once.
-            // The listeners on `closeBtn` need to be attached if it's a fresh element or just once.
-            // Since `closeBtn` is inside the modal which is created once, we should attach listeners only when creating it.
-            // BUT, `closeBtn` variable is queried every time.
-            
-            // Let's attach listeners only if we just created the modal, OR carefully manage them.
-            // Actually, the simplest way for the global modal events is to attach them inside the `if` block where modal is created.
-            // BUT, `closeModal` function is defined inside this closure.
-            
-            // Refactoring to ensure logic is self-contained and safe:
-            
-            if (modal) {
-                // We need to handle the case where multiple 'topnews' might run this (unlikely) 
-                // or just ensure we don't duplicate logic. 
-                // Given the user request, I will keep it simple but functional.
-                
-                // Remove old listeners to be safe? No, can't remove anonymous functions easily.
-                // Instead, we can assign onclick properties or use a flag.
-                // Or just attach them. For a single page app structure like this, it runs once.
-                
-                // Re-attaching to closeBtn is fine if we are careful.
-                // Actually, let's attach the close logic to the DOM elements directly to avoid closure issues if we wanted to be perfect,
-                // but here, standard addEventListener is fine.
-                
-                // To prevent duplicate listeners on the GLOBAL modal elements (closeBtn, modal background),
-                // we should check if they already have our handler. 
-                // A simple way is to tag them.
-                if (!modal.dataset.hasListener) {
-                    if (closeBtn) {
-                        closeBtn.addEventListener('click', closeModal);
-                    }
-                    modal.addEventListener('click', (e) => {
-                        if (e.target === modal) closeModal();
-                    });
-                    document.addEventListener('keydown', (e) => {
-                        if (e.key === 'Escape' && !modal.classList.contains('hidden')) closeModal();
-                    });
-                    modal.dataset.hasListener = 'true';
-                }
-                
-                // Note: closeModal inside the listener above refers to the closeModal in THIS scope.
-                // If we run this script again, we might have a new closeModal function, but the old listener 
-                // refers to the old function. This is fine as long as they do the same thing.
-                // But `modal` variable is fresh.
-            }
-        })();
-</script> -->

@@ -17,7 +17,7 @@ const components = [
 // 加载所有组件
 async function loadComponents() {
     const loader = document.getElementById('loader');
-    
+
     // 串行加载组件
     for (const component of components) {
         try {
@@ -27,47 +27,20 @@ async function loadComponents() {
             }
             const content = await response.text();
             const container = document.getElementById(component.id);
-            
+
             if (container) {
                 container.innerHTML = content;
-                
-                // 执行加载内容中的脚本
-                const scripts = container.querySelectorAll('script');
-                scripts.forEach(script => {
-                    const newScript = document.createElement('script');
-                    if (script.src) {
-                        newScript.src = script.src;
-                    } else {
-                        // 使用 textContent 获取原始文本，避免 HTML 实体解码导致的问题
-                        // 并添加换行符防止意外的 EOF 错误
-                        newScript.textContent = script.textContent + '\n';
-                    }
-                    
-                    Array.from(script.attributes).forEach(attr => {
-                        if (attr.name !== 'src') {
-                            newScript.setAttribute(attr.name, attr.value);
-                        }
-                    });
-                    
-                    try {
-                        console.log('document', document.body,newScript);
-                        document.body.appendChild(newScript);
-                    } catch (e) {
-                        console.error('Error executing script in component:', component.id, e);
-                        console.log('Failed script content:', newScript.textContent);
-                    }
-                });
             }
         } catch (error) {
             console.error(`Error loading component ${component.file}:`, error);
         }
     }
-        
+
     // 隐藏加载指示器
     if (loader) {
         loader.style.display = 'none';
     }
-    
+
     // 初始化组件
     initComponents();
 }
@@ -75,19 +48,27 @@ async function loadComponents() {
 // 初始化组件
 function initComponents() {
     // 初始化滚动动画
-    initScrollReveal();
-    
-    // 初始化模态窗口
-    initModal();
-    
+    if (typeof initScrollReveal === 'function') initScrollReveal();
+
     // 初始化按钮交互
-    initButtonInteractions();
-    
-    // 初始化视频播放
-    initVideoPlayers();
+    if (typeof initButtonInteractions === 'function') initButtonInteractions();
+
+    // 初始化 TopNews（按钮触发 YouTube 弹窗）
+    initTopNews();
 
     // 初始化 Newsletter 弹窗
     initNewsletterPopup();
+
+    // 初始化 GDPR 弹窗
+    if (typeof initGDPRModal === 'function') initGDPRModal();
+    // 初始化 GDPR Info Bar
+    if (typeof initGDPRInfoBar === 'function') initGDPRInfoBar();
+
+    // 初始化导航栏滚动效果
+    if (typeof initNavbarScroll === 'function') initNavbarScroll();
+
+    // 初始化移动端菜单
+    if (typeof initMobileMenu === 'function') initMobileMenu();
 
     // 初始化图标
     if (window.lucide) {
@@ -95,126 +76,16 @@ function initComponents() {
     }
 }
 
-// 滚动触发动画
-function initScrollReveal() {
-    const revealElements = document.querySelectorAll('.scroll-reveal');
-    
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('active');
-                observer.unobserve(entry.target);
-            }
-        });
-    }, {
-        threshold: 0.1,
-        rootMargin: '0px 0px -50px 0px'
-    });
-    
-    revealElements.forEach(element => {
-        observer.observe(element);
-    });
-}
-
-
-
-// 模态窗口初始化
-function initModal() {
-    const modal = document.getElementById('modal');
-    const modalBtn = document.querySelector('[data-modal="open"]');
-    const closeBtn = document.querySelector('[data-modal="close"]');
-    
-    if (modal && modalBtn && closeBtn) {
-        modalBtn.addEventListener('click', () => {
-            modal.classList.add('active');
-            document.body.style.overflow = 'hidden';
-        });
-        
-        closeBtn.addEventListener('click', () => {
-            modal.classList.remove('active');
-            document.body.style.overflow = 'auto';
-        });
-        
-        // 点击模态框外部关闭
-        modal.addEventListener('click', (e) => {
-            if (e.target === modal) {
-                modal.classList.remove('active');
-                document.body.style.overflow = 'auto';
-            }
-        });
-    }
-}
-
-// 按钮交互效果
-function initButtonInteractions() {
-    const buttons = document.querySelectorAll('button');
-    
-    buttons.forEach(button => {
-        button.addEventListener('mouseenter', () => {
-            button.style.transform = 'translateY(-2px)';
-        });
-        
-        button.addEventListener('mouseleave', () => {
-            button.style.transform = 'translateY(0)';
-        });
-    });
-}
-
-// 视频播放器初始化
-function initVideoPlayers() {
-    const videoBtns = document.querySelectorAll('[data-video]');
-    
-    videoBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-            const videoId = btn.getAttribute('data-video');
-            const videoContainer = document.getElementById(videoId);
-            
-            if (videoContainer) {
-                const video = videoContainer.querySelector('video');
-                if (video) {
-                    // 滚动到视频位置
-                    videoContainer.scrollIntoView({ behavior: 'smooth' });
-                    
-                    // 播放视频
-                    setTimeout(() => {
-                        video.play().catch(err => {
-                            console.error('Error playing video:', err);
-                        });
-                    }, 500);
-                }
-            }
-        });
-    });
-}
-
 // Newsletter 弹窗初始化
 function initNewsletterPopup() {
     const popup = document.getElementById('newsletter-popup');
     const closeBtn = document.getElementById('newsletter-close-btn');
     const form = document.getElementById('newsletter-form');
-    
+
     if (!popup) return;
 
-    const cookieName = 'newsletter_popup_closed';
+    const cookieName = 'cr-popup-popup';
     const submittedCookieName = 'newsletter_popup_submitted';
-    
-    // Cookie 操作辅助函数
-    function getCookie(name) {
-        const value = `; ${document.cookie}`;
-        const parts = value.split(`; ${name}=`);
-        if (parts.length === 2) return parts.pop().split(';').shift();
-        return null;
-    }
-
-    function setCookie(name, value, days) {
-        let expires = "";
-        if (days) {
-            const date = new Date();
-            date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
-            expires = "; expires=" + date.toUTCString();
-        }
-        document.cookie = `${name}=${value || ""}${expires}; path=/; SameSite=Lax`;
-    }
 
     // 检查是否已关闭或已提交
     if (getCookie(cookieName) || getCookie(submittedCookieName)) {
@@ -225,9 +96,9 @@ function initNewsletterPopup() {
     function showPopup() {
         popup.classList.remove('hidden');
         // 强制重绘以触发 transition
-        popup.offsetHeight; 
+        popup.offsetHeight;
         popup.classList.remove('opacity-0');
-        
+
         // 禁止背景滚动
         document.body.style.overflow = 'hidden';
     }
@@ -235,7 +106,7 @@ function initNewsletterPopup() {
     // 关闭弹窗
     function closePopup() {
         popup.classList.add('opacity-0');
-        
+
         // 等待动画结束
         setTimeout(() => {
             popup.classList.add('hidden');
@@ -246,14 +117,46 @@ function initNewsletterPopup() {
         setCookie(cookieName, 'true', 7);
     }
 
-    // 提交处理
+    // 提交处理（本地模拟提交）
     if (form) {
-        form.addEventListener('submit', () => {
-            // 设置提交 Cookie (365天)
+        const submitBtn = popup.querySelector('button[type="submit"]');
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            if (!form.checkValidity()) {
+                form.reportValidity();
+                return;
+            }
+
+            if (!submitBtn) {
+                setCookie(submittedCookieName, 'true', 365);
+                closePopup();
+                return;
+            }
+
+            const originalBtnText = submitBtn.innerText;
+            const originalBtnClasses = submitBtn.className;
+
+            submitBtn.innerText = 'Sending...';
+            submitBtn.disabled = true;
+            submitBtn.classList.add('opacity-75', 'cursor-not-allowed');
+
+            await new Promise(resolve => setTimeout(resolve, 1500));
+
+            submitBtn.innerText = 'Sent!';
+            submitBtn.classList.remove('bg-primary', 'hover:bg-[#b02e1a]');
+            submitBtn.classList.add('bg-green-600', 'hover:bg-green-700');
+
             setCookie(submittedCookieName, 'true', 365);
-            // 提交后关闭弹窗
-            closePopup();
-            // 表单会正常提交到 target="_blank"
+
+            setTimeout(() => {
+                closePopup();
+                setTimeout(() => {
+                    submitBtn.innerText = originalBtnText;
+                    submitBtn.disabled = false;
+                    submitBtn.className = originalBtnClasses;
+                }, 3000);
+            }, 800);
         });
     }
 
@@ -275,3 +178,136 @@ function initNewsletterPopup() {
 
 // 页面加载完成后执行
 window.addEventListener('DOMContentLoaded', loadComponents);
+
+// TopNews 组件初始化
+function initTopNews() {
+    // 1. Video Autoplay Logic
+    const video = document.getElementById('topnews-video');
+    if (video) {
+        // Ensure muted for autoplay
+        video.muted = true;
+
+        const playPromise = video.play();
+        if (playPromise !== undefined) {
+            playPromise.catch(error => {
+                console.log('Autoplay prevented:', error);
+                // Fallback to play on user interaction
+                const startPlay = () => {
+                    video.play();
+                    document.removeEventListener('click', startPlay);
+                    document.removeEventListener('touchstart', startPlay);
+                    document.removeEventListener('keydown', startPlay);
+                };
+                document.addEventListener('click', startPlay);
+                document.addEventListener('touchstart', startPlay);
+                document.addEventListener('keydown', startPlay);
+            });
+        }
+    }
+
+    // 2. Video Modal Logic
+    // Create modal DOM if it doesn't exist
+    if (!document.getElementById('video-modal')) {
+        const modalHtml = `
+            <div id="video-modal" class="fixed inset-0 z-[200] flex items-center justify-center bg-black/90 hidden opacity-0 transition-opacity duration-300" role="dialog" aria-modal="true">
+                <button id="video-modal-close" class="absolute top-4 right-4 text-white/70 hover:text-white transition-colors focus:outline-none z-[201]">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                </button>
+                <div class="w-full max-w-5xl aspect-video mx-4 relative bg-black rounded-lg overflow-hidden shadow-2xl">
+                    <iframe id="video-modal-iframe" class="w-full h-full" src="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                </div>
+            </div>
+        `;
+        document.body.insertAdjacentHTML('beforeend', modalHtml);
+    }
+
+    const modal = document.getElementById('video-modal');
+    const iframe = document.getElementById('video-modal-iframe');
+    const closeBtn = document.getElementById('video-modal-close');
+    const topnewsSection = document.getElementById('topnews');
+    const musiciansSection = document.getElementById('special-offer');
+    const clientSection = document.getElementById('special-offer-client');
+    let triggers = [];
+    if (topnewsSection) {
+        triggers = triggers.concat(Array.from(topnewsSection.querySelectorAll('[data-video-id]')));
+    }
+    if (musiciansSection) {
+        triggers = triggers.concat(Array.from(musiciansSection.querySelectorAll('[data-video-id]')));
+    }
+    if (clientSection) {
+        triggers = triggers.concat(Array.from(clientSection.querySelectorAll('[data-video-id]')));
+    }
+
+    function openModal(videoSrc) {
+        if (!modal || !iframe) return;
+
+        let src = videoSrc || '';
+        if (src) {
+            src += src.includes('?') ? '&autoplay=1' : '?autoplay=1';
+        }
+        iframe.src = src;
+
+        modal.classList.remove('hidden');
+        // Force reflow
+        modal.offsetHeight;
+        modal.classList.remove('opacity-0');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+        if (!modal || !iframe) return;
+
+        modal.classList.add('opacity-0');
+        setTimeout(() => {
+            modal.classList.add('hidden');
+            iframe.src = ''; // Stop playback
+            document.body.style.overflow = '';
+        }, 300);
+    }
+
+    // Bind triggers
+    triggers.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            const videoId = btn.dataset.videoId;
+            const videoUrl = btn.dataset.videoUrl;
+            const baseSrc = videoUrl || (videoId ? `https://www.youtube.com/embed/${videoId}` : '');
+
+            const hasPopupCookie = !!getCookie('moove_gdpr_popup');
+            if (hasPopupCookie) {
+                if (baseSrc) openModal(baseSrc);
+            } else {
+                const gdprModal = document.getElementById('moove_gdpr_cookie_modal');
+                if (gdprModal) {
+                    gdprModal.classList.remove('hidden');
+                    if (typeof gdprModal.showModal === 'function') {
+                        gdprModal.showModal();
+                    } else {
+                        gdprModal.setAttribute('open', '');
+                    }
+                    document.body.style.overflow = 'hidden';
+                    // Switch to YouTube tab
+                    const ytTabBtn = document.querySelector('.gdpr-tab-btn[data-target="youtube_cookies"]');
+                    if (ytTabBtn) ytTabBtn.click();
+                } else {
+                    console.error("GDPR Modal not found");
+                }
+            }
+        });
+    });
+
+    if (modal) {
+        if (!modal.dataset.hasListener) {
+            if (closeBtn) {
+                closeBtn.addEventListener('click', closeModal);
+            }
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) closeModal();
+            });
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && !modal.classList.contains('hidden')) closeModal();
+            });
+            modal.dataset.hasListener = 'true';
+        }
+    }
+}
