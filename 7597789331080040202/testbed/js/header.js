@@ -162,7 +162,7 @@
     function renderMegaMenu(container) {
         let sidebarHtml = '';
         let contentHtml = '';
-        servicesData.forEach((category, index) => {
+        servicesData.forEach((category) => {
             // 生成 Sidebar Item
             sidebarHtml += `
             <div class="mega-menu-trigger w-full flex items-center gap-3 px-6 py-4 cursor-pointer transition-all duration-200 border-l-4 border-transparent hover:bg-white hover:text-primary group" data-target="mega-content-${category.id}">
