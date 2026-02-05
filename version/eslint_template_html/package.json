@@ -1,0 +1,21 @@
+{
+  "name": "eslint-template-html",
+  "version": "1.0.0",
+  "description": "Standard ESLint configuration for HTML/JS projects",
+  "scripts": {
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
+  },
+  "devDependencies": {
+    "eslint": "^8.57.0",
+    "eslint-plugin-html": "^8.0.0"
+  },
+  "keywords": [
+    "eslint",
+    "template",
+    "html",
+    "js"
+  ],
+  "author": "",
+  "license": "ISC"
+}
