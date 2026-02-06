@@ -65,6 +65,11 @@
                 <span class="desktop-icon__glyph" data-glyph="video"></span>
                 <span class="desktop-icon__label">视频播放器</span>
             </button>
+
+            <button class="desktop-icon" data-app="settings" type="button" aria-label="设置">
+                <span class="desktop-icon__glyph" data-glyph="settings"></span>
+                <span class="desktop-icon__label">设置</span>
+            </button>
         </div>
     </div>
 
@@ -149,11 +154,22 @@
                 <span class="start-menu-item__glyph" data-glyph="video"></span>
                 <span>视频播放器</span>
             </button>
+
+            <button class="start-menu-item" data-app="settings" type="button">
+                <span class="start-menu-item__glyph" data-glyph="settings"></span>
+                <span>设置</span>
+            </button>
         </div>
 
         <div class="start-menu-footer">
             <button class="power-button" id="power-button" type="button">
-                <span class="power-button__glyph" aria-hidden="true"></span>
+                <span class="power-button__glyph" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"
+                        stroke-linejoin="round" aria-hidden="true">
+                        <path d="M12 2v10"></path>
+                        <path d="M18.36 6.64a9 9 0 1 1-12.72 0"></path>
+                    </svg>
+                </span>
                 <span>关机</span>
             </button>
         </div>

@@ -1,6 +1,7 @@
 const WebOSStorage = {
     vfsKey: "webos_vfs_v1",
-    snakeHighScoreKey: "webos_snake_high_score_v1"
+    snakeHighScoreKey: "webos_snake_high_score_v1",
+    themeKey: "webos_theme_v1"
 };
 
 function clamp(n, min, max) {
@@ -601,11 +602,20 @@ class WebOS {
         this.trayBattery.textContent = `${this.battery}%`;
         this.trayNetwork.textContent = "Wi‑Fi";
 
+        this.applyTheme(localStorage.getItem(WebOSStorage.themeKey) || "ocean");
+
         this.apps = this.createAppRegistry();
         this.installGlobalHandlers();
         this.updateClock();
         window.setInterval(() => this.updateClock(), 1000);
         this.toast.push({ title: "WebOS", message: "已启动。双击桌面图标开始使用。" });
+    }
+
+    applyTheme(themeId) {
+        const allowed = new Set(["ocean", "sunset", "graphite"]);
+        const id = allowed.has(String(themeId)) ? String(themeId) : "ocean";
+        document.body.dataset.theme = id;
+        localStorage.setItem(WebOSStorage.themeKey, id);
     }
 
     windowCount() {
@@ -1020,7 +1030,8 @@ def __webos_exec(code, ns):
             code: { title: "代码编辑器", glyph: "code", width: 980, height: 700 },
             paint: { title: "画图", glyph: "paint", width: 1040, height: 720 },
             game: { title: "小游戏", glyph: "game", width: 740, height: 760 },
-            video: { title: "视频播放器", glyph: "video", width: 920, height: 640 }
+            video: { title: "视频播放器", glyph: "video", width: 920, height: 640 },
+            settings: { title: "设置", glyph: "settings", width: 720, height: 560, singletonKey: "settings" }
         };
     }
 
@@ -1125,7 +1136,8 @@ def __webos_exec(code, ns):
             code: () => this.mountCodeEditor(win, options),
             paint: () => this.mountPaint(win, options),
             game: () => this.mountGame(win, options),
-            video: () => this.mountVideo(win, options)
+            video: () => this.mountVideo(win, options),
+            settings: () => this.mountSettings(win, options)
         }[appId];
 
         if (!mount) {
@@ -2661,6 +2673,61 @@ def __webos_exec(code, ns):
                 } catch (_) { }
             }
         }
+    }
+
+    mountSettings(win, options) {
+        const root = el("div", { class: "app-pad" });
+        const title = el("div", { style: { fontWeight: "950", fontSize: "16px" } }, "设置");
+        const sub = el("div", { style: { color: "#64748b", fontSize: "12px", marginTop: "6px", lineHeight: "1.4" } }, "切换桌面背景主题（会保存到本地，下次打开仍生效）");
+
+        const themes = [
+            { id: "ocean", name: "海洋蓝", desc: "清爽蓝色渐变" },
+            { id: "sunset", name: "落日橙紫", desc: "高饱和暖色渐变" },
+            { id: "graphite", name: "石墨灰", desc: "深色冷静渐变" }
+        ];
+
+        const current = document.body.dataset.theme || "ocean";
+        const list = el("div", { style: { marginTop: "14px", display: "grid", gap: "10px" } });
+
+        const render = () => {
+            list.innerHTML = "";
+            const active = document.body.dataset.theme || "ocean";
+            for (const t of themes) {
+                const card = el("button", { type: "button", class: "ui-btn", style: { textAlign: "left", padding: "12px 12px", borderRadius: "16px" }, dataset: { theme: t.id } }, [
+                    el("div", { style: { display: "flex", alignItems: "center", gap: "10px" } }, [
+                        el("div", { style: { width: "40px", height: "40px", borderRadius: "14px", border: "1px solid rgba(0,0,0,.10)", background: t.id === "ocean" ? "linear-gradient(135deg,#0b4aa2,#2a72ff,#6e9bff)" : t.id === "sunset" ? "linear-gradient(135deg,#6d28d9,#db2777,#fb923c)" : "linear-gradient(135deg,#0f172a,#334155,#64748b)" } }),
+                        el("div", { style: { minWidth: "0" } }, [
+                            el("div", { style: { fontWeight: "900" } }, t.name),
+                            el("div", { style: { fontSize: "12px", color: "#64748b", marginTop: "2px" } }, t.desc)
+                        ]),
+                        el("div", { style: { flex: "1" } }),
+                        el("div", { style: { fontWeight: "900", color: t.id === active ? "#1e3a8a" : "#94a3b8" } }, t.id === active ? "已启用" : "")
+                    ])
+                ]);
+                card.addEventListener("click", () => {
+                    this.applyTheme(t.id);
+                    this.toast.push({ title: "主题已切换", message: t.name });
+                    render();
+                });
+                list.appendChild(card);
+            }
+        };
+
+        const resetBtn = el("button", { class: "ui-btn", type: "button", style: { marginTop: "12px" } }, "恢复默认（海洋蓝）");
+        resetBtn.addEventListener("click", () => {
+            this.applyTheme("ocean");
+            this.toast.push({ title: "主题已切换", message: "海洋蓝" });
+            render();
+        });
+
+        root.appendChild(title);
+        root.appendChild(sub);
+        root.appendChild(list);
+        root.appendChild(resetBtn);
+        win.contentEl.appendChild(root);
+        win.setTitleExtra("主题");
+        if (current) render();
+        else render();
     }
 }
 

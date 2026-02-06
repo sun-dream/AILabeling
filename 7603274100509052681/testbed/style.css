@@ -25,6 +25,22 @@ body{
 button,input,select,textarea{font:inherit}
 button{cursor:pointer}
 
+body[data-theme="ocean"]{
+    --bg1:#0b4aa2;
+    --bg2:#2a72ff;
+    --bg3:#6e9bff;
+}
+body[data-theme="sunset"]{
+    --bg1:#6d28d9;
+    --bg2:#db2777;
+    --bg3:#fb923c;
+}
+body[data-theme="graphite"]{
+    --bg1:#0f172a;
+    --bg2:#334155;
+    --bg3:#64748b;
+}
+
 .desktop{
     position:relative;
     width:100%;
@@ -106,6 +122,7 @@ button{cursor:pointer}
 .desktop-icon__glyph[data-glyph="paint"]::before{content:"🎨"}
 .desktop-icon__glyph[data-glyph="game"]::before{content:"🎮"}
 .desktop-icon__glyph[data-glyph="video"]::before{content:"🎬"}
+.desktop-icon__glyph[data-glyph="settings"]::before{content:"⚙"}
 
 .desktop-icon__label{
     font-size:12px;
@@ -192,6 +209,7 @@ button{cursor:pointer}
 .app-badge[data-glyph="paint"]::before{content:"🎨"}
 .app-badge[data-glyph="game"]::before{content:"🎮"}
 .app-badge[data-glyph="video"]::before{content:"🎬"}
+.app-badge[data-glyph="settings"]::before{content:"⚙"}
 
 .window-title .title-text{
     overflow:hidden;
@@ -317,6 +335,7 @@ button{cursor:pointer}
 .taskbar-app .app-chip[data-glyph="paint"]::before{content:"🎨"}
 .taskbar-app .app-chip[data-glyph="game"]::before{content:"🎮"}
 .taskbar-app .app-chip[data-glyph="video"]::before{content:"🎬"}
+.taskbar-app .app-chip[data-glyph="settings"]::before{content:"⚙"}
 
 .system-tray{
     display:flex;
@@ -338,6 +357,8 @@ button{cursor:pointer}
     bottom:calc(var(--taskbar-h) + 10px);
     width:340px;
     max-height:70vh;
+    display:flex;
+    flex-direction:column;
     background:rgba(255,255,255,.9);
     border:1px solid rgba(255,255,255,.55);
     border-radius:18px;
@@ -376,6 +397,8 @@ button{cursor:pointer}
     grid-template-columns:1fr;
     gap:6px;
     overflow:auto;
+    flex:1;
+    min-height:0;
 }
 .start-menu-item{
     appearance:none;
@@ -417,6 +440,7 @@ button{cursor:pointer}
 .start-menu-item__glyph[data-glyph="paint"]::before{content:"🎨"}
 .start-menu-item__glyph[data-glyph="game"]::before{content:"🎮"}
 .start-menu-item__glyph[data-glyph="video"]::before{content:"🎬"}
+.start-menu-item__glyph[data-glyph="settings"]::before{content:"⚙"}
 
 .start-menu-footer{
     padding:10px;
@@ -445,7 +469,11 @@ button{cursor:pointer}
     justify-content:center;
     background:rgba(239,68,68,.18);
 }
-.power-button__glyph::before{content:"⏻"}
+.power-button__glyph::before{content:""}
+.power-button__glyph svg{
+    width:16px;
+    height:16px;
+}
 
 .ui-btn{
     border:1px solid rgba(0,0,0,.10);
