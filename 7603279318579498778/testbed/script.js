@@ -58,6 +58,17 @@ const OS = (() => {
       startedAt: null,
       timer: null,
     },
+    super: {
+      connected: {},
+    },
+    gesture: {
+      edge: null,
+      bottom: null,
+    },
+    launcher: {
+      suppress: null,
+      pointer: null,
+    },
   };
 
   const APPS = [
@@ -94,6 +105,7 @@ const OS = (() => {
       subtitle: "拍照与录像",
       color: "from-gray-700 to-slate-900",
       dock: true,
+      widget: true,
       content: renderCamera,
       icon: `<svg class="w-8 h-8 text-white drop-shadow-md" fill="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.2"/><path d="M9 2L7.17 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2h-3.17L15 2H9zm3 15c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z"/></svg>`
     },
@@ -103,6 +115,7 @@ const OS = (() => {
       subtitle: "照片与视频",
       color: "from-indigo-400 to-purple-500",
       dock: false,
+      widget: true,
       content: renderGallery,
       icon: `<svg class="w-8 h-8 text-white drop-shadow-md" fill="currentColor" viewBox="0 0 24 24"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg>`
     },
@@ -281,14 +294,92 @@ const OS = (() => {
     });
   }
 
+  function ensureKeyboard() {
+    if (qs('#celia-kbd')) return;
+    const root = qs('#os') || document.body;
+    const el = document.createElement('div');
+    el.id = 'celia-kbd';
+    el.className = 'fixed left-0 right-0 bottom-0 z-[78] hidden pb-[max(10px,env(safe-area-inset-bottom))]';
+    el.innerHTML = `
+      <div class="mx-auto max-w-[520px] px-4">
+        <div class="rounded-[26px] border border-white/12 bg-white/85 text-black shadow-float overflow-hidden">
+          <div class="flex items-center justify-between px-4 py-2 border-b border-black/10">
+            <div class="text-xs font-medium text-black/60">小艺键盘</div>
+            <button type="button" data-kbd-hide="1" class="px-3 py-1.5 rounded-xl bg-black/5 text-xs text-black/70 hover:bg-black/10 active:scale-[0.98] transition">收起</button>
+          </div>
+          <div class="p-3 grid grid-cols-10 gap-2" data-kbd-grid="1"></div>
+          <div class="px-3 pb-3 flex gap-2">
+            <button type="button" data-kbd-key="SPACE" class="flex-1 py-3 rounded-2xl bg-black/5 text-sm text-black/80 hover:bg-black/10 active:scale-[0.98] transition">空格</button>
+            <button type="button" data-kbd-key="DEL" class="w-20 py-3 rounded-2xl bg-black/5 text-sm text-black/80 hover:bg-black/10 active:scale-[0.98] transition">⌫</button>
+            <button type="button" data-kbd-key="ENTER" class="w-24 py-3 rounded-2xl bg-blue-500/15 text-sm text-blue-700 hover:bg-blue-500/20 active:scale-[0.98] transition">完成</button>
+          </div>
+        </div>
+      </div>
+    `;
+    root.appendChild(el);
+    const grid = qs('[data-kbd-grid]', el);
+    const keys = '1234567890qwertyuiopasdfghjklzxcvbnm'.split('');
+    grid.innerHTML = keys.map(k => `<button type="button" data-kbd-key="${k}" class="h-9 rounded-xl bg-black/5 text-[13px] text-black/80 hover:bg-black/10 active:scale-[0.98] transition">${k}</button>`).join('');
+
+    el.addEventListener('pointerdown', (e) => {
+      if (e.target.closest('button')) e.preventDefault();
+    });
+  }
+
+  function showKeyboard(target) {
+    if (!target) return;
+    ensureKeyboard();
+    state.keyboardTarget = target;
+    qs('#celia-kbd')?.classList.remove('hidden');
+  }
+
+  function hideKeyboard() {
+    state.keyboardTarget = null;
+    qs('#celia-kbd')?.classList.add('hidden');
+  }
+
+  function insertToTarget(text) {
+    const el = state.keyboardTarget;
+    if (!el) return;
+    const start = el.selectionStart ?? el.value.length;
+    const end = el.selectionEnd ?? el.value.length;
+    const v = el.value ?? '';
+    el.value = v.slice(0, start) + text + v.slice(end);
+    const pos = start + text.length;
+    try {
+      el.setSelectionRange(pos, pos);
+    } catch { }
+    el.dispatchEvent(new Event('input', { bubbles: true }));
+  }
+
+  function deleteFromTarget() {
+    const el = state.keyboardTarget;
+    if (!el) return;
+    const start = el.selectionStart ?? el.value.length;
+    const end = el.selectionEnd ?? el.value.length;
+    const v = el.value ?? '';
+    if (start !== end) {
+      el.value = v.slice(0, start) + v.slice(end);
+      try { el.setSelectionRange(start, start); } catch { }
+      el.dispatchEvent(new Event('input', { bubbles: true }));
+      return;
+    }
+    if (start <= 0) return;
+    el.value = v.slice(0, start - 1) + v.slice(end);
+    try { el.setSelectionRange(start - 1, start - 1); } catch { }
+    el.dispatchEvent(new Event('input', { bubbles: true }));
+  }
+
   function appIcon(app, size = "lg") {
     const dim = size === "sm" ? "h-11 w-11" : "h-[56px] w-[56px]";
+    const hint = app.widget ? `<div class="absolute bottom-1 left-1/2 -translate-x-1/2 w-6 h-1 rounded-full bg-white/55"></div>` : ``;
     return `
       <div class="relative grid place-items-center rounded-[18px] shadow-lg shadow-black/20 overflow-hidden ${dim} bg-gradient-to-br ${app.color} border border-white/10 group">
         <div class="absolute inset-0 bg-gradient-to-b from-white/20 to-transparent opacity-60"></div>
         <div class="relative z-10 transform transition-transform duration-300 group-active:scale-90">
           ${app.icon}
         </div>
+        ${hint}
       </div>
     `;
   }
@@ -505,6 +596,7 @@ const OS = (() => {
     if (state.windows.has(id)) {
       const w = state.windows.get(id);
       w.el.style.display = 'block';
+      w.minimized = false;
       if (opts) {
         const body = w.el.querySelector('[data-window-content]');
         if (body) {
@@ -535,7 +627,7 @@ const OS = (() => {
     `;
 
     qs('#windows').appendChild(el);
-    state.windows.set(id, { el, app });
+    state.windows.set(id, { el, app, minimized: false });
 
     const closeBtn = el.querySelector('#btn-close');
     closeBtn.addEventListener('click', () => closeApp(id));
@@ -997,6 +1089,10 @@ const OS = (() => {
           ${kind === 'mail' ? `<div class="mt-2 text-white/85 text-sm font-medium">${escapeHtml(item.subject)}</div>` : ``}
           <div class="mt-3 text-white/75 text-sm leading-relaxed whitespace-pre-wrap">${escapeHtml(item.body)}</div>
         </div>
+        <div class="rounded-2xl border border-white/10 bg-white/5 p-3">
+          <div class="text-xs text-white/55 mb-2">回复（示意）</div>
+          <input data-celia="1" class="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white outline-none focus:bg-white/10 transition" placeholder="输入内容…" />
+        </div>
       </div>
     `;
   }
@@ -1092,25 +1188,81 @@ const OS = (() => {
   }
 
   function renderSuperDevice() {
+    const tv = state.super.connected.tv ? '已连接' : '智慧屏';
+    const pad = state.super.connected.pad ? '已连接' : 'MatePad';
+    const buds = state.super.connected.buds ? '已连接' : 'FreeBuds';
     return `
-      <div class="h-48 relative bg-black/20 rounded-2xl mb-4 overflow-hidden border border-white/5">
-        <div class="absolute inset-0 flex items-center justify-center">
-           <div class="w-20 h-20 rounded-full bg-white flex flex-col items-center justify-center z-10 shadow-[0_0_30px_rgba(255,255,255,0.2)]">
+      <div id="super-device" class="h-48 relative bg-black/20 rounded-2xl mb-4 overflow-hidden border border-white/5 select-none touch-none">
+        <div class="absolute inset-0">
+          <div class="absolute inset-0 flex items-center justify-center">
+            <div id="super-center" class="w-20 h-20 rounded-full bg-white flex flex-col items-center justify-center z-10 shadow-[0_0_30px_rgba(255,255,255,0.2)]">
               <span class="text-2xl">📱</span>
               <span class="text-[10px] text-black font-bold mt-1">本机</span>
-           </div>
-           <div class="absolute top-4 left-8 w-14 h-14 rounded-full bg-white/10 backdrop-blur-md flex flex-col items-center justify-center border border-white/20 animate-float-slow">
-              <span class="text-lg">📺</span>
-              <span class="text-[8px] text-white">智慧屏</span>
-           </div>
-           <div class="absolute bottom-6 right-8 w-14 h-14 rounded-full bg-white/10 backdrop-blur-md flex flex-col items-center justify-center border border-white/20 animate-float-slower">
-              <span class="text-lg">💻</span>
-              <span class="text-[8px] text-white">MateBook</span>
-           </div>
+            </div>
+          </div>
+          <button type="button" data-super-bubble="tv" class="super-bubble absolute top-4 left-8 w-14 h-14 rounded-full bg-white/10 backdrop-blur-md flex flex-col items-center justify-center border border-white/20">
+            <span class="text-lg">📺</span>
+            <span class="text-[8px] text-white">${tv}</span>
+          </button>
+          <button type="button" data-super-bubble="pad" class="super-bubble absolute bottom-8 left-10 w-14 h-14 rounded-full bg-white/10 backdrop-blur-md flex flex-col items-center justify-center border border-white/20">
+            <span class="text-lg">�</span>
+            <span class="text-[8px] text-white">${pad}</span>
+          </button>
+          <button type="button" data-super-bubble="buds" class="super-bubble absolute bottom-6 right-8 w-14 h-14 rounded-full bg-white/10 backdrop-blur-md flex flex-col items-center justify-center border border-white/20">
+            <span class="text-lg">🎧</span>
+            <span class="text-[8px] text-white">${buds}</span>
+          </button>
         </div>
         <div class="absolute bottom-2 left-0 right-0 text-center text-white/30 text-xs">超级终端 · 拖拽吸附协同</div>
       </div>
     `;
+  }
+
+  function bindSuperDevice(panelRoot) {
+    const root = panelRoot.querySelector('#super-device');
+    if (!root || root.dataset.bound === '1') return;
+    root.dataset.bound = '1';
+    const center = root.querySelector('#super-center');
+    const centerRect = () => center.getBoundingClientRect();
+    let drag = null;
+
+    const onMove = (e) => {
+      if (!drag || drag.pointerId !== e.pointerId) return;
+      const dx = e.clientX - drag.x;
+      const dy = e.clientY - drag.y;
+      drag.el.style.transform = `translate(${dx}px, ${dy}px)`;
+    };
+    const onUp = (e) => {
+      if (!drag || drag.pointerId !== e.pointerId) return;
+      const rect = drag.el.getBoundingClientRect();
+      const c = centerRect();
+      const bx = rect.left + rect.width / 2;
+      const by = rect.top + rect.height / 2;
+      const cx = c.left + c.width / 2;
+      const cy = c.top + c.height / 2;
+      const dist = Math.hypot(bx - cx, by - cy);
+      if (dist < 74) {
+        state.super.connected[drag.id] = true;
+        renderControls();
+        toast('已连接');
+      } else {
+        drag.el.style.transform = '';
+      }
+      drag = null;
+      document.removeEventListener('pointermove', onMove);
+      document.removeEventListener('pointerup', onUp);
+      document.removeEventListener('pointercancel', onUp);
+    };
+
+    root.querySelectorAll('[data-super-bubble]').forEach((b) => {
+      b.addEventListener('pointerdown', (e) => {
+        if (e.pointerType === 'mouse' && e.button !== 0) return;
+        drag = { el: b, id: b.getAttribute('data-super-bubble'), x: e.clientX, y: e.clientY, pointerId: e.pointerId };
+        document.addEventListener('pointermove', onMove, { passive: true });
+        document.addEventListener('pointerup', onUp, { passive: true });
+        document.addEventListener('pointercancel', onUp, { passive: true });
+      });
+    });
   }
 
   function renderControls() {
@@ -1148,6 +1300,7 @@ const OS = (() => {
         </div>
       </div>
     `;
+    bindSuperDevice(p);
   }
 
   function renderLockScreen() {
@@ -1187,6 +1340,192 @@ const OS = (() => {
     toast("已解锁");
   }
 
+  function ensureServiceWidget() {
+    if (qs('#service-widget')) return;
+    const root = qs('#os') || document.body;
+    const el = document.createElement('div');
+    el.id = 'service-widget';
+    el.className = 'fixed inset-0 z-[75] hidden';
+    el.innerHTML = `
+      <div class="absolute inset-0 bg-black/50 backdrop-blur-sm"></div>
+      <div class="absolute left-0 right-0 bottom-0 pb-[max(12px,env(safe-area-inset-bottom))] px-4">
+        <div id="service-widget-sheet" class="mx-auto max-w-[520px] rounded-[28px] border border-white/12 bg-black/45 backdrop-blur-2xl shadow-float overflow-hidden">
+          <div class="px-4 py-3 border-b border-white/10 bg-white/5 flex items-center justify-between">
+            <div id="service-widget-title" class="text-[14px] font-semibold text-white/90">服务卡片</div>
+            <button id="service-widget-close" type="button" class="rounded-xl px-3 py-1.5 text-xs text-white/80 hover:bg-white/10 active:scale-[0.98] transition">关闭</button>
+          </div>
+          <div id="service-widget-body" class="p-4"></div>
+        </div>
+      </div>
+    `;
+    root.appendChild(el);
+    qs('#service-widget-close', el).addEventListener('click', () => closeServiceWidget());
+    el.addEventListener('click', (e) => {
+      if (e.target === el || e.target === el.firstElementChild) closeServiceWidget();
+    });
+  }
+
+  function closeServiceWidget() {
+    const el = qs('#service-widget');
+    if (!el) return;
+    el.classList.add('hidden');
+  }
+
+  function widgetHtmlFor(appId) {
+    if (appId === 'gallery') {
+      const thumbs = state.photos.slice(0, 4).map(p => `
+        <button type="button" class="relative aspect-square rounded-2xl overflow-hidden border border-white/10 bg-white/5 active:scale-[0.98] transition" data-widget-photo="${p.id}">
+          <img src="${p.src || ''}" class="absolute inset-0 w-full h-full object-cover" />
+        </button>
+      `).join('');
+      return `
+        <div class="space-y-3">
+          <div class="grid grid-cols-4 gap-2">${thumbs}</div>
+          <div class="flex items-center justify-between">
+            <div class="text-xs text-white/60">最近照片</div>
+            <button type="button" class="px-3 py-2 rounded-2xl bg-white/10 text-white/80 text-xs hover:bg-white/15 active:scale-[0.98] transition" data-widget-open="gallery">打开图库</button>
+          </div>
+        </div>
+      `;
+    }
+    if (appId === 'camera') {
+      const last = state.photos[0];
+      return `
+        <div class="space-y-3">
+          <div class="rounded-2xl border border-white/10 bg-white/5 overflow-hidden">
+            <div class="relative aspect-[16/10] bg-black">
+              ${last ? `<img src="${last.src || ''}" class="absolute inset-0 w-full h-full object-cover opacity-90" />` : ``}
+              <div class="absolute inset-0 bg-gradient-to-b from-black/15 via-transparent to-black/40"></div>
+              <div class="absolute left-3 bottom-3 text-xs text-white/85">相机快捷卡片</div>
+            </div>
+          </div>
+          <div class="flex items-center justify-end">
+            <button type="button" class="px-3 py-2 rounded-2xl bg-white/10 text-white/80 text-xs hover:bg-white/15 active:scale-[0.98] transition" data-widget-open="camera">打开相机</button>
+          </div>
+        </div>
+      `;
+    }
+    return `
+      <div class="text-white/60 text-sm">暂无服务卡片</div>
+      <div class="mt-3">
+        <button type="button" class="px-3 py-2 rounded-2xl bg-white/10 text-white/80 text-xs hover:bg-white/15 active:scale-[0.98] transition" data-widget-open="${escapeHtml(appId)}">打开应用</button>
+      </div>
+    `;
+  }
+
+  function openServiceWidget(appId) {
+    ensureServiceWidget();
+    const el = qs('#service-widget');
+    const title = qs('#service-widget-title', el);
+    const body = qs('#service-widget-body', el);
+    const app = APPS.find(a => a.id === appId);
+    title.textContent = app ? `${app.name} · 服务卡片` : '服务卡片';
+    body.innerHTML = widgetHtmlFor(appId);
+    el.classList.remove('hidden');
+
+    body.querySelectorAll('[data-widget-open]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        closeServiceWidget();
+        openApp(btn.getAttribute('data-widget-open'));
+      });
+    });
+    body.querySelectorAll('[data-widget-photo]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        openPhoto(btn.getAttribute('data-widget-photo'));
+      });
+    });
+  }
+
+  function bindLauncher() {
+    const roots = [qs('#app-grid'), qs('#dock')].filter(Boolean);
+    for (const root of roots) {
+      if (root.dataset.bound === '1') continue;
+      root.dataset.bound = '1';
+
+      root.addEventListener('pointerdown', (e) => {
+        const btn = e.target.closest('[data-app-id]');
+        if (!btn) return;
+        state.launcher.pointer = {
+          id: btn.getAttribute('data-app-id'),
+          widget: btn.getAttribute('data-app-widget') === '1',
+          x: e.clientX,
+          y: e.clientY,
+          t: Date.now(),
+          pointerId: e.pointerId,
+        };
+      });
+
+      root.addEventListener('pointerup', (e) => {
+        const p = state.launcher.pointer;
+        if (!p || p.pointerId !== e.pointerId) return;
+        state.launcher.pointer = null;
+        const dy = p.y - e.clientY;
+        const dx = Math.abs(p.x - e.clientX);
+        if (p.widget && dy > 45 && dx < 35) {
+          state.launcher.suppress = { id: p.id, until: Date.now() + 600 };
+          openServiceWidget(p.id);
+        }
+      });
+
+      root.addEventListener('click', (e) => {
+        const btn = e.target.closest('[data-app-id]');
+        if (!btn) return;
+        const id = btn.getAttribute('data-app-id');
+        const s = state.launcher.suppress;
+        if (s && s.id === id && Date.now() < s.until) {
+          e.preventDefault();
+          e.stopPropagation();
+          state.launcher.suppress = null;
+          return;
+        }
+        openApp(id);
+      });
+    }
+  }
+
+  function bindKeyboard() {
+    if (document.documentElement.dataset.kbdBound === '1') return;
+    document.documentElement.dataset.kbdBound = '1';
+    ensureKeyboard();
+    const kbd = qs('#celia-kbd');
+    kbd.addEventListener('click', (e) => {
+      const hide = e.target.closest('[data-kbd-hide]');
+      if (hide) {
+        hideKeyboard();
+        return;
+      }
+      const keyBtn = e.target.closest('[data-kbd-key]');
+      if (!keyBtn) return;
+      const k = keyBtn.getAttribute('data-kbd-key');
+      if (k === 'SPACE') insertToTarget(' ');
+      else if (k === 'DEL') deleteFromTarget();
+      else if (k === 'ENTER') {
+        try { state.keyboardTarget?.blur(); } catch { }
+        hideKeyboard();
+      } else {
+        insertToTarget(k);
+      }
+    });
+
+    let blurTimer = null;
+    document.addEventListener('focusin', (e) => {
+      const t = e.target;
+      if (!(t instanceof HTMLInputElement || t instanceof HTMLTextAreaElement)) return;
+      const ok = t.getAttribute('data-celia') === '1' || t.id === 'global-search' || t.id === 'notes-text';
+      if (!ok) return;
+      clearTimeout(blurTimer);
+      showKeyboard(t);
+    });
+    document.addEventListener('focusout', () => {
+      clearTimeout(blurTimer);
+      blurTimer = setTimeout(() => {
+        const active = document.activeElement;
+        if (active && kbd.contains(active)) return;
+        hideKeyboard();
+      }, 120);
+    });
+  }
+
   function init() {
     window.OS = {
       openApp,
@@ -1220,10 +1559,12 @@ const OS = (() => {
 
     ensureDefaultPhotos();
     ensurePhotoViewer();
+    ensureServiceWidget();
+    bindKeyboard();
 
     const grid = qs('#app-grid');
     grid.innerHTML = APPS.filter(a => !a.dock).map(app => `
-      <button class="flex flex-col items-center gap-2 p-2 active:scale-95 transition" onclick="OS_openApp('${app.id}')">
+      <button class="flex flex-col items-center gap-2 p-2 active:scale-95 transition select-none" type="button" data-app-id="${app.id}" data-app-widget="${app.widget ? '1' : '0'}">
         ${appIcon(app, 'lg')}
         <span class="text-xs text-white drop-shadow-md">${app.name}</span>
       </button>
@@ -1231,10 +1572,12 @@ const OS = (() => {
 
     const dock = qs('#dock');
     dock.innerHTML = APPS.filter(a => a.dock).map(app => `
-      <button class="active:scale-90 transition" onclick="OS_openApp('${app.id}')">
+      <button class="active:scale-90 transition select-none" type="button" data-app-id="${app.id}" data-app-widget="${app.widget ? '1' : '0'}">
         ${appIcon(app, 'sm')}
       </button>
     `).join('');
+
+    bindLauncher();
 
     setInterval(() => {
       qs('#status-time').textContent = nowTimeText();
@@ -1246,49 +1589,256 @@ const OS = (() => {
     bindGestures();
   }
 
+  function hidePanels() {
+    qs('#panel-scrim')?.classList.add('opacity-0', 'pointer-events-none');
+    qs('#panel-controls')?.classList.add('translate-y-[-102%]');
+    qs('#panel-notifications')?.classList.add('translate-y-[-102%]');
+    const rec = qs('#panel-recents');
+    if (rec) rec.classList.add('opacity-0', 'pointer-events-none');
+    state.panel = 'none';
+  }
+
+  function showScrim() {
+    qs('#panel-scrim')?.classList.remove('opacity-0', 'pointer-events-none');
+  }
+
+  function renderNotifications() {
+    const list = qs('#notif-list');
+    const dateEl = qs('#notif-date');
+    if (dateEl) dateEl.textContent = dateText();
+    if (!list) return;
+    list.innerHTML = state.notifs.map(n => `
+      <div class="rounded-2xl border border-white/10 bg-white/5 p-4">
+        <div class="flex items-center justify-between gap-2">
+          <div class="text-sm font-semibold text-white/90 truncate">${escapeHtml(n.title)}</div>
+          <div class="text-xs text-white/45">${escapeHtml(n.time)}</div>
+        </div>
+        <div class="mt-2 text-sm text-white/70 leading-relaxed">${escapeHtml(n.body)}</div>
+      </div>
+    `).join('');
+    const btn = qs('#btn-clear-notifs');
+    if (btn && !btn.dataset.bound) {
+      btn.dataset.bound = '1';
+      btn.addEventListener('click', () => {
+        state.notifs = [];
+        renderNotifications();
+        toast('已清除');
+      });
+    }
+  }
+
+  function showNotifications() {
+    state.panel = 'notifications';
+    showScrim();
+    renderNotifications();
+    qs('#panel-notifications')?.classList.remove('translate-y-[-102%]');
+  }
+
+  function showControls() {
+    state.panel = 'controls';
+    showScrim();
+    qs('#panel-controls')?.classList.remove('translate-y-[-102%]');
+    renderControls();
+  }
+
+  function renderRecents() {
+    const list = qs('#recents-list');
+    if (!list) return;
+    const items = Array.from(state.windows.entries())
+      .map(([id, w]) => ({ id, w, z: parseInt(w.el.style.zIndex || '0', 10) || 0 }))
+      .sort((a, b) => b.z - a.z);
+    if (items.length === 0) {
+      list.innerHTML = `<div class="text-center text-white/40 text-sm py-10">暂无任务</div>`;
+      return;
+    }
+    list.innerHTML = items.map(({ id, w }) => `
+      <div class="rounded-2xl border border-white/10 bg-white/5 p-3 flex items-center gap-3">
+        <div class="w-10 h-10 rounded-2xl bg-white/10 border border-white/10 grid place-items-center overflow-hidden">${w.app.icon}</div>
+        <div class="flex-1 min-w-0">
+          <div class="text-sm text-white/90 truncate">${escapeHtml(w.app.name)}</div>
+          <div class="text-xs text-white/45">${w.minimized ? '已挂起' : '运行中'}</div>
+        </div>
+        <button type="button" class="px-3 py-2 rounded-2xl bg-white/10 text-white/80 text-xs hover:bg-white/15 active:scale-[0.98] transition" data-recents-open="${id}">打开</button>
+        <button type="button" class="w-9 h-9 rounded-2xl bg-white/10 text-white/70 hover:bg-red-500 hover:text-white active:scale-[0.98] transition grid place-items-center" data-recents-close="${id}">×</button>
+      </div>
+    `).join('');
+  }
+
+  function showRecents() {
+    state.panel = 'recents';
+    showScrim();
+    renderRecents();
+    const rec = qs('#panel-recents');
+    if (rec) rec.classList.remove('opacity-0', 'pointer-events-none');
+    const closeBtn = qs('#btn-close-recents');
+    if (closeBtn && !closeBtn.dataset.bound) {
+      closeBtn.dataset.bound = '1';
+      closeBtn.addEventListener('click', hidePanels);
+    }
+    const clearBtn = qs('#btn-clear-recents');
+    if (clearBtn && !clearBtn.dataset.bound) {
+      clearBtn.dataset.bound = '1';
+      clearBtn.addEventListener('click', () => {
+        for (const [id] of state.windows) closeApp(id);
+        hidePanels();
+      });
+    }
+    const list = qs('#recents-list');
+    if (list && !list.dataset.bound) {
+      list.dataset.bound = '1';
+      list.addEventListener('click', (e) => {
+        const openBtn = e.target.closest('[data-recents-open]');
+        if (openBtn) {
+          const id = openBtn.getAttribute('data-recents-open');
+          openApp(id);
+          hidePanels();
+          return;
+        }
+        const closeBtn = e.target.closest('[data-recents-close]');
+        if (closeBtn) {
+          closeApp(closeBtn.getAttribute('data-recents-close'));
+          renderRecents();
+        }
+      });
+    }
+  }
+
+  function goHome() {
+    closeServiceWidget();
+    qs('#photo-viewer')?.classList.add('hidden');
+    hidePanels();
+    for (const [, w] of state.windows) {
+      w.el.style.display = 'none';
+      w.minimized = true;
+    }
+  }
+
+  function topmostWindowId() {
+    let best = null;
+    let bestZ = -1;
+    for (const [id, w] of state.windows) {
+      if (w.minimized) continue;
+      const z = parseInt(w.el.style.zIndex || '0', 10) || 0;
+      if (z > bestZ) {
+        bestZ = z;
+        best = id;
+      }
+    }
+    return best;
+  }
+
+  function goBack() {
+    const widget = qs('#service-widget');
+    if (widget && !widget.classList.contains('hidden')) {
+      closeServiceWidget();
+      return;
+    }
+    const viewer = qs('#photo-viewer');
+    if (viewer && !viewer.classList.contains('hidden')) {
+      viewer.classList.add('hidden');
+      return;
+    }
+    if (state.panel !== 'none') {
+      hidePanels();
+      return;
+    }
+    const id = topmostWindowId();
+    if (id) {
+      closeApp(id);
+      return;
+    }
+    toast('已到桌面');
+  }
+
   function bindGestures() {
-    qs('header').addEventListener('click', (e) => {
-      if (e.clientX > window.innerWidth / 2) {
-        state.panel = 'controls';
-        const p = qs('#panel-controls');
-        p.classList.remove('translate-y-[-102%]');
-        renderControls();
-      } else {
-        toast("通知中心 (暂未展开)");
-      }
-    });
+    const scrim = qs('#panel-scrim');
+    if (scrim && !scrim.dataset.bound) {
+      scrim.dataset.bound = '1';
+      scrim.addEventListener('click', hidePanels);
+    }
 
-    document.addEventListener('click', (e) => {
-      if (state.panel === 'controls' && !e.target.closest('#panel-controls') && !e.target.closest('header')) {
-        qs('#panel-controls').classList.add('translate-y-[-102%]');
-        state.panel = 'none';
-      }
-    });
+    const header = qs('header');
+    if (header && !header.dataset.bound) {
+      header.dataset.bound = '1';
+      header.addEventListener('click', (e) => {
+        if (state.locked) return;
+        if (e.clientX > window.innerWidth / 2) showControls();
+        else showNotifications();
+      });
+    }
 
-    let startY = 0;
-    document.addEventListener('touchstart', (e) => {
-      startY = e.touches[0].clientY;
+    document.addEventListener('pointerdown', (e) => {
+      if (state.locked) return;
+      if (e.pointerType === 'mouse' && e.button !== 0) return;
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+      if (e.clientY <= 22) {
+        state.gesture.top = { x: e.clientX, y: e.clientY, pointerId: e.pointerId, fired: false };
+      } else if (e.clientX <= 14) {
+        state.gesture.edge = { x: e.clientX, y: e.clientY, pointerId: e.pointerId, fired: false };
+      } else if (e.clientY >= h - 18) {
+        const timer = setTimeout(() => {
+          if (state.gesture.bottom && !state.gesture.bottom.fired) {
+            showRecents();
+            state.gesture.bottom.fired = true;
+          }
+        }, 520);
+        state.gesture.bottom = { x: e.clientX, y: e.clientY, pointerId: e.pointerId, fired: false, timer };
+      }
     }, { passive: true });
 
-    document.addEventListener('touchend', (e) => {
-      const endY = e.changedTouches[0].clientY;
-      const diffY = startY - endY;
-
-      if (state.locked && diffY > 100) {
-        unlock();
+    document.addEventListener('pointermove', (e) => {
+      const top = state.gesture.top;
+      if (top && top.pointerId === e.pointerId && !top.fired) {
+        const dy = e.clientY - top.y;
+        if (dy > 70) {
+          top.fired = true;
+          if (top.x > window.innerWidth / 2) showControls();
+          else showNotifications();
+        }
       }
-    });
-
-    let mouseDownY = 0;
-    document.addEventListener('mousedown', (e) => {
-      mouseDownY = e.clientY;
-    });
-    document.addEventListener('mouseup', (e) => {
-      const diffY = mouseDownY - e.clientY;
-      if (state.locked && diffY > 100) {
-        unlock();
+      const edge = state.gesture.edge;
+      if (edge && edge.pointerId === e.pointerId && !edge.fired) {
+        const dx = e.clientX - edge.x;
+        const dy = Math.abs(e.clientY - edge.y);
+        if (dx > 80 && dy < 60) {
+          edge.fired = true;
+          goBack();
+        }
       }
-    });
+      const bottom = state.gesture.bottom;
+      if (bottom && bottom.pointerId === e.pointerId && !bottom.fired) {
+        const dy = bottom.y - e.clientY;
+        const dx = Math.abs(e.clientX - bottom.x);
+        if (dy > 110 && dx < 80) {
+          bottom.fired = true;
+          clearTimeout(bottom.timer);
+          goHome();
+        }
+      }
+    }, { passive: true });
+
+    const clearPointer = (pid) => {
+      if (state.gesture.top && state.gesture.top.pointerId === pid) state.gesture.top = null;
+      if (state.gesture.edge && state.gesture.edge.pointerId === pid) state.gesture.edge = null;
+      if (state.gesture.bottom && state.gesture.bottom.pointerId === pid) {
+        clearTimeout(state.gesture.bottom.timer);
+        state.gesture.bottom = null;
+      }
+    };
+    document.addEventListener('pointerup', (e) => clearPointer(e.pointerId), { passive: true });
+    document.addEventListener('pointercancel', (e) => clearPointer(e.pointerId), { passive: true });
+
+    document.addEventListener('pointerdown', (e) => {
+      if (!state.locked) return;
+      state.gesture.unlock = { y: e.clientY, pointerId: e.pointerId };
+    }, { passive: true });
+    document.addEventListener('pointerup', (e) => {
+      if (!state.locked || !state.gesture.unlock || state.gesture.unlock.pointerId !== e.pointerId) return;
+      const dy = state.gesture.unlock.y - e.clientY;
+      state.gesture.unlock = null;
+      if (dy > 110) unlock();
+    }, { passive: true });
   }
 
   return { init };
