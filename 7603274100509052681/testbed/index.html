@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebOS - Desktop</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="overflow-hidden">
+    <div id="desktop" class="desktop" aria-label="Desktop">
+        <div class="desktop-icons" id="desktop-icons">
+            <button class="desktop-icon" data-app="explorer" type="button" aria-label="文件管理器">
+                <span class="desktop-icon__glyph" data-glyph="folder"></span>
+                <span class="desktop-icon__label">文件管理器</span>
+            </button>
+
+            <button class="desktop-icon" data-app="notepad" type="button" aria-label="记事本">
+                <span class="desktop-icon__glyph" data-glyph="note"></span>
+                <span class="desktop-icon__label">记事本</span>
+            </button>
+
+            <button class="desktop-icon" data-app="terminal" type="button" aria-label="终端">
+                <span class="desktop-icon__glyph" data-glyph="terminal"></span>
+                <span class="desktop-icon__label">终端</span>
+            </button>
+
+            <button class="desktop-icon" data-app="browser" type="button" aria-label="浏览器">
+                <span class="desktop-icon__glyph" data-glyph="globe"></span>
+                <span class="desktop-icon__label">浏览器</span>
+            </button>
+
+            <button class="desktop-icon" data-app="photos" type="button" aria-label="照片">
+                <span class="desktop-icon__glyph" data-glyph="photo"></span>
+                <span class="desktop-icon__label">照片</span>
+            </button>
+
+            <button class="desktop-icon" data-app="calendar" type="button" aria-label="日历">
+                <span class="desktop-icon__glyph" data-glyph="calendar"></span>
+                <span class="desktop-icon__label">日历</span>
+            </button>
+
+            <button class="desktop-icon" data-app="calculator" type="button" aria-label="计算器">
+                <span class="desktop-icon__glyph" data-glyph="calc"></span>
+                <span class="desktop-icon__label">计算器</span>
+            </button>
+
+            <button class="desktop-icon" data-app="code" type="button" aria-label="代码编辑器">
+                <span class="desktop-icon__glyph" data-glyph="code"></span>
+                <span class="desktop-icon__label">代码编辑器</span>
+            </button>
+
+            <button class="desktop-icon" data-app="paint" type="button" aria-label="画图">
+                <span class="desktop-icon__glyph" data-glyph="paint"></span>
+                <span class="desktop-icon__label">画图</span>
+            </button>
+
+            <button class="desktop-icon" data-app="game" type="button" aria-label="小游戏">
+                <span class="desktop-icon__glyph" data-glyph="game"></span>
+                <span class="desktop-icon__label">小游戏</span>
+            </button>
+
+            <button class="desktop-icon" data-app="video" type="button" aria-label="视频播放器">
+                <span class="desktop-icon__glyph" data-glyph="video"></span>
+                <span class="desktop-icon__label">视频播放器</span>
+            </button>
+        </div>
+    </div>
+
+    <div id="windows-container"></div>
+
+    <div class="taskbar">
+        <button class="start-button" id="start-button" type="button" aria-label="开始">
+            <span class="start-button__logo" aria-hidden="true"></span>
+            <span>开始</span>
+        </button>
+
+        <div class="taskbar-apps" id="taskbar-apps"></div>
+
+        <div class="system-tray" aria-label="系统托盘">
+            <span class="tray-item" id="tray-network" aria-label="网络">Wi‑Fi</span>
+            <span class="tray-item" id="tray-battery" aria-label="电量">100%</span>
+            <span class="tray-item" id="clock" aria-label="时间">00:00</span>
+        </div>
+    </div>
+
+    <div class="start-menu" id="start-menu">
+        <div class="start-menu-header" aria-label="用户信息">
+            <div class="start-avatar" aria-hidden="true"></div>
+            <div class="start-user">
+                <div class="start-user__name">用户</div>
+                <div class="start-user__sub">WebOS Desktop</div>
+            </div>
+        </div>
+
+        <div class="start-menu-apps" aria-label="应用列表">
+            <button class="start-menu-item" data-app="explorer" type="button">
+                <span class="start-menu-item__glyph" data-glyph="folder"></span>
+                <span>文件管理器</span>
+            </button>
+
+            <button class="start-menu-item" data-app="notepad" type="button">
+                <span class="start-menu-item__glyph" data-glyph="note"></span>
+                <span>记事本</span>
+            </button>
+
+            <button class="start-menu-item" data-app="terminal" type="button">
+                <span class="start-menu-item__glyph" data-glyph="terminal"></span>
+                <span>终端</span>
+            </button>
+
+            <button class="start-menu-item" data-app="browser" type="button">
+                <span class="start-menu-item__glyph" data-glyph="globe"></span>
+                <span>浏览器</span>
+            </button>
+
+            <button class="start-menu-item" data-app="photos" type="button">
+                <span class="start-menu-item__glyph" data-glyph="photo"></span>
+                <span>照片</span>
+            </button>
+
+            <button class="start-menu-item" data-app="calendar" type="button">
+                <span class="start-menu-item__glyph" data-glyph="calendar"></span>
+                <span>日历</span>
+            </button>
+
+            <button class="start-menu-item" data-app="calculator" type="button">
+                <span class="start-menu-item__glyph" data-glyph="calc"></span>
+                <span>计算器</span>
+            </button>
+
+            <button class="start-menu-item" data-app="code" type="button">
+                <span class="start-menu-item__glyph" data-glyph="code"></span>
+                <span>代码编辑器</span>
+            </button>
+
+            <button class="start-menu-item" data-app="paint" type="button">
+                <span class="start-menu-item__glyph" data-glyph="paint"></span>
+                <span>画图</span>
+            </button>
+
+            <button class="start-menu-item" data-app="game" type="button">
+                <span class="start-menu-item__glyph" data-glyph="game"></span>
+                <span>小游戏</span>
+            </button>
+
+            <button class="start-menu-item" data-app="video" type="button">
+                <span class="start-menu-item__glyph" data-glyph="video"></span>
+                <span>视频播放器</span>
+            </button>
+        </div>
+
+        <div class="start-menu-footer">
+            <button class="power-button" id="power-button" type="button">
+                <span class="power-button__glyph" aria-hidden="true"></span>
+                <span>关机</span>
+            </button>
+        </div>
+    </div>
+
+    <div id="modal-root"></div>
+    <div id="toast-root"></div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
