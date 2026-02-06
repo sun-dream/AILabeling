@@ -79,4 +79,4 @@
 
 - 在浏览器中模拟 HarmonyOS 4/Next (华为鸿蒙手机版) 的操作系统 WebOS。要支持常用的操作和场景。
 - 编写一个单文件（Single File）的 HTML，在浏览器中完美模拟 HarmonyOS 4/Next (华为鸿蒙手机版) 的操作系统体验。要支持常用的操作和场景，至少要包含视图栈、手势交互、锁屏、设置、浏览器、照片等。
-- 产出一个 index.html，代码包含所有 CSS、JS 和 HTML，无需外部资源引用即可运行。界面需高度还原 HarmonyOS 的“万物互联”设计理念与视觉规范。
+- 产出一个 index.html，代码包含所有 CSS、JS 和 HTML，可引入TaillWindCss在项目中使用，无需外部资源引用即可运行。界面需高度还原 HarmonyOS 的“万物互联”设计理念与视觉规范。
