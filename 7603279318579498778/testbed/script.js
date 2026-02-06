@@ -45,6 +45,9 @@ const OS = (() => {
     notes: {
       fileId: null,
     },
+    camera: {
+      stream: null,
+    },
 
     locked: true,
     pin: "",
@@ -209,6 +212,75 @@ const OS = (() => {
     }, 2000);
   }
 
+  function ensureInputSheet() {
+    if (qs('#os-input-sheet')) return;
+    const root = qs('#os') || document.body;
+    const el = document.createElement('div');
+    el.id = 'os-input-sheet';
+    el.className = 'fixed inset-0 z-[80] hidden';
+    el.innerHTML = `
+      <div class="absolute inset-0 bg-black/60 backdrop-blur-sm"></div>
+      <div class="relative h-full flex items-end sm:items-center justify-center px-4 pb-6 sm:pb-0">
+        <div class="w-full max-w-[520px] rounded-[28px] border border-white/10 bg-black/45 backdrop-blur-2xl shadow-float overflow-hidden">
+          <div class="px-4 py-3 border-b border-white/10 bg-white/5 flex items-center justify-between">
+            <div id="os-input-title" class="text-[14px] font-semibold text-white/90">输入</div>
+            <button id="os-input-close" class="rounded-xl px-3 py-1.5 text-xs text-white/80 hover:bg-white/10 active:scale-[0.98] transition" type="button">关闭</button>
+          </div>
+          <div class="p-4 space-y-3">
+            <input id="os-input-value" class="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white outline-none focus:bg-white/10 transition" />
+            <div class="flex items-center justify-end gap-2">
+              <button id="os-input-cancel" class="px-4 py-2 rounded-2xl bg-white/10 text-white/80 text-sm hover:bg-white/15 active:scale-[0.98] transition" type="button">取消</button>
+              <button id="os-input-ok" class="px-4 py-2 rounded-2xl bg-blue-500/25 text-blue-100 text-sm hover:bg-blue-500/30 active:scale-[0.98] transition" type="button">确定</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+    root.appendChild(el);
+  }
+
+  function openInputSheet(opts) {
+    ensureInputSheet();
+    const sheet = qs('#os-input-sheet');
+    const title = qs('#os-input-title', sheet);
+    const input = qs('#os-input-value', sheet);
+    const ok = qs('#os-input-ok', sheet);
+    const cancel = qs('#os-input-cancel', sheet);
+    const close = qs('#os-input-close', sheet);
+    const scrim = sheet.firstElementChild;
+
+    title.textContent = opts && opts.title ? opts.title : '输入';
+    input.placeholder = (opts && opts.placeholder) ? opts.placeholder : '';
+    input.value = (opts && typeof opts.value === 'string') ? opts.value : '';
+    ok.textContent = (opts && opts.okText) ? opts.okText : '确定';
+
+    sheet.classList.remove('hidden');
+    setTimeout(() => input.focus(), 0);
+
+    return new Promise((resolve) => {
+      const done = (val) => {
+        sheet.classList.add('hidden');
+        ok.removeEventListener('click', onOk);
+        cancel.removeEventListener('click', onCancel);
+        close.removeEventListener('click', onCancel);
+        scrim.removeEventListener('click', onCancel);
+        input.removeEventListener('keydown', onKey);
+        resolve(val);
+      };
+      const onOk = () => done(input.value.trim());
+      const onCancel = () => done(null);
+      const onKey = (e) => {
+        if (e.key === 'Enter') onOk();
+        if (e.key === 'Escape') onCancel();
+      };
+      ok.addEventListener('click', onOk);
+      cancel.addEventListener('click', onCancel);
+      close.addEventListener('click', onCancel);
+      scrim.addEventListener('click', onCancel);
+      input.addEventListener('keydown', onKey);
+    });
+  }
+
   function appIcon(app, size = "lg") {
     const dim = size === "sm" ? "h-11 w-11" : "h-[56px] w-[56px]";
     return `
@@ -309,15 +381,21 @@ const OS = (() => {
 
   function renderCamera() {
     return `
-      <div class="h-full bg-black flex flex-col relative overflow-hidden rounded-xl">
-        <div class="flex-1 bg-gray-800 flex items-center justify-center relative">
-          <div class="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/20"></div>
-          <p class="text-white/30 text-sm">相机取景框模拟</p>
+      <div class="h-full bg-black flex flex-col relative overflow-hidden rounded-xl" id="camera-app">
+        <div class="flex-1 bg-black flex items-center justify-center relative">
+          <video id="camera-video" class="absolute inset-0 w-full h-full object-cover" autoplay playsinline muted></video>
+          <canvas id="camera-canvas" class="hidden"></canvas>
+          <div class="absolute inset-0 bg-gradient-to-b from-black/10 via-transparent to-black/35"></div>
+          <div id="camera-perm" class="absolute inset-0 flex items-center justify-center px-6 text-center">
+            <div class="rounded-2xl border border-white/10 bg-black/40 backdrop-blur-xl px-4 py-3 text-white/85 text-sm">
+              需要相机权限以显示取景画面
+            </div>
+          </div>
           <div id="camera-flash" class="absolute inset-0 bg-white opacity-0 pointer-events-none transition-opacity duration-100"></div>
         </div>
         <div class="h-32 bg-black/40 backdrop-blur-md flex items-center justify-center gap-12 relative z-10">
            <div class="w-12 h-12 rounded-lg bg-white/10"></div>
-           <button id="btn-shutter" class="w-16 h-16 rounded-full border-4 border-white flex items-center justify-center active:scale-90 transition">
+           <button id="btn-shutter" class="w-16 h-16 rounded-full border-4 border-white flex items-center justify-center active:scale-90 transition" type="button">
               <div class="w-12 h-12 bg-white rounded-full"></div>
            </button>
            <div class="w-12 h-12"></div>
@@ -478,6 +556,7 @@ const OS = (() => {
   function closeApp(id) {
     const w = state.windows.get(id);
     if (w) {
+      if (id === 'camera') stopCamera();
       w.el.classList.add('animate-sink');
       w.el.addEventListener('animationend', () => {
         w.el.remove();
@@ -559,15 +638,60 @@ const OS = (() => {
   }
 
   function bindCamera(el) {
-    el.querySelector('#btn-shutter').addEventListener('click', () => {
+    const app = el.querySelector('#camera-app');
+    if (!app) return;
+    const video = app.querySelector('#camera-video');
+    const canvas = app.querySelector('#camera-canvas');
+    const perm = app.querySelector('#camera-perm');
+
+    const start = async () => {
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        perm.classList.remove('hidden');
+        perm.querySelector('div').textContent = '当前环境不支持相机取景';
+        return;
+      }
+      try {
+        stopCamera();
+        const stream = await navigator.mediaDevices.getUserMedia({
+          video: { facingMode: { ideal: 'environment' } },
+          audio: false
+        });
+        state.camera.stream = stream;
+        video.srcObject = stream;
+        perm.classList.add('hidden');
+      } catch (e) {
+        perm.classList.remove('hidden');
+        perm.querySelector('div').textContent = '相机权限被拒绝或不可用，点击此处重试';
+      }
+    };
+
+    perm.addEventListener('click', start);
+    start();
+
+    app.querySelector('#btn-shutter').addEventListener('click', () => {
       const flash = el.querySelector('#camera-flash');
       flash.classList.remove('opacity-0');
       setTimeout(() => flash.classList.add('opacity-0'), 100);
 
-      const newPhoto = { id: `p_${Date.now()}`, src: makePhotoSrc(Date.now()), time: '刚刚' };
+      let src = null;
+      if (state.camera.stream && video.videoWidth && video.videoHeight) {
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+        src = canvas.toDataURL('image/jpeg', 0.92);
+      }
+      const newPhoto = { id: `p_${Date.now()}`, src: src || makePhotoSrc(Date.now()), time: '刚刚' };
       state.photos.unshift(newPhoto);
       toast("已保存到图库");
     });
+  }
+
+  function stopCamera() {
+    const stream = state.camera.stream;
+    if (!stream) return;
+    for (const track of stream.getTracks()) track.stop();
+    state.camera.stream = null;
   }
 
   function makePhotoSrc(seed) {
@@ -689,14 +813,20 @@ const OS = (() => {
     }).join('');
   }
 
-  function fsCreateItem(type) {
+  async function fsCreateItem(type) {
     const folder = getFsCurrentFolder();
     const def = type === 'folder' ? '新建文件夹' : '新建文件.txt';
-    const name = (prompt(type === 'folder' ? '文件夹名称' : '文件名称', def) || '').trim();
-    if (!name) return;
+    const name = await openInputSheet({
+      title: type === 'folder' ? '新建文件夹' : '新建文件',
+      placeholder: type === 'folder' ? '请输入文件夹名称' : '请输入文件名称',
+      value: def,
+      okText: '创建'
+    });
+    const finalName = (name || '').trim();
+    if (!finalName) return;
     const item = type === 'folder'
-      ? { id: `d_${Date.now()}`, name, type: 'folder', children: [] }
-      : { id: `f_${Date.now()}`, name, type: 'file', content: '' };
+      ? { id: `d_${Date.now()}`, name: finalName, type: 'folder', children: [] }
+      : { id: `f_${Date.now()}`, name: finalName, type: 'file', content: '' };
     folder.children.push(item);
     state.fsSelectedId = item.id;
   }
@@ -730,12 +860,12 @@ const OS = (() => {
       listEl.innerHTML = renderFsListHtml(folder);
     };
 
-    app.querySelector('#files-new-file').addEventListener('click', () => {
-      fsCreateItem('file');
+    app.querySelector('#files-new-file').addEventListener('click', async () => {
+      await fsCreateItem('file');
       refresh();
     });
-    app.querySelector('#files-new-folder').addEventListener('click', () => {
-      fsCreateItem('folder');
+    app.querySelector('#files-new-folder').addEventListener('click', async () => {
+      await fsCreateItem('folder');
       refresh();
     });
     app.querySelector('#files-del').addEventListener('click', () => {
@@ -799,7 +929,7 @@ const OS = (() => {
     titleEl.textContent = found ? found.item.name : '新建笔记';
     textEl.value = found && typeof found.item.content === 'string' ? found.item.content : '';
 
-    const saveTo = (targetId) => {
+    const saveTo = async (targetId) => {
       const existing = targetId ? fsFindById(targetId) : null;
       if (existing && existing.item.type === 'file') {
         existing.item.content = textEl.value;
@@ -809,18 +939,24 @@ const OS = (() => {
         return;
       }
 
-      const name = (prompt('保存为文件名', '新建笔记.txt') || '').trim();
-      if (!name) return;
+      const name = await openInputSheet({
+        title: '保存为文件',
+        placeholder: '请输入文件名',
+        value: '新建笔记.txt',
+        okText: '保存'
+      });
+      const finalName = (name || '').trim();
+      if (!finalName) return;
       const root = { id: 'root', type: 'folder', name: '文件', children: state.files };
-      const newFile = { id: `f_${Date.now()}`, name, type: 'file', content: textEl.value };
+      const newFile = { id: `f_${Date.now()}`, name: finalName, type: 'file', content: textEl.value };
       root.children.push(newFile);
       state.notes.fileId = newFile.id;
       titleEl.textContent = newFile.name;
       toast('已保存');
     };
 
-    app.querySelector('#notes-save').addEventListener('click', () => saveTo(fileId));
-    app.querySelector('#notes-saveas').addEventListener('click', () => saveTo(null));
+    app.querySelector('#notes-save').addEventListener('click', async () => { await saveTo(fileId); });
+    app.querySelector('#notes-saveas').addEventListener('click', async () => { await saveTo(null); });
   }
 
   function renderMsgList(kind) {
