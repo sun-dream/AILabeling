@@ -1,0 +1,3451 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web OS - Windows Style</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden;
+            height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            position: relative;
+        }
+
+        #desktop {
+            width: 100%;
+            height: calc(100vh - 48px);
+            position: relative;
+            background:
+                radial-gradient(1200px 700px at 20% 20%, rgba(102, 126, 234, 0.95) 0%, rgba(102, 126, 234, 0) 60%),
+                radial-gradient(900px 600px at 80% 35%, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0) 60%),
+                radial-gradient(1000px 700px at 70% 85%, rgba(118, 75, 162, 0.9) 0%, rgba(118, 75, 162, 0) 62%),
+                linear-gradient(135deg, #0f1115 0%, #1b1f2a 45%, #12141c 100%);
+        }
+
+        .desktop-icon {
+            width: 80px;
+            padding: 8px;
+            text-align: center;
+            cursor: pointer;
+            position: absolute;
+            border-radius: 4px;
+            transition: background 0.2s;
+        }
+
+        .desktop-icon:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .desktop-icon img {
+            width: 48px;
+            height: 48px;
+            margin-bottom: 4px;
+        }
+
+        .desktop-icon span {
+            display: block;
+            color: white;
+            font-size: 12px;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+        }
+
+        #taskbar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 48px;
+            background: rgba(30, 30, 30, 0.95);
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            padding: 0 8px;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.3);
+            z-index: 10000;
+        }
+
+        #start-button {
+            width: 48px;
+            height: 36px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            color: white;
+            transition: all 0.2s;
+        }
+
+        #start-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        #taskbar-apps {
+            display: flex;
+            gap: 4px;
+            margin-left: 8px;
+            flex: 1;
+        }
+
+        .taskbar-app {
+            padding: 4px 12px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            color: white;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 2px solid transparent;
+        }
+
+        .taskbar-app:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .taskbar-app.active {
+            border-color: rgba(102, 126, 234, 0.8);
+            background: rgba(102, 126, 234, 0.3);
+        }
+
+        #clock {
+            color: white;
+            font-size: 13px;
+            padding: 0 12px;
+            text-align: right;
+        }
+
+        #system-tray {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-right: 8px;
+        }
+
+        .tray-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 10px;
+            border-radius: 6px;
+            color: white;
+            font-size: 13px;
+            cursor: pointer;
+            user-select: none;
+            background: rgba(255, 255, 255, 0.08);
+            transition: all 0.15s;
+        }
+
+        .tray-item:hover {
+            background: rgba(255, 255, 255, 0.14);
+        }
+
+        .tray-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 999px;
+            background: #43e97b;
+            box-shadow: 0 0 0 2px rgba(67, 233, 123, 0.18);
+        }
+
+        .tray-dot.offline {
+            background: #ff6b6b;
+            box-shadow: 0 0 0 2px rgba(255, 107, 107, 0.18);
+        }
+
+        .window {
+            position: absolute;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            display: none;
+            min-width: 400px;
+            min-height: 300px;
+        }
+
+        .window.maximized {
+            border-radius: 0;
+        }
+
+        .window.active {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .window-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 8px 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: move;
+            user-select: none;
+        }
+
+        .window-title {
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .window-controls {
+            display: flex;
+            gap: 8px;
+        }
+
+        .window-control {
+            width: 28px;
+            height: 28px;
+            border: none;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+
+        .window-control:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .window-content {
+            flex: 1;
+            overflow: auto;
+            padding: 16px;
+        }
+
+        #start-menu {
+            position: fixed;
+            bottom: 56px;
+            left: 8px;
+            width: 320px;
+            background: rgba(30, 30, 30, 0.98);
+            backdrop-filter: blur(20px);
+            border-radius: 8px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            display: none;
+            padding: 16px;
+            z-index: 9999;
+        }
+
+        #start-menu.active {
+            display: block;
+            animation: slideUp 0.2s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .start-menu-section {
+            margin-bottom: 16px;
+        }
+
+        .start-menu-title {
+            color: #999;
+            font-size: 11px;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+            letter-spacing: 0.5px;
+        }
+
+        .start-menu-item {
+            padding: 10px 12px;
+            color: white;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .start-menu-item:hover {
+            background: rgba(102, 126, 234, 0.3);
+        }
+
+        .start-menu-icon {
+            width: 24px;
+            height: 24px;
+            font-size: 20px;
+        }
+
+        /* File Manager Styles */
+        .file-manager-toolbar {
+            display: flex;
+            gap: 8px;
+            padding: 8px;
+            background: #f5f5f5;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .toolbar-button {
+            padding: 6px 12px;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.2s;
+        }
+
+        .toolbar-button:hover {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        .file-manager-path {
+            flex: 1;
+            padding: 6px 12px;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 13px;
+        }
+
+        .file-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 16px;
+            padding: 16px;
+        }
+
+        .file-item {
+            text-align: center;
+            padding: 12px;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+
+        .file-item:hover {
+            background: rgba(102, 126, 234, 0.1);
+        }
+
+        .file-item.selected {
+            background: rgba(102, 126, 234, 0.2);
+        }
+
+        .file-icon {
+            font-size: 48px;
+            margin-bottom: 8px;
+        }
+
+        .file-name {
+            font-size: 12px;
+            word-break: break-word;
+        }
+
+        /* Text Editor Styles */
+        .editor-toolbar {
+            display: flex;
+            gap: 8px;
+            padding: 8px;
+            background: #f5f5f5;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .editor-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .editor-textarea {
+            flex: 1;
+            border: none;
+            padding: 16px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 14px;
+            resize: none;
+            outline: none;
+        }
+
+        /* Terminal Styles */
+        .terminal-output {
+            flex: 1;
+            background: #1e1e1e;
+            color: #00ff00;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 14px;
+            padding: 16px;
+            overflow-y: auto;
+        }
+
+        .terminal-input-line {
+            display: flex;
+            align-items: center;
+            background: #1e1e1e;
+            padding: 8px 16px;
+            border-top: 1px solid #333;
+        }
+
+        .terminal-prompt {
+            color: #00ff00;
+            margin-right: 8px;
+        }
+
+        .terminal-input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: #00ff00;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 14px;
+            outline: none;
+        }
+
+        /* Code Editor Styles */
+        .code-editor-toolbar {
+            display: flex;
+            gap: 8px;
+            padding: 8px;
+            background: #2d2d2d;
+            border-bottom: 1px solid #1e1e1e;
+        }
+
+        .code-editor-toolbar button {
+            padding: 6px 12px;
+            background: #3c3c3c;
+            border: none;
+            color: white;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.2s;
+        }
+
+        .code-editor-toolbar button:hover {
+            background: #667eea;
+        }
+
+        .code-editor-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .code-textarea {
+            flex: 1;
+            background: #1e1e1e;
+            color: #d4d4d4;
+            border: none;
+            padding: 16px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 14px;
+            resize: none;
+            outline: none;
+            line-height: 1.5;
+        }
+
+        .code-output {
+            height: 150px;
+            background: #1e1e1e;
+            color: #00ff00;
+            border-top: 1px solid #333;
+            padding: 12px;
+            overflow-y: auto;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 13px;
+        }
+
+        /* Paint Styles */
+        .paint-toolbar {
+            display: flex;
+            gap: 12px;
+            padding: 12px;
+            background: #f5f5f5;
+            border-bottom: 1px solid #ddd;
+            align-items: center;
+        }
+
+        .paint-canvas-container {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #e0e0e0;
+        }
+
+        #paint-canvas {
+            background: white;
+            cursor: crosshair;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .color-picker {
+            width: 40px;
+            height: 40px;
+            border: 2px solid #ddd;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .brush-size {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Game Styles */
+        .game-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            background: #1e1e1e;
+        }
+
+        #game-canvas {
+            border: 2px solid #667eea;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+        }
+
+        .game-info {
+            color: white;
+            margin-top: 16px;
+            font-size: 18px;
+            display: flex;
+            gap: 24px;
+        }
+
+        .game-controls {
+            margin-top: 12px;
+            display: flex;
+            gap: 12px;
+        }
+
+        .game-button {
+            padding: 8px 24px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+
+        .game-button:hover {
+            background: #764ba2;
+            transform: translateY(-2px);
+        }
+
+        /* Calculator Styles */
+        .calculator-container {
+            max-width: 320px;
+            margin: 0 auto;
+        }
+
+        .calculator-display {
+            width: 100%;
+            padding: 24px;
+            font-size: 32px;
+            text-align: right;
+            background: #1e1e1e;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            margin-bottom: 16px;
+            font-family: 'Consolas', monospace;
+        }
+
+        .calculator-buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+        }
+
+        .calc-button {
+            padding: 20px;
+            font-size: 18px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            background: #f5f5f5;
+            transition: all 0.2s;
+        }
+
+        .calc-button:hover {
+            background: #e0e0e0;
+            transform: scale(1.05);
+        }
+
+        .calc-button.operator {
+            background: #667eea;
+            color: white;
+        }
+
+        .calc-button.operator:hover {
+            background: #764ba2;
+        }
+
+        .calc-button.equals {
+            background: #4caf50;
+            color: white;
+            grid-column: span 2;
+        }
+
+        .calc-button.equals:hover {
+            background: #45a049;
+        }
+
+        /* Video Player Styles */
+        .video-container {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            background: #000;
+        }
+
+        #video-player {
+            flex: 1;
+            width: 100%;
+        }
+
+        .video-controls {
+            display: flex;
+            gap: 12px;
+            padding: 12px;
+            background: rgba(30, 30, 30, 0.95);
+            align-items: center;
+        }
+
+        .video-button {
+            padding: 8px 16px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .video-button:hover {
+            background: #764ba2;
+        }
+
+        .video-progress {
+            flex: 1;
+            height: 6px;
+            background: #444;
+            border-radius: 3px;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .video-progress-bar {
+            height: 100%;
+            background: #667eea;
+            border-radius: 3px;
+            width: 0%;
+        }
+
+        /* Photos Styles */
+        .photos-container {
+            display: flex;
+            height: 100%;
+            background: #0f1115;
+            color: white;
+        }
+
+        .photos-sidebar {
+            width: 320px;
+            background: rgba(255, 255, 255, 0.06);
+            border-right: 1px solid rgba(255, 255, 255, 0.08);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .photos-toolbar {
+            padding: 10px;
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .photos-path {
+            flex: 1;
+            padding: 8px 10px;
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            border-radius: 8px;
+            background: rgba(0, 0, 0, 0.25);
+            color: white;
+            font-size: 12px;
+            outline: none;
+        }
+
+        .photos-grid {
+            padding: 10px;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            overflow: auto;
+        }
+
+        .photo-thumb {
+            position: relative;
+            height: 110px;
+            border-radius: 10px;
+            overflow: hidden;
+            cursor: pointer;
+            border: 2px solid transparent;
+            background: rgba(255, 255, 255, 0.06);
+            transition: all 0.15s;
+        }
+
+        .photo-thumb:hover {
+            transform: translateY(-1px);
+            border-color: rgba(102, 126, 234, 0.7);
+        }
+
+        .photo-thumb.active {
+            border-color: rgba(102, 126, 234, 1);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+        }
+
+        .photo-thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .photo-thumb .label {
+            position: absolute;
+            left: 8px;
+            right: 8px;
+            bottom: 8px;
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.95);
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.7);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .photos-preview {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .photos-preview-header {
+            padding: 12px 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .photos-preview-title {
+            font-size: 13px;
+            opacity: 0.9;
+        }
+
+        .photos-preview-controls {
+            display: flex;
+            gap: 8px;
+        }
+
+        .photos-action {
+            padding: 8px 12px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            background: rgba(255, 255, 255, 0.08);
+            color: white;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+
+        .photos-action:hover {
+            background: rgba(255, 255, 255, 0.14);
+            transform: translateY(-1px);
+        }
+
+        .photos-stage {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 18px;
+        }
+
+        .photos-stage img {
+            max-width: 100%;
+            max-height: 100%;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+            background: rgba(255, 255, 255, 0.04);
+        }
+
+        /* Browser Styles */
+        .browser-toolbar {
+            display: flex;
+            gap: 8px;
+            padding: 12px;
+            background: #f5f5f5;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .browser-url {
+            flex: 1;
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .browser-iframe {
+            flex: 1;
+            border: none;
+            width: 100%;
+        }
+
+        /* Settings Styles */
+        .settings-container {
+            max-width: 600px;
+        }
+
+        .settings-section {
+            margin-bottom: 24px;
+        }
+
+        .settings-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: #333;
+        }
+
+        .theme-options {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+
+        .theme-option {
+            padding: 16px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.2s;
+        }
+
+        .theme-option:hover {
+            border-color: #667eea;
+            transform: translateY(-2px);
+        }
+
+        .theme-option.active {
+            border-color: #667eea;
+            background: rgba(102, 126, 234, 0.1);
+        }
+
+        .theme-preview {
+            width: 100%;
+            height: 60px;
+            border-radius: 4px;
+            margin-bottom: 8px;
+        }
+
+        /* Clock Styles */
+        .clock-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 18px 16px;
+            overflow: auto;
+        }
+
+        .clock-time {
+            font-size: 72px;
+            font-weight: 300;
+            margin-bottom: 16px;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        .clock-date {
+            font-size: 24px;
+            opacity: 0.9;
+        }
+
+        .calendar-controls {
+            margin-top: 14px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .calendar-select {
+            padding: 8px 10px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(0, 0, 0, 0.18);
+            color: white;
+            outline: none;
+        }
+
+        .calendar-selected {
+            margin-top: 10px;
+            font-size: 14px;
+            opacity: 0.95;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 8px;
+            margin-top: 24px;
+            max-width: 400px;
+        }
+
+        .calendar-day {
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            text-align: center;
+            font-size: 14px;
+            user-select: none;
+        }
+
+        .calendar-day.today {
+            background: rgba(255, 255, 255, 0.3);
+            font-weight: 600;
+        }
+
+        .calendar-day.header {
+            background: rgba(0, 0, 0, 0.18);
+            font-weight: 700;
+        }
+
+        .calendar-day.selectable {
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+
+        .calendar-day.selectable:hover {
+            background: rgba(255, 255, 255, 0.18);
+            transform: translateY(-1px);
+        }
+
+        .calendar-day.selected {
+            background: rgba(102, 126, 234, 0.55);
+            box-shadow: 0 10px 24px rgba(0, 0, 0, 0.22);
+            font-weight: 700;
+        }
+
+        /* Custom Dialog + Toast (No native popups) */
+        .ui-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.42);
+            backdrop-filter: blur(6px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 20000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.15s;
+        }
+
+        .ui-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .ui-dialog {
+            width: min(520px, calc(100vw - 28px));
+            border-radius: 14px;
+            overflow: hidden;
+            background: rgba(20, 20, 24, 0.92);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            box-shadow: 0 18px 60px rgba(0, 0, 0, 0.55);
+        }
+
+        .ui-dialog-header {
+            padding: 14px 16px;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.9) 0%, rgba(118, 75, 162, 0.9) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            user-select: none;
+        }
+
+        .ui-dialog-title {
+            font-size: 14px;
+            font-weight: 650;
+            letter-spacing: 0.2px;
+        }
+
+        .ui-dialog-body {
+            padding: 14px 16px 12px;
+        }
+
+        .ui-dialog-message {
+            font-size: 13px;
+            opacity: 0.95;
+            line-height: 1.5;
+            white-space: pre-wrap;
+        }
+
+        .ui-dialog-input {
+            width: 100%;
+            margin-top: 12px;
+            padding: 10px 12px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            background: rgba(0, 0, 0, 0.25);
+            color: white;
+            outline: none;
+        }
+
+        .ui-dialog-actions {
+            padding: 12px 16px 16px;
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+
+        .ui-btn {
+            padding: 9px 14px;
+            border-radius: 10px;
+            cursor: pointer;
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            background: rgba(255, 255, 255, 0.08);
+            color: white;
+            transition: all 0.15s;
+        }
+
+        .ui-btn:hover {
+            background: rgba(255, 255, 255, 0.14);
+            transform: translateY(-1px);
+        }
+
+        .ui-btn.primary {
+            background: rgba(102, 126, 234, 0.85);
+            border-color: rgba(102, 126, 234, 0.9);
+        }
+
+        .ui-btn.primary:hover {
+            background: rgba(118, 75, 162, 0.85);
+            border-color: rgba(118, 75, 162, 0.9);
+        }
+
+        .ui-toast-container {
+            position: fixed;
+            right: 14px;
+            bottom: 62px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 20001;
+            pointer-events: none;
+        }
+
+        .ui-toast {
+            min-width: 220px;
+            max-width: min(420px, calc(100vw - 28px));
+            padding: 10px 12px;
+            border-radius: 12px;
+            background: rgba(20, 20, 24, 0.92);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            box-shadow: 0 14px 40px rgba(0, 0, 0, 0.4);
+            opacity: 0;
+            transform: translateY(6px);
+            transition: all 0.2s;
+        }
+
+        .ui-toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .ui-toast .title {
+            font-size: 12px;
+            opacity: 0.8;
+            margin-bottom: 4px;
+        }
+
+        .ui-toast .msg {
+            font-size: 13px;
+            line-height: 1.4;
+            opacity: 0.98;
+        }
+
+        .ui-toast.warn {
+            border-color: rgba(255, 193, 7, 0.45);
+        }
+
+        .ui-toast.error {
+            border-color: rgba(255, 107, 107, 0.5);
+        }
+
+        /* Context Menu */
+        .context-menu {
+            position: fixed;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            padding: 4px 0;
+            display: none;
+            z-index: 10001;
+            min-width: 180px;
+        }
+
+        .context-menu.active {
+            display: block;
+        }
+
+        .context-menu-item {
+            padding: 8px 16px;
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.2s;
+        }
+
+        .context-menu-item:hover {
+            background: rgba(102, 126, 234, 0.1);
+        }
+
+        .context-menu-separator {
+            height: 1px;
+            background: #ddd;
+            margin: 4px 0;
+        }
+    </style>
+</head>
+<body>
+    <div id="desktop">
+        <!-- Desktop Icons -->
+        <div class="desktop-icon" style="top: 20px; left: 20px;" data-app="file-manager">
+            <div style="font-size: 48px;">📁</div>
+            <span>文件管理器</span>
+        </div>
+        <div class="desktop-icon" style="top: 20px; left: 120px;" data-app="notepad">
+            <div style="font-size: 48px;">📝</div>
+            <span>记事本</span>
+        </div>
+        <div class="desktop-icon" style="top: 20px; left: 220px;" data-app="code-editor">
+            <div style="font-size: 48px;">💻</div>
+            <span>代码编辑器</span>
+        </div>
+        <div class="desktop-icon" style="top: 140px; left: 20px;" data-app="terminal">
+            <div style="font-size: 48px;">⌨️</div>
+            <span>终端</span>
+        </div>
+        <div class="desktop-icon" style="top: 140px; left: 120px;" data-app="paint">
+            <div style="font-size: 48px;">🎨</div>
+            <span>画图</span>
+        </div>
+        <div class="desktop-icon" style="top: 140px; left: 220px;" data-app="game">
+            <div style="font-size: 48px;">🎮</div>
+            <span>贪吃蛇游戏</span>
+        </div>
+        <div class="desktop-icon" style="top: 260px; left: 20px;" data-app="calculator">
+            <div style="font-size: 48px;">🔢</div>
+            <span>计算器</span>
+        </div>
+        <div class="desktop-icon" style="top: 260px; left: 120px;" data-app="video">
+            <div style="font-size: 48px;">🎬</div>
+            <span>视频播放器</span>
+        </div>
+        <div class="desktop-icon" style="top: 260px; left: 220px;" data-app="browser">
+            <div style="font-size: 48px;">🌐</div>
+            <span>浏览器</span>
+        </div>
+        <div class="desktop-icon" style="top: 380px; left: 20px;" data-app="clock">
+            <div style="font-size: 48px;">🕐</div>
+            <span>时钟</span>
+        </div>
+        <div class="desktop-icon" style="top: 380px; left: 120px;" data-app="settings">
+            <div style="font-size: 48px;">⚙️</div>
+            <span>设置</span>
+        </div>
+        <div class="desktop-icon" style="top: 380px; left: 220px;" data-app="photos">
+            <div style="font-size: 48px;">🖼️</div>
+            <span>照片</span>
+        </div>
+    </div>
+
+    <!-- Taskbar -->
+    <div id="taskbar">
+        <button id="start-button">⊞</button>
+        <div id="taskbar-apps"></div>
+        <div id="system-tray">
+            <div class="tray-item" id="tray-network" title="网络">
+                <div class="tray-dot" id="tray-network-dot"></div>
+                <div id="tray-network-text">Wi‑Fi</div>
+            </div>
+            <div class="tray-item" id="tray-battery" title="电量">
+                <div id="tray-battery-icon">🔋</div>
+                <div id="tray-battery-text">100%</div>
+            </div>
+        </div>
+        <div id="clock"></div>
+    </div>
+
+    <!-- Start Menu -->
+    <div id="start-menu">
+        <div class="start-menu-section">
+            <div class="start-menu-title">常用应用</div>
+            <div class="start-menu-item" data-app="file-manager">
+                <div class="start-menu-icon">📁</div>
+                <div>文件管理器</div>
+            </div>
+            <div class="start-menu-item" data-app="notepad">
+                <div class="start-menu-icon">📝</div>
+                <div>记事本</div>
+            </div>
+            <div class="start-menu-item" data-app="code-editor">
+                <div class="start-menu-icon">💻</div>
+                <div>代码编辑器</div>
+            </div>
+            <div class="start-menu-item" data-app="terminal">
+                <div class="start-menu-icon">⌨️</div>
+                <div>终端</div>
+            </div>
+        </div>
+        <div class="start-menu-section">
+            <div class="start-menu-title">工具</div>
+            <div class="start-menu-item" data-app="paint">
+                <div class="start-menu-icon">🎨</div>
+                <div>画图</div>
+            </div>
+            <div class="start-menu-item" data-app="photos">
+                <div class="start-menu-icon">🖼️</div>
+                <div>照片</div>
+            </div>
+            <div class="start-menu-item" data-app="calculator">
+                <div class="start-menu-icon">🔢</div>
+                <div>计算器</div>
+            </div>
+            <div class="start-menu-item" data-app="clock">
+                <div class="start-menu-icon">🕐</div>
+                <div>时钟</div>
+            </div>
+        </div>
+        <div class="start-menu-section">
+            <div class="start-menu-title">娱乐</div>
+            <div class="start-menu-item" data-app="game">
+                <div class="start-menu-icon">🎮</div>
+                <div>贪吃蛇游戏</div>
+            </div>
+            <div class="start-menu-item" data-app="video">
+                <div class="start-menu-icon">🎬</div>
+                <div>视频播放器</div>
+            </div>
+            <div class="start-menu-item" data-app="browser">
+                <div class="start-menu-icon">🌐</div>
+                <div>浏览器</div>
+            </div>
+        </div>
+        <div class="start-menu-section">
+            <div class="start-menu-item" data-app="settings">
+                <div class="start-menu-icon">⚙️</div>
+                <div>设置</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Context Menu -->
+    <div id="context-menu" class="context-menu">
+        <div class="context-menu-item" data-action="new-file">新建文件</div>
+        <div class="context-menu-item" data-action="new-folder">新建文件夹</div>
+        <div class="context-menu-separator"></div>
+        <div class="context-menu-item" data-action="delete">删除</div>
+        <div class="context-menu-item" data-action="rename">重命名</div>
+    </div>
+
+    <!-- Custom Dialog + Toast -->
+    <div id="ui-overlay" class="ui-overlay">
+        <div class="ui-dialog" role="dialog" aria-modal="true" aria-labelledby="ui-dialog-title" aria-describedby="ui-dialog-message">
+            <div class="ui-dialog-header">
+                <div class="ui-dialog-title" id="ui-dialog-title">提示</div>
+            </div>
+            <div class="ui-dialog-body">
+                <div class="ui-dialog-message" id="ui-dialog-message"></div>
+                <input class="ui-dialog-input" id="ui-dialog-input" type="text" autocomplete="off">
+            </div>
+            <div class="ui-dialog-actions">
+                <button class="ui-btn" id="ui-dialog-cancel">取消</button>
+                <button class="ui-btn primary" id="ui-dialog-ok">确定</button>
+            </div>
+        </div>
+    </div>
+    <div id="ui-toast-container" class="ui-toast-container"></div>
+
+    <!-- Windows -->
+    <!-- File Manager Window -->
+    <div id="window-file-manager" class="window" style="width: 800px; height: 600px; top: 50px; left: 100px;">
+        <div class="window-header">
+            <div class="window-title">📁 文件管理器</div>
+            <div class="window-controls">
+                <button class="window-control minimize">−</button>
+                <button class="window-control maximize">□</button>
+                <button class="window-control close">×</button>
+            </div>
+        </div>
+        <div class="window-content" style="padding: 0;">
+            <div class="file-manager-toolbar">
+                <button class="toolbar-button" id="fm-back">← 返回</button>
+                <button class="toolbar-button" id="fm-new-file">新建文件</button>
+                <button class="toolbar-button" id="fm-new-folder">新建文件夹</button>
+                <button class="toolbar-button" id="fm-delete">删除</button>
+                <input type="text" class="file-manager-path" id="fm-path" readonly>
+            </div>
+            <div class="file-list" id="file-list"></div>
+        </div>
+    </div>
+
+    <!-- Notepad Window -->
+    <div id="window-notepad" class="window" style="width: 700px; height: 500px; top: 80px; left: 150px;">
+        <div class="window-header">
+            <div class="window-title">📝 记事本</div>
+            <div class="window-controls">
+                <button class="window-control minimize">−</button>
+                <button class="window-control maximize">□</button>
+                <button class="window-control close">×</button>
+            </div>
+        </div>
+        <div class="window-content" style="padding: 0;">
+            <div class="editor-toolbar">
+                <button class="toolbar-button" id="notepad-new">新建</button>
+                <button class="toolbar-button" id="notepad-save">保存</button>
+                <button class="toolbar-button" id="notepad-save-as">另存为</button>
+            </div>
+            <div class="editor-content">
+                <textarea class="editor-textarea" id="notepad-textarea" placeholder="在此输入文本..."></textarea>
+            </div>
+        </div>
+    </div>
+
+    <!-- Code Editor Window -->
+    <div id="window-code-editor" class="window" style="width: 900px; height: 650px; top: 60px; left: 120px;">
+        <div class="window-header">
+            <div class="window-title">💻 Python 代码编辑器</div>
+            <div class="window-controls">
+                <button class="window-control minimize">−</button>
+                <button class="window-control maximize">□</button>
+                <button class="window-control close">×</button>
+            </div>
+        </div>
+        <div class="window-content" style="padding: 0;">
+            <div class="code-editor-toolbar">
+                <button id="code-run">▶ 运行</button>
+                <button id="code-clear">清空输出</button>
+                <button id="code-save">保存</button>
+            </div>
+            <div class="code-editor-content">
+                <textarea class="code-textarea" id="code-textarea" placeholder="# 在此编写 Python 代码...&#10;print('Hello, World!')"></textarea>
+                <div class="code-output" id="code-output">输出将显示在这里...</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Terminal Window -->
+    <div id="window-terminal" class="window" style="width: 800px; height: 500px; top: 100px; left: 180px;">
+        <div class="window-header">
+            <div class="window-title">⌨️ 终端</div>
+            <div class="window-controls">
+                <button class="window-control minimize">−</button>
+                <button class="window-control maximize">□</button>
+                <button class="window-control close">×</button>
+            </div>
+        </div>
+        <div class="window-content" style="padding: 0; display: flex; flex-direction: column;">
+            <div class="terminal-output" id="terminal-output"></div>
+            <div class="terminal-input-line">
+                <span class="terminal-prompt" id="terminal-prompt">C:\></span>
+                <input type="text" class="terminal-input" id="terminal-input" autocomplete="off">
+            </div>
+        </div>
+    </div>
+
+    <!-- Paint Window -->
+    <div id="window-paint" class="window" style="width: 900px; height: 650px; top: 70px; left: 140px;">
+        <div class="window-header">
+            <div class="window-title">🎨 画图</div>
+            <div class="window-controls">
+                <button class="window-control minimize">−</button>
+                <button class="window-control maximize">□</button>
+                <button class="window-control close">×</button>
+            </div>
+        </div>
+        <div class="window-content" style="padding: 0; display: flex; flex-direction: column;">
+            <div class="paint-toolbar">
+                <label>颜色:</label>
+                <input type="color" id="paint-color" class="color-picker" value="#000000">
+                <div class="brush-size">
+                    <label>画笔大小:</label>
+                    <input type="range" id="paint-size" min="1" max="20" value="3">
+                    <span id="paint-size-display">3</span>
+                </div>
+                <button class="toolbar-button" id="paint-clear">清空画布</button>
+            </div>
+            <div class="paint-canvas-container">
+                <canvas id="paint-canvas" width="800" height="500"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Game Window -->
+    <div id="window-game" class="window" style="width: 600px; height: 700px; top: 50px; left: 200px;">
+        <div class="window-header">
+            <div class="window-title">🎮 贪吃蛇游戏</div>
+            <div class="window-controls">
+                <button class="window-control minimize">−</button>
+                <button class="window-control maximize">□</button>
+                <button class="window-control close">×</button>
+            </div>
+        </div>
+        <div class="window-content" style="padding: 0;">
+            <div class="game-container">
+                <canvas id="game-canvas" width="400" height="400"></canvas>
+                <div class="game-info">
+                    <div>分数: <span id="game-score">0</span></div>
+                    <div>最高分: <span id="game-high-score">0</span></div>
+                </div>
+                <div class="game-controls">
+                    <button class="game-button" id="game-start">开始游戏</button>
+                    <button class="game-button" id="game-pause">暂停</button>
+                    <button class="game-button" id="game-restart">重新开始</button>
+                </div>
+                <div style="color: white; margin-top: 16px; font-size: 14px;">
+                    使用方向键 ↑ ↓ ← → 控制蛇的移动
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Calculator Window -->
+    <div id="window-calculator" class="window" style="width: 400px; height: 550px; top: 120px; left: 250px;">
+        <div class="window-header">
+            <div class="window-title">🔢 计算器</div>
+            <div class="window-controls">
+                <button class="window-control minimize">−</button>
+                <button class="window-control maximize">□</button>
+                <button class="window-control close">×</button>
+            </div>
+        </div>
+        <div class="window-content">
+            <div class="calculator-container">
+                <input type="text" id="calc-display" class="calculator-display" readonly value="0">
+                <div class="calculator-buttons">
+                    <button class="calc-button" data-value="7">7</button>
+                    <button class="calc-button" data-value="8">8</button>
+                    <button class="calc-button" data-value="9">9</button>
+                    <button class="calc-button operator" data-value="/">÷</button>
+                    <button class="calc-button" data-value="4">4</button>
+                    <button class="calc-button" data-value="5">5</button>
+                    <button class="calc-button" data-value="6">6</button>
+                    <button class="calc-button operator" data-value="*">×</button>
+                    <button class="calc-button" data-value="1">1</button>
+                    <button class="calc-button" data-value="2">2</button>
+                    <button class="calc-button" data-value="3">3</button>
+                    <button class="calc-button operator" data-value="-">−</button>
+                    <button class="calc-button" data-value="0">0</button>
+                    <button class="calc-button" data-value=".">.</button>
+                    <button class="calc-button operator" data-value="C">C</button>
+                    <button class="calc-button operator" data-value="+">+</button>
+                    <button class="calc-button equals" data-value="=">=</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Video Player Window -->
+    <div id="window-video" class="window" style="width: 800px; height: 550px; top: 90px; left: 160px;">
+        <div class="window-header">
+            <div class="window-title">🎬 视频播放器</div>
+            <div class="window-controls">
+                <button class="window-control minimize">−</button>
+                <button class="window-control maximize">□</button>
+                <button class="window-control close">×</button>
+            </div>
+        </div>
+        <div class="window-content" style="padding: 0;">
+            <div class="video-container">
+                <video id="video-player"></video>
+                <div class="video-controls">
+                    <button class="video-button" id="video-play">▶ 播放</button>
+                    <button class="video-button" id="video-pause">⏸ 暂停</button>
+                    <button class="video-button" id="video-online-demo">🌐 在线示例</button>
+                    <div class="video-progress" id="video-progress">
+                        <div class="video-progress-bar" id="video-progress-bar"></div>
+                    </div>
+                    <span style="color: white; font-size: 13px;" id="video-time">00:00 / 00:00</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Photos Window -->
+    <div id="window-photos" class="window" style="width: 1000px; height: 700px; top: 40px; left: 120px;">
+        <div class="window-header">
+            <div class="window-title">🖼️ 照片</div>
+            <div class="window-controls">
+                <button class="window-control minimize">−</button>
+                <button class="window-control maximize">□</button>
+                <button class="window-control close">×</button>
+            </div>
+        </div>
+        <div class="window-content" style="padding: 0; height: 100%;">
+            <div class="photos-container">
+                <div class="photos-sidebar">
+                    <div class="photos-toolbar">
+                        <input class="photos-path" id="photos-path" readonly value="C:\\Pictures">
+                        <button class="photos-action" id="photos-refresh">刷新</button>
+                    </div>
+                    <div class="photos-grid" id="photos-grid"></div>
+                </div>
+                <div class="photos-preview">
+                    <div class="photos-preview-header">
+                        <div class="photos-preview-title" id="photos-title">选择一张图片预览</div>
+                        <div class="photos-preview-controls">
+                            <button class="photos-action" id="photos-prev">上一张</button>
+                            <button class="photos-action" id="photos-next">下一张</button>
+                        </div>
+                    </div>
+                    <div class="photos-stage">
+                        <img id="photos-image" alt="">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Browser Window -->
+    <div id="window-browser" class="window" style="width: 1000px; height: 700px; top: 40px; left: 80px;">
+        <div class="window-header">
+            <div class="window-title">🌐 浏览器</div>
+            <div class="window-controls">
+                <button class="window-control minimize">−</button>
+                <button class="window-control maximize">□</button>
+                <button class="window-control close">×</button>
+            </div>
+        </div>
+        <div class="window-content" style="padding: 0; display: flex; flex-direction: column;">
+            <div class="browser-toolbar">
+                <button class="toolbar-button" id="browser-back">←</button>
+                <button class="toolbar-button" id="browser-forward">→</button>
+                <button class="toolbar-button" id="browser-refresh">⟳</button>
+                <input type="text" class="browser-url" id="browser-url" value="http://www.baicu.com" placeholder="输入网址...">
+                <button class="toolbar-button" id="browser-go">前往</button>
+            </div>
+            <iframe class="browser-iframe" id="browser-iframe" src="about:blank"></iframe>
+        </div>
+    </div>
+
+    <!-- Clock Window -->
+    <div id="window-clock" class="window" style="width: 600px; height: 500px; top: 110px; left: 220px;">
+        <div class="window-header">
+            <div class="window-title">🕐 时钟与日历</div>
+            <div class="window-controls">
+                <button class="window-control minimize">−</button>
+                <button class="window-control maximize">□</button>
+                <button class="window-control close">×</button>
+            </div>
+        </div>
+        <div class="window-content" style="padding: 0;">
+            <div class="clock-container">
+                <div class="clock-time" id="clock-time">00:00:00</div>
+                <div class="clock-date" id="clock-date">2024年1月1日 星期一</div>
+                <div class="calendar-controls">
+                    <select class="calendar-select" id="calendar-year"></select>
+                    <select class="calendar-select" id="calendar-month"></select>
+                </div>
+                <div class="calendar-selected" id="calendar-selected">请选择日期</div>
+                <div class="calendar-grid" id="calendar-grid"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings Window -->
+    <div id="window-settings" class="window" style="width: 700px; height: 500px; top: 100px; left: 200px;">
+        <div class="window-header">
+            <div class="window-title">⚙️ 设置</div>
+            <div class="window-controls">
+                <button class="window-control minimize">−</button>
+                <button class="window-control maximize">□</button>
+                <button class="window-control close">×</button>
+            </div>
+        </div>
+        <div class="window-content">
+            <div class="settings-container">
+                <div class="settings-section">
+                    <div class="settings-title">主题设置</div>
+                    <div class="theme-options">
+                        <div class="theme-option active" data-theme="purple">
+                            <div class="theme-preview" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);"></div>
+                            <div>紫色渐变</div>
+                        </div>
+                        <div class="theme-option" data-theme="blue">
+                            <div class="theme-preview" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);"></div>
+                            <div>蓝色渐变</div>
+                        </div>
+                        <div class="theme-option" data-theme="green">
+                            <div class="theme-preview" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);"></div>
+                            <div>绿色渐变</div>
+                        </div>
+                        <div class="theme-option" data-theme="orange">
+                            <div class="theme-preview" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);"></div>
+                            <div>橙色渐变</div>
+                        </div>
+                        <div class="theme-option" data-theme="dark">
+                            <div class="theme-preview" style="background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);"></div>
+                            <div>深色主题</div>
+                        </div>
+                        <div class="theme-option" data-theme="sunset">
+                            <div class="theme-preview" style="background: linear-gradient(135deg, #ff6b6b 0%, #feca57 100%);"></div>
+                            <div>日落主题</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/pyodide/v0.24.1/full/pyodide.js"></script>
+    <script>
+        // Global Variables
+        let pyodide = null;
+        let activeWindow = null;
+        let zIndexCounter = 1000;
+        let draggedWindow = null;
+        let dragOffset = { x: 0, y: 0 };
+        const windowStates = new Map();
+
+        // UI (Custom dialog + toast)
+        const ui = (() => {
+            const overlay = document.getElementById('ui-overlay');
+            const titleEl = document.getElementById('ui-dialog-title');
+            const messageEl = document.getElementById('ui-dialog-message');
+            const inputEl = document.getElementById('ui-dialog-input');
+            const okBtn = document.getElementById('ui-dialog-ok');
+            const cancelBtn = document.getElementById('ui-dialog-cancel');
+            const toastContainer = document.getElementById('ui-toast-container');
+
+            let resolver = null;
+            let inputEnabled = false;
+
+            const close = (result) => {
+                overlay.classList.remove('active');
+                document.removeEventListener('keydown', onKeyDown, true);
+                const r = resolver;
+                resolver = null;
+                if (r) r(result);
+            };
+
+            const onKeyDown = (e) => {
+                if (!overlay.classList.contains('active')) return;
+                if (e.key === 'Escape') {
+                    e.preventDefault();
+                    close({ ok: false, value: null });
+                } else if (e.key === 'Enter') {
+                    if (document.activeElement === inputEl || !inputEnabled) {
+                        e.preventDefault();
+                        close({ ok: true, value: inputEnabled ? inputEl.value : null });
+                    }
+                }
+            };
+
+            const open = ({ title, message, mode, defaultValue, placeholder, okText, cancelText }) => {
+                if (resolver) close({ ok: false, value: null });
+                titleEl.textContent = title || '提示';
+                messageEl.textContent = message || '';
+
+                inputEnabled = mode === 'prompt';
+                inputEl.style.display = inputEnabled ? 'block' : 'none';
+                inputEl.value = defaultValue ?? '';
+                inputEl.placeholder = placeholder ?? '';
+
+                okBtn.textContent = okText || '确定';
+                cancelBtn.textContent = cancelText || (mode === 'alert' ? '关闭' : '取消');
+                cancelBtn.style.display = mode === 'alert' ? 'none' : 'inline-flex';
+
+                overlay.classList.add('active');
+                document.addEventListener('keydown', onKeyDown, true);
+
+                setTimeout(() => {
+                    if (inputEnabled) {
+                        inputEl.focus();
+                        inputEl.select();
+                    } else {
+                        okBtn.focus();
+                    }
+                }, 0);
+
+                return new Promise((resolve) => {
+                    resolver = resolve;
+                });
+            };
+
+            overlay.addEventListener('mousedown', (e) => {
+                if (e.target === overlay) close({ ok: false, value: null });
+            });
+            okBtn.addEventListener('click', () => close({ ok: true, value: inputEnabled ? inputEl.value : null }));
+            cancelBtn.addEventListener('click', () => close({ ok: false, value: null }));
+
+            const toast = (message, { title = '提示', type = 'info', durationMs = 2200 } = {}) => {
+                const el = document.createElement('div');
+                el.className = `ui-toast ${type}`;
+                el.innerHTML = `<div class="title">${title}</div><div class="msg"></div>`;
+                el.querySelector('.msg').textContent = message;
+                toastContainer.appendChild(el);
+                requestAnimationFrame(() => el.classList.add('show'));
+                setTimeout(() => {
+                    el.classList.remove('show');
+                    setTimeout(() => el.remove(), 220);
+                }, durationMs);
+            };
+
+            return {
+                alert: async (title, message) => {
+                    await open({ title, message, mode: 'alert', okText: '确定' });
+                    return true;
+                },
+                confirm: async (title, message) => {
+                    const r = await open({ title, message, mode: 'confirm', okText: '确定', cancelText: '取消' });
+                    return r.ok;
+                },
+                prompt: async (title, message, { defaultValue = '', placeholder = '' } = {}) => {
+                    const r = await open({ title, message, mode: 'prompt', defaultValue, placeholder, okText: '确定', cancelText: '取消' });
+                    if (!r.ok) return null;
+                    const v = String(r.value ?? '').trim();
+                    return v ? v : null;
+                },
+                toast
+            };
+        })();
+
+        // File System
+        class FileSystem {
+            constructor() {
+                this.loadFromStorage();
+            }
+
+            loadFromStorage() {
+                const stored = localStorage.getItem('webos-filesystem');
+                if (stored) {
+                    this.root = JSON.parse(stored);
+                } else {
+                    this.root = {
+                        type: 'folder',
+                        name: 'C:',
+                        children: {
+                            'Documents': {
+                                type: 'folder',
+                                name: 'Documents',
+                                children: {
+                                    'welcome.txt': {
+                                        type: 'file',
+                                        name: 'welcome.txt',
+                                        content: '欢迎使用 Web OS！\n\n这是一个模拟 Windows 操作系统的 Web 应用。\n\n您可以：\n- 创建和管理文件\n- 编写和运行 Python 代码\n- 使用各种内置应用\n\n祝您使用愉快！'
+                                    }
+                                }
+                            },
+                            'Programs': {
+                                type: 'folder',
+                                name: 'Programs',
+                                children: {}
+                            },
+                            'Pictures': {
+                                type: 'folder',
+                                name: 'Pictures',
+                                children: {
+                                    'mountains.png': {
+                                        type: 'file',
+                                        name: 'mountains.png',
+                                        content: 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="900"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#667eea" offset="0"/><stop stop-color="#764ba2" offset="1"/></linearGradient><linearGradient id="s" x1="0" y1="1" x2="1" y2="0"><stop stop-color="#0f1115" offset="0"/><stop stop-color="#1b1f2a" offset="1"/></linearGradient></defs><rect width="100%" height="100%" fill="url(#g)"/><path d="M0 620 L260 420 L420 520 L640 300 L840 460 L1040 340 L1400 620 L1400 900 L0 900 Z" fill="rgba(15,17,21,0.45)"/><path d="M0 680 L250 520 L460 640 L640 440 L820 610 L1000 500 L1400 720 L1400 900 L0 900 Z" fill="rgba(15,17,21,0.55)"/><rect x="0" y="0" width="1400" height="900" fill="url(#s)" opacity="0.15"/><text x="60" y="120" fill="rgba(255,255,255,0.9)" font-family="Segoe UI, sans-serif" font-size="54">Mountains</text><text x="60" y="172" fill="rgba(255,255,255,0.75)" font-family="Segoe UI, sans-serif" font-size="26">Local Demo Image</text></svg>`)
+                                    },
+                                    'city.png': {
+                                        type: 'file',
+                                        name: 'city.png',
+                                        content: 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="900"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#4facfe" offset="0"/><stop stop-color="#00f2fe" offset="1"/></linearGradient></defs><rect width="100%" height="100%" fill="url(#g)"/><rect x="0" y="540" width="1400" height="360" fill="rgba(15,17,21,0.55)"/><g fill="rgba(255,255,255,0.22)"><rect x="90" y="300" width="140" height="320" rx="10"/><rect x="260" y="240" width="160" height="380" rx="10"/><rect x="450" y="320" width="120" height="300" rx="10"/><rect x="600" y="210" width="200" height="410" rx="10"/><rect x="830" y="280" width="140" height="340" rx="10"/><rect x="1000" y="230" width="220" height="390" rx="10"/></g><g fill="rgba(255,255,255,0.18)"><circle cx="1260" cy="170" r="64"/><circle cx="1180" cy="210" r="34"/></g><text x="60" y="120" fill="rgba(255,255,255,0.9)" font-family="Segoe UI, sans-serif" font-size="54">City</text><text x="60" y="172" fill="rgba(255,255,255,0.75)" font-family="Segoe UI, sans-serif" font-size="26">Local Demo Image</text></svg>`)
+                                    },
+                                    'ocean.png': {
+                                        type: 'file',
+                                        name: 'ocean.png',
+                                        content: 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="900"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#43e97b" offset="0"/><stop stop-color="#38f9d7" offset="1"/></linearGradient></defs><rect width="100%" height="100%" fill="url(#g)"/><path d="M0 560 C160 520 320 600 480 560 C640 520 800 600 960 560 C1120 520 1280 600 1400 560 L1400 900 L0 900 Z" fill="rgba(15,17,21,0.35)"/><path d="M0 640 C180 600 360 680 540 640 C720 600 900 680 1080 640 C1260 600 1320 660 1400 640 L1400 900 L0 900 Z" fill="rgba(15,17,21,0.5)"/><text x="60" y="120" fill="rgba(255,255,255,0.9)" font-family="Segoe UI, sans-serif" font-size="54">Ocean</text><text x="60" y="172" fill="rgba(255,255,255,0.75)" font-family="Segoe UI, sans-serif" font-size="26">Local Demo Image</text></svg>`)
+                                    }
+                                }
+                            },
+                            'Desktop': {
+                                type: 'folder',
+                                name: 'Desktop',
+                                children: {}
+                            }
+                        }
+                    };
+                    this.save();
+                }
+            }
+
+            save() {
+                localStorage.setItem('webos-filesystem', JSON.stringify(this.root));
+            }
+
+            getNode(path) {
+                if (path === undefined || path === null) return this.root;
+                const raw = String(path).trim();
+                if (!raw) return this.root;
+
+                const normalized = raw.replace(/\//g, '\\');
+                if (normalized === this.root.name || normalized === `${this.root.name}\\` || normalized === 'C:' || normalized === 'C:\\') {
+                    return this.root;
+                }
+
+                const parts = normalized.split('\\').filter(Boolean);
+                if (parts.length && (parts[0] === this.root.name || parts[0] === 'C:')) {
+                    parts.shift();
+                }
+
+                let current = this.root;
+                for (const part of parts) {
+                    if (current.children && current.children[part]) {
+                        current = current.children[part];
+                    } else {
+                        return null;
+                    }
+                }
+                return current;
+            }
+
+            createFile(path, name, content = '') {
+                const node = this.getNode(path);
+                if (node && node.type === 'folder') {
+                    node.children[name] = {
+                        type: 'file',
+                        name: name,
+                        content: content
+                    };
+                    this.save();
+                    return true;
+                }
+                return false;
+            }
+
+            createFolder(path, name) {
+                const node = this.getNode(path);
+                if (node && node.type === 'folder') {
+                    node.children[name] = {
+                        type: 'folder',
+                        name: name,
+                        children: {}
+                    };
+                    this.save();
+                    return true;
+                }
+                return false;
+            }
+
+            deleteNode(path, name) {
+                const node = this.getNode(path);
+                if (node && node.type === 'folder' && node.children[name]) {
+                    delete node.children[name];
+                    this.save();
+                    return true;
+                }
+                return false;
+            }
+
+            readFile(path) {
+                const node = this.getNode(path);
+                if (node && node.type === 'file') {
+                    return node.content;
+                }
+                return null;
+            }
+
+            writeFile(path, content) {
+                const node = this.getNode(path);
+                if (node && node.type === 'file') {
+                    node.content = content;
+                    this.save();
+                    return true;
+                }
+                return false;
+            }
+        }
+
+        const fileSystem = new FileSystem();
+
+        // Initialize Pyodide
+        async function initPyodide() {
+            if (!pyodide) {
+                try {
+                    pyodide = await loadPyodide();
+                    console.log('Pyodide loaded successfully');
+                } catch (error) {
+                    console.error('Failed to load Pyodide:', error);
+                }
+            }
+        }
+
+        // Window Management
+        function openWindow(appName) {
+            const window = document.getElementById(`window-${appName}`);
+            if (window) {
+                window.classList.add('active');
+                setActiveWindow(window);
+                addToTaskbar(appName);
+                
+                // Initialize app-specific functionality
+                if (appName === 'file-manager') {
+                    initFileManager();
+                } else if (appName === 'clock') {
+                    updateClock();
+                    initCalendar();
+                    updateCalendar();
+                } else if (appName === 'terminal') {
+                    initTerminal();
+                } else if (appName === 'code-editor') {
+                    initPyodide();
+                } else if (appName === 'photos') {
+                    initPhotos();
+                } else if (appName === 'video') {
+                    initVideoPlayer();
+                } else if (appName === 'browser') {
+                    initBrowser();
+                }
+            }
+        }
+
+        function closeWindow(window) {
+            window.classList.remove('active');
+            const appName = window.id.replace('window-', '');
+            removeFromTaskbar(appName);
+        }
+
+        function minimizeWindow(window) {
+            window.classList.remove('active');
+            const appName = window.id.replace('window-', '');
+            const appButton = document.querySelector(`[data-taskbar-app="${appName}"]`);
+            if (appButton) appButton.classList.remove('active');
+        }
+
+        function setActiveWindow(window) {
+            document.querySelectorAll('.window').forEach(w => {
+                w.style.zIndex = w === window ? ++zIndexCounter : w.style.zIndex;
+            });
+            activeWindow = window;
+        }
+
+        function toggleMaximizeWindow(window) {
+            const prev = windowStates.get(window) || { maximized: false, rect: null };
+            if (!prev.maximized) {
+                const rect = window.getBoundingClientRect();
+                windowStates.set(window, {
+                    maximized: true,
+                    rect: { left: rect.left, top: rect.top, width: rect.width, height: rect.height }
+                });
+                window.classList.add('maximized');
+                window.style.left = '0px';
+                window.style.top = '0px';
+                window.style.width = '100vw';
+                window.style.height = 'calc(100vh - 48px)';
+            } else {
+                if (prev.rect) {
+                    window.style.left = `${prev.rect.left}px`;
+                    window.style.top = `${prev.rect.top}px`;
+                    window.style.width = `${prev.rect.width}px`;
+                    window.style.height = `${prev.rect.height}px`;
+                }
+                window.classList.remove('maximized');
+                windowStates.set(window, { maximized: false, rect: prev.rect });
+            }
+            setActiveWindow(window);
+        }
+
+        function addToTaskbar(appName) {
+            const taskbarApps = document.getElementById('taskbar-apps');
+            const existing = document.querySelector(`[data-taskbar-app="${appName}"]`);
+            if (!existing) {
+                const appButton = document.createElement('div');
+                appButton.className = 'taskbar-app active';
+                appButton.dataset.taskbarApp = appName;
+                appButton.textContent = getAppTitle(appName);
+                appButton.addEventListener('click', () => {
+                    const window = document.getElementById(`window-${appName}`);
+                    if (window.classList.contains('active')) {
+                        minimizeWindow(window);
+                        appButton.classList.remove('active');
+                    } else {
+                        openWindow(appName);
+                        appButton.classList.add('active');
+                    }
+                });
+                taskbarApps.appendChild(appButton);
+            } else {
+                existing.classList.add('active');
+            }
+        }
+
+        function removeFromTaskbar(appName) {
+            const appButton = document.querySelector(`[data-taskbar-app="${appName}"]`);
+            if (appButton) {
+                appButton.remove();
+            }
+        }
+
+        function getAppTitle(appName) {
+            const titles = {
+                'file-manager': '文件管理器',
+                'notepad': '记事本',
+                'code-editor': '代码编辑器',
+                'terminal': '终端',
+                'paint': '画图',
+                'game': '贪吃蛇',
+                'calculator': '计算器',
+                'video': '视频播放器',
+                'photos': '照片',
+                'browser': '浏览器',
+                'clock': '时钟',
+                'settings': '设置'
+            };
+            return titles[appName] || appName;
+        }
+
+        // File Manager
+        let currentPath = 'C:\\Desktop';
+        const DEFAULT_SAVE_DIR = 'C:\\Desktop';
+
+        function initFileManager() {
+            renderFileList();
+        }
+
+        function renderFileList() {
+            const fileList = document.getElementById('file-list');
+            const pathInput = document.getElementById('fm-path');
+            pathInput.value = currentPath;
+            
+            const node = fileSystem.getNode(currentPath);
+            if (!node || node.type !== 'folder') {
+                fileList.innerHTML = '<div style="padding: 20px; text-align: center;">无效的路径</div>';
+                return;
+            }
+
+            fileList.innerHTML = '';
+            
+            const iconForFile = (fileName) => {
+                const lower = fileName.toLowerCase();
+                if (/\.(png|jpg|jpeg|gif|webp|bmp)$/.test(lower)) return '🖼️';
+                if (/\.(mp4|webm|ogg)$/.test(lower)) return '🎬';
+                if (/\.(py)$/.test(lower)) return '🐍';
+                if (/\.(txt|md|log)$/.test(lower)) return '📝';
+                return '📄';
+            };
+
+            for (const [name, child] of Object.entries(node.children)) {
+                const fileItem = document.createElement('div');
+                fileItem.className = 'file-item';
+                fileItem.innerHTML = `
+                    <div class="file-icon">${child.type === 'folder' ? '📁' : iconForFile(name)}</div>
+                    <div class="file-name">${name}</div>
+                `;
+                
+                fileItem.addEventListener('click', (e) => {
+                    document.querySelectorAll('.file-item').forEach(item => item.classList.remove('selected'));
+                    fileItem.classList.add('selected');
+                });
+
+                fileItem.addEventListener('dblclick', () => {
+                    if (child.type === 'folder') {
+                        currentPath = currentPath === 'C:' ? `C:\\${name}` : `${currentPath}\\${name}`;
+                        renderFileList();
+                    } else {
+                        openFileWithApp(currentPath + '\\' + name, child);
+                    }
+                });
+
+                fileItem.addEventListener('contextmenu', (e) => {
+                    e.preventDefault();
+                    showContextMenu(e.clientX, e.clientY, name);
+                });
+
+                fileList.appendChild(fileItem);
+            }
+        }
+
+        function openFileWithApp(path, file) {
+            const lower = file.name.toLowerCase();
+            if (lower.endsWith('.txt') || lower.endsWith('.md') || lower.endsWith('.log')) {
+                openWindow('notepad');
+                const textarea = document.getElementById('notepad-textarea');
+                textarea.value = file.content;
+                textarea.dataset.filePath = path;
+            } else if (lower.endsWith('.py')) {
+                openWindow('code-editor');
+                const textarea = document.getElementById('code-textarea');
+                textarea.value = file.content;
+                textarea.dataset.filePath = path;
+            } else if (/\.(png|jpg|jpeg|gif|webp|bmp)$/.test(lower)) {
+                openPhotoByPath(path);
+            } else if (/\.(mp4|webm|ogg)$/.test(lower)) {
+                openWindow('video');
+                const player = document.getElementById('video-player');
+                const src = file.content || player.getAttribute('src');
+                if (src) {
+                    player.src = src;
+                    player.load();
+                }
+            }
+        }
+
+        document.getElementById('fm-back').addEventListener('click', () => {
+            if (currentPath !== 'C:') {
+                const parts = currentPath.split('\\');
+                parts.pop();
+                currentPath = parts.length === 1 ? 'C:' : parts.join('\\');
+                renderFileList();
+            }
+        });
+
+        document.getElementById('fm-new-file').addEventListener('click', async () => {
+            const name = await ui.prompt('新建文件', '输入文件名:', { placeholder: '例如：note.txt' });
+            if (!name) return;
+            if (fileSystem.createFile(currentPath, name)) {
+                renderFileList();
+                ui.toast('已创建文件', { title: '文件管理器' });
+            } else {
+                await ui.alert('创建失败', '创建文件失败');
+            }
+        });
+
+        document.getElementById('fm-new-folder').addEventListener('click', async () => {
+            const name = await ui.prompt('新建文件夹', '输入文件夹名:', { placeholder: '例如：Photos' });
+            if (!name) return;
+            if (fileSystem.createFolder(currentPath, name)) {
+                renderFileList();
+                ui.toast('已创建文件夹', { title: '文件管理器' });
+            } else {
+                await ui.alert('创建失败', '创建文件夹失败');
+            }
+        });
+
+        document.getElementById('fm-delete').addEventListener('click', async () => {
+            const selected = document.querySelector('.file-item.selected');
+            if (!selected) {
+                ui.toast('请先选择一个文件或文件夹', { title: '文件管理器', type: 'warn' });
+                return;
+            }
+            const name = selected.querySelector('.file-name').textContent;
+            const ok = await ui.confirm('删除', `确定要删除 “${name}” 吗？`);
+            if (!ok) return;
+            if (fileSystem.deleteNode(currentPath, name)) {
+                renderFileList();
+                ui.toast('已删除', { title: '文件管理器' });
+            } else {
+                await ui.alert('删除失败', '删除失败');
+            }
+        });
+
+        // Context Menu
+        function showContextMenu(x, y, fileName) {
+            const menu = document.getElementById('context-menu');
+            menu.style.left = x + 'px';
+            menu.style.top = y + 'px';
+            menu.classList.add('active');
+            menu.dataset.fileName = fileName;
+        }
+
+        document.addEventListener('click', () => {
+            document.getElementById('context-menu').classList.remove('active');
+        });
+
+        document.querySelectorAll('.context-menu-item').forEach(item => {
+            item.addEventListener('click', async (e) => {
+                const action = e.target.dataset.action;
+                const menu = document.getElementById('context-menu');
+                const fileName = menu.dataset.fileName;
+
+                if (action === 'delete') {
+                    const ok = await ui.confirm('删除', `确定要删除 “${fileName}” 吗？`);
+                    if (ok) {
+                        fileSystem.deleteNode(currentPath, fileName);
+                        renderFileList();
+                        ui.toast('已删除', { title: '文件管理器' });
+                    }
+                } else if (action === 'rename') {
+                    const newName = await ui.prompt('重命名', '输入新名称:', { defaultValue: fileName });
+                    if (newName && newName !== fileName) {
+                        const node = fileSystem.getNode(currentPath);
+                        if (node.children[fileName]) {
+                            node.children[newName] = node.children[fileName];
+                            node.children[newName].name = newName;
+                            delete node.children[fileName];
+                            fileSystem.save();
+                            renderFileList();
+                            ui.toast('已重命名', { title: '文件管理器' });
+                        }
+                    }
+                } else if (action === 'new-file') {
+                    const name = await ui.prompt('新建文件', '输入文件名:', { placeholder: '例如：note.txt' });
+                    if (!name) return;
+                    fileSystem.createFile(currentPath, name);
+                    renderFileList();
+                    ui.toast('已创建文件', { title: '文件管理器' });
+                } else if (action === 'new-folder') {
+                    const name = await ui.prompt('新建文件夹', '输入文件夹名:', { placeholder: '例如：Photos' });
+                    if (!name) return;
+                    fileSystem.createFolder(currentPath, name);
+                    renderFileList();
+                    ui.toast('已创建文件夹', { title: '文件管理器' });
+                }
+            });
+        });
+
+        function parseSaveTarget(input, defaultDir) {
+            const raw = String(input || '').trim();
+            if (!raw) return null;
+
+            let normalized = raw;
+            if (normalized.includes('\\')) {
+                if (normalized.startsWith('\\')) normalized = 'C:' + normalized;
+                if (!normalized.startsWith('C:')) normalized = 'C:\\' + normalized;
+                const parts = normalized.split('\\').filter(Boolean);
+                if (parts.length < 2) return null;
+                const name = parts.pop();
+                const dirParts = parts;
+                const dir = dirParts.length === 1 ? 'C:' : dirParts.join('\\');
+                return { dir, name };
+            }
+
+            return { dir: defaultDir, name: normalized };
+        }
+
+        // Notepad
+        let currentNotepadFile = null;
+
+        document.getElementById('notepad-new').addEventListener('click', () => {
+            document.getElementById('notepad-textarea').value = '';
+            currentNotepadFile = null;
+        });
+
+        document.getElementById('notepad-save').addEventListener('click', async () => {
+            const textarea = document.getElementById('notepad-textarea');
+            const content = textarea.value;
+            
+            if (textarea.dataset.filePath) {
+                fileSystem.writeFile(textarea.dataset.filePath, content);
+                ui.toast('文件已保存', { title: '记事本' });
+            } else {
+                const defaultValue = 'Desktop\\note.txt';
+                const target = await ui.prompt('保存', '输入保存路径或文件名：', { defaultValue, placeholder: '例如：Documents\\note.txt 或 note.txt' });
+                if (!target) return;
+                const parsed = parseSaveTarget(target, DEFAULT_SAVE_DIR);
+                if (!parsed) {
+                    ui.toast('路径格式不正确', { title: '记事本', type: 'warn' });
+                    return;
+                }
+                const folder = fileSystem.getNode(parsed.dir);
+                if (!folder || folder.type !== 'folder') {
+                    ui.toast('目标文件夹不存在', { title: '记事本', type: 'warn' });
+                    return;
+                }
+                if (fileSystem.createFile(parsed.dir, parsed.name, content)) {
+                    textarea.dataset.filePath = `${parsed.dir}\\${parsed.name}`;
+                    ui.toast('文件已保存', { title: '记事本' });
+                    currentPath = DEFAULT_SAVE_DIR;
+                    renderFileList();
+                } else {
+                    await ui.alert('保存失败', '保存失败');
+                }
+            }
+        });
+
+        document.getElementById('notepad-save-as').addEventListener('click', async () => {
+            const textarea = document.getElementById('notepad-textarea');
+            const content = textarea.value;
+            const baseDefault = textarea.dataset.filePath ? textarea.dataset.filePath : 'Desktop\\copy.txt';
+            const target = await ui.prompt('另存为', '输入保存路径或文件名：', { defaultValue: baseDefault, placeholder: '例如：Documents\\copy.txt 或 copy.txt' });
+            if (!target) return;
+            const parsed = parseSaveTarget(target, DEFAULT_SAVE_DIR);
+            if (!parsed) {
+                ui.toast('路径格式不正确', { title: '记事本', type: 'warn' });
+                return;
+            }
+            const folder = fileSystem.getNode(parsed.dir);
+            if (!folder || folder.type !== 'folder') {
+                ui.toast('目标文件夹不存在', { title: '记事本', type: 'warn' });
+                return;
+            }
+            if (fileSystem.createFile(parsed.dir, parsed.name, content)) {
+                textarea.dataset.filePath = `${parsed.dir}\\${parsed.name}`;
+                ui.toast('文件已保存', { title: '记事本' });
+                currentPath = DEFAULT_SAVE_DIR;
+                renderFileList();
+            } else {
+                await ui.alert('保存失败', '保存失败');
+            }
+        });
+
+        // Code Editor
+        document.getElementById('code-run').addEventListener('click', async () => {
+            const code = document.getElementById('code-textarea').value;
+            const output = document.getElementById('code-output');
+            
+            output.textContent = '正在运行...\n';
+            
+            try {
+                if (!pyodide) {
+                    output.textContent = '正在加载 Python 环境，请稍候...\n';
+                    await initPyodide();
+                }
+                
+                // Redirect stdout
+                pyodide.runPython(`
+import sys
+from io import StringIO
+sys.stdout = StringIO()
+                `);
+                
+                // Run code
+                pyodide.runPython(code);
+                
+                // Get output
+                const result = pyodide.runPython('sys.stdout.getvalue()');
+                output.textContent = result || '(程序执行完成，无输出)';
+            } catch (error) {
+                output.textContent = `错误: ${error.message}`;
+            }
+        });
+
+        document.getElementById('code-clear').addEventListener('click', () => {
+            document.getElementById('code-output').textContent = '输出将显示在这里...';
+        });
+
+        document.getElementById('code-save').addEventListener('click', async () => {
+            const textarea = document.getElementById('code-textarea');
+            const content = textarea.value;
+            const defaultValue = textarea.dataset.filePath ? textarea.dataset.filePath : 'Desktop\\script.py';
+            const target = await ui.prompt('保存', '输入保存路径或文件名 (例如: script.py):', { defaultValue, placeholder: '例如：Documents\\script.py 或 script.py' });
+            if (!target) return;
+            const parsed = parseSaveTarget(target, DEFAULT_SAVE_DIR);
+            if (!parsed) {
+                ui.toast('路径格式不正确', { title: '代码编辑器', type: 'warn' });
+                return;
+            }
+            const folder = fileSystem.getNode(parsed.dir);
+            if (!folder || folder.type !== 'folder') {
+                ui.toast('目标文件夹不存在', { title: '代码编辑器', type: 'warn' });
+                return;
+            }
+            if (fileSystem.createFile(parsed.dir, parsed.name, content)) {
+                textarea.dataset.filePath = `${parsed.dir}\\${parsed.name}`;
+                ui.toast('文件已保存', { title: '代码编辑器' });
+                currentPath = DEFAULT_SAVE_DIR;
+                renderFileList();
+            } else {
+                await ui.alert('保存失败', '保存失败');
+            }
+        });
+
+        // Terminal
+        let terminalHistory = [];
+        let historyIndex = -1;
+        let terminalCurrentPath = 'C:';
+
+        function initTerminal() {
+            const output = document.getElementById('terminal-output');
+            output.innerHTML = 'Web OS Terminal [版本 1.0.0]<br>(c) 2024 Web OS. 保留所有权利。<br><br>';
+            updateTerminalPrompt();
+        }
+
+        function updateTerminalPrompt() {
+            document.getElementById('terminal-prompt').textContent = terminalCurrentPath + '>';
+        }
+
+        function terminalPrint(text) {
+            const output = document.getElementById('terminal-output');
+            output.innerHTML += text + '<br>';
+            output.scrollTop = output.scrollHeight;
+        }
+
+        async function executeCommand(command) {
+            terminalHistory.push(command);
+            historyIndex = terminalHistory.length;
+            
+            terminalPrint(`${terminalCurrentPath}> ${command}`);
+            
+            const parts = command.trim().split(' ');
+            const cmd = parts[0].toLowerCase();
+            const args = parts.slice(1);
+
+            switch (cmd) {
+                case 'ls':
+                case 'dir':
+                    const node = fileSystem.getNode(terminalCurrentPath);
+                    if (node && node.type === 'folder') {
+                        terminalPrint('');
+                        for (const [name, child] of Object.entries(node.children)) {
+                            const type = child.type === 'folder' ? '<DIR>' : '     ';
+                            terminalPrint(`${type}  ${name}`);
+                        }
+                        terminalPrint('');
+                    }
+                    break;
+
+                case 'cd':
+                    if (args.length === 0) {
+                        terminalPrint(terminalCurrentPath);
+                    } else if (args[0] === '..') {
+                        if (terminalCurrentPath !== 'C:') {
+                            const parts = terminalCurrentPath.split('\\');
+                            parts.pop();
+                            terminalCurrentPath = parts.length === 1 ? 'C:' : parts.join('\\');
+                            updateTerminalPrompt();
+                        }
+                    } else {
+                        const newPath = terminalCurrentPath === 'C:' ? 
+                            `C:\\${args[0]}` : `${terminalCurrentPath}\\${args[0]}`;
+                        const targetNode = fileSystem.getNode(newPath);
+                        if (targetNode && targetNode.type === 'folder') {
+                            terminalCurrentPath = newPath;
+                            updateTerminalPrompt();
+                        } else {
+                            terminalPrint('系统找不到指定的路径。');
+                        }
+                    }
+                    break;
+
+                case 'pwd':
+                    terminalPrint(terminalCurrentPath);
+                    break;
+
+                case 'cat':
+                case 'type':
+                    if (args.length > 0) {
+                        const filePath = terminalCurrentPath === 'C:' ? 
+                            `C:\\${args[0]}` : `${terminalCurrentPath}\\${args[0]}`;
+                        const content = fileSystem.readFile(filePath);
+                        if (content !== null) {
+                            terminalPrint(content);
+                        } else {
+                            terminalPrint('系统找不到指定的文件。');
+                        }
+                    } else {
+                        terminalPrint('请指定文件名。');
+                    }
+                    break;
+
+                case 'python':
+                    if (args.length === 0) {
+                        terminalPrint('Python 3.11.0');
+                        terminalPrint('输入 Python 代码后按回车执行，或使用 python <文件名> 运行脚本');
+                    } else {
+                        const fileName = args[0];
+                        const filePath = terminalCurrentPath === 'C:' ? 
+                            `C:\\${fileName}` : `${terminalCurrentPath}\\${fileName}`;
+                        const content = fileSystem.readFile(filePath);
+                        
+                        if (content !== null) {
+                            try {
+                                if (!pyodide) {
+                                    terminalPrint('正在加载 Python 环境...');
+                                    await initPyodide();
+                                }
+                                
+                                pyodide.runPython(`
+import sys
+from io import StringIO
+sys.stdout = StringIO()
+                                `);
+                                
+                                pyodide.runPython(content);
+                                const result = pyodide.runPython('sys.stdout.getvalue()');
+                                if (result) {
+                                    terminalPrint(result);
+                                }
+                            } catch (error) {
+                                terminalPrint(`错误: ${error.message}`);
+                            }
+                        } else {
+                            terminalPrint('系统找不到指定的文件。');
+                        }
+                    }
+                    break;
+
+                case 'clear':
+                case 'cls':
+                    document.getElementById('terminal-output').innerHTML = '';
+                    break;
+
+                case 'help':
+                    terminalPrint('可用命令:');
+                    terminalPrint('  ls, dir     - 列出当前目录');
+                    terminalPrint('  cd <目录>   - 切换目录');
+                    terminalPrint('  pwd         - 显示当前路径');
+                    terminalPrint('  cat <文件>  - 显示文件内容');
+                    terminalPrint('  python      - 运行 Python');
+                    terminalPrint('  clear, cls  - 清空屏幕');
+                    terminalPrint('  help        - 显示帮助');
+                    break;
+
+                default:
+                    if (command.trim()) {
+                        terminalPrint(`'${cmd}' 不是内部或外部命令，也不是可运行的程序。`);
+                    }
+            }
+        }
+
+        document.getElementById('terminal-input').addEventListener('keydown', async (e) => {
+            if (e.key === 'Enter') {
+                const input = e.target;
+                const command = input.value;
+                input.value = '';
+                await executeCommand(command);
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                if (historyIndex > 0) {
+                    historyIndex--;
+                    e.target.value = terminalHistory[historyIndex];
+                }
+            } else if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                if (historyIndex < terminalHistory.length - 1) {
+                    historyIndex++;
+                    e.target.value = terminalHistory[historyIndex];
+                } else {
+                    historyIndex = terminalHistory.length;
+                    e.target.value = '';
+                }
+            }
+        });
+
+        // Paint
+        const paintCanvas = document.getElementById('paint-canvas');
+        const paintCtx = paintCanvas.getContext('2d');
+        let isPainting = false;
+        let paintColor = '#000000';
+        let paintSize = 3;
+
+        document.getElementById('paint-color').addEventListener('change', (e) => {
+            paintColor = e.target.value;
+        });
+
+        document.getElementById('paint-size').addEventListener('input', (e) => {
+            paintSize = e.target.value;
+            document.getElementById('paint-size-display').textContent = paintSize;
+        });
+
+        document.getElementById('paint-clear').addEventListener('click', () => {
+            paintCtx.clearRect(0, 0, paintCanvas.width, paintCanvas.height);
+        });
+
+        paintCanvas.addEventListener('mousedown', (e) => {
+            isPainting = true;
+            const rect = paintCanvas.getBoundingClientRect();
+            paintCtx.beginPath();
+            paintCtx.moveTo(e.clientX - rect.left, e.clientY - rect.top);
+        });
+
+        paintCanvas.addEventListener('mousemove', (e) => {
+            if (isPainting) {
+                const rect = paintCanvas.getBoundingClientRect();
+                paintCtx.lineTo(e.clientX - rect.left, e.clientY - rect.top);
+                paintCtx.strokeStyle = paintColor;
+                paintCtx.lineWidth = paintSize;
+                paintCtx.lineCap = 'round';
+                paintCtx.stroke();
+            }
+        });
+
+        paintCanvas.addEventListener('mouseup', () => {
+            isPainting = false;
+        });
+
+        paintCanvas.addEventListener('mouseleave', () => {
+            isPainting = false;
+        });
+
+        // Snake Game
+        const gameCanvas = document.getElementById('game-canvas');
+        const gameCtx = gameCanvas.getContext('2d');
+        const gridSize = 20;
+        const tileCount = gameCanvas.width / gridSize;
+
+        let snake = [{ x: 10, y: 10 }];
+        let food = { x: 15, y: 15 };
+        let dx = 0;
+        let dy = 0;
+        let score = 0;
+        let highScore = localStorage.getItem('snake-high-score') || 0;
+        let gameLoop = null;
+        let gamePaused = false;
+
+        document.getElementById('game-high-score').textContent = highScore;
+
+        function drawGame() {
+            // Clear canvas
+            gameCtx.fillStyle = '#1e1e1e';
+            gameCtx.fillRect(0, 0, gameCanvas.width, gameCanvas.height);
+
+            // Draw snake
+            gameCtx.fillStyle = '#4caf50';
+            snake.forEach((segment, index) => {
+                if (index === 0) {
+                    gameCtx.fillStyle = '#66bb6a';
+                } else {
+                    gameCtx.fillStyle = '#4caf50';
+                }
+                gameCtx.fillRect(segment.x * gridSize, segment.y * gridSize, gridSize - 2, gridSize - 2);
+            });
+
+            // Draw food
+            gameCtx.fillStyle = '#f44336';
+            gameCtx.fillRect(food.x * gridSize, food.y * gridSize, gridSize - 2, gridSize - 2);
+
+            // Move snake
+            if (!gamePaused && (dx !== 0 || dy !== 0)) {
+                const head = { x: snake[0].x + dx, y: snake[0].y + dy };
+
+                // Check wall collision
+                if (head.x < 0 || head.x >= tileCount || head.y < 0 || head.y >= tileCount) {
+                    gameOver();
+                    return;
+                }
+
+                // Check self collision
+                if (snake.some(segment => segment.x === head.x && segment.y === head.y)) {
+                    gameOver();
+                    return;
+                }
+
+                snake.unshift(head);
+
+                // Check food collision
+                if (head.x === food.x && head.y === food.y) {
+                    score++;
+                    document.getElementById('game-score').textContent = score;
+                    if (score > highScore) {
+                        highScore = score;
+                        localStorage.setItem('snake-high-score', highScore);
+                        document.getElementById('game-high-score').textContent = highScore;
+                    }
+                    placeFood();
+                } else {
+                    snake.pop();
+                }
+            }
+        }
+
+        function placeFood() {
+            food = {
+                x: Math.floor(Math.random() * tileCount),
+                y: Math.floor(Math.random() * tileCount)
+            };
+            // Make sure food doesn't spawn on snake
+            while (snake.some(segment => segment.x === food.x && segment.y === food.y)) {
+                food = {
+                    x: Math.floor(Math.random() * tileCount),
+                    y: Math.floor(Math.random() * tileCount)
+                };
+            }
+        }
+
+        function gameOver() {
+            clearInterval(gameLoop);
+            gameLoop = null;
+            gameCtx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+            gameCtx.fillRect(0, 0, gameCanvas.width, gameCanvas.height);
+            gameCtx.fillStyle = 'white';
+            gameCtx.font = '30px Arial';
+            gameCtx.textAlign = 'center';
+            gameCtx.fillText('游戏结束!', gameCanvas.width / 2, gameCanvas.height / 2);
+            gameCtx.font = '20px Arial';
+            gameCtx.fillText(`得分: ${score}`, gameCanvas.width / 2, gameCanvas.height / 2 + 40);
+        }
+
+        document.getElementById('game-start').addEventListener('click', () => {
+            if (!gameLoop) {
+                snake = [{ x: 10, y: 10 }];
+                dx = 1;
+                dy = 0;
+                score = 0;
+                gamePaused = false;
+                document.getElementById('game-score').textContent = score;
+                placeFood();
+                gameLoop = setInterval(drawGame, 100);
+            }
+        });
+
+        document.getElementById('game-pause').addEventListener('click', () => {
+            gamePaused = !gamePaused;
+            document.getElementById('game-pause').textContent = gamePaused ? '继续' : '暂停';
+        });
+
+        document.getElementById('game-restart').addEventListener('click', () => {
+            if (gameLoop) {
+                clearInterval(gameLoop);
+            }
+            snake = [{ x: 10, y: 10 }];
+            dx = 1;
+            dy = 0;
+            score = 0;
+            gamePaused = false;
+            document.getElementById('game-score').textContent = score;
+            document.getElementById('game-pause').textContent = '暂停';
+            placeFood();
+            gameLoop = setInterval(drawGame, 100);
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (!gameLoop) return;
+            
+            switch (e.key) {
+                case 'ArrowUp':
+                    if (dy === 0) { dx = 0; dy = -1; }
+                    break;
+                case 'ArrowDown':
+                    if (dy === 0) { dx = 0; dy = 1; }
+                    break;
+                case 'ArrowLeft':
+                    if (dx === 0) { dx = -1; dy = 0; }
+                    break;
+                case 'ArrowRight':
+                    if (dx === 0) { dx = 1; dy = 0; }
+                    break;
+            }
+        });
+
+        // Calculator
+        let calcDisplay = document.getElementById('calc-display');
+        let calcCurrentValue = '0';
+        let calcPreviousValue = '';
+        let calcOperation = '';
+
+        document.querySelectorAll('.calc-button').forEach(button => {
+            button.addEventListener('click', () => {
+                const value = button.dataset.value;
+
+                if (value >= '0' && value <= '9' || value === '.') {
+                    if (calcCurrentValue === '0' && value !== '.') {
+                        calcCurrentValue = value;
+                    } else {
+                        calcCurrentValue += value;
+                    }
+                    calcDisplay.value = calcCurrentValue;
+                } else if (value === 'C') {
+                    calcCurrentValue = '0';
+                    calcPreviousValue = '';
+                    calcOperation = '';
+                    calcDisplay.value = calcCurrentValue;
+                } else if (value === '=') {
+                    if (calcOperation && calcPreviousValue) {
+                        const prev = parseFloat(calcPreviousValue);
+                        const curr = parseFloat(calcCurrentValue);
+                        let result = 0;
+
+                        switch (calcOperation) {
+                            case '+':
+                                result = prev + curr;
+                                break;
+                            case '-':
+                                result = prev - curr;
+                                break;
+                            case '*':
+                                result = prev * curr;
+                                break;
+                            case '/':
+                                result = prev / curr;
+                                break;
+                        }
+
+                        calcCurrentValue = result.toString();
+                        calcDisplay.value = calcCurrentValue;
+                        calcPreviousValue = '';
+                        calcOperation = '';
+                    }
+                } else {
+                    if (calcOperation && calcPreviousValue) {
+                        const prev = parseFloat(calcPreviousValue);
+                        const curr = parseFloat(calcCurrentValue);
+                        let result = 0;
+
+                        switch (calcOperation) {
+                            case '+':
+                                result = prev + curr;
+                                break;
+                            case '-':
+                                result = prev - curr;
+                                break;
+                            case '*':
+                                result = prev * curr;
+                                break;
+                            case '/':
+                                result = prev / curr;
+                                break;
+                        }
+
+                        calcCurrentValue = result.toString();
+                        calcDisplay.value = calcCurrentValue;
+                    }
+
+                    calcPreviousValue = calcCurrentValue;
+                    calcCurrentValue = '0';
+                    calcOperation = value;
+                }
+            });
+        });
+
+        // Video Player
+        const videoPlayer = document.getElementById('video-player');
+        const videoProgressBar = document.getElementById('video-progress-bar');
+        const videoTime = document.getElementById('video-time');
+        let videoInitialized = false;
+        let demoVideoUrl = null;
+        const ONLINE_DEMO_MP4 = 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4';
+
+        async function createDemoVideoUrl() {
+            const canvas = document.createElement('canvas');
+            canvas.width = 640;
+            canvas.height = 360;
+            const ctx = canvas.getContext('2d');
+
+            const stream = canvas.captureStream(30);
+            let recorder;
+            try {
+                recorder = new MediaRecorder(stream);
+            } catch (e) {
+                return null;
+            }
+
+            const chunks = [];
+            recorder.ondataavailable = (ev) => {
+                if (ev.data && ev.data.size) chunks.push(ev.data);
+            };
+
+            const startTs = performance.now();
+            const durationMs = 2600;
+            let raf = 0;
+
+            const draw = () => {
+                const t = performance.now() - startTs;
+                const p = Math.min(1, t / durationMs);
+
+                const g = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+                g.addColorStop(0, '#667eea');
+                g.addColorStop(1, '#764ba2');
+                ctx.fillStyle = g;
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                ctx.fillStyle = 'rgba(0,0,0,0.25)';
+                ctx.fillRect(0, canvas.height - 92, canvas.width, 92);
+
+                ctx.fillStyle = 'rgba(255,255,255,0.92)';
+                ctx.font = '24px Segoe UI, sans-serif';
+                ctx.fillText('Web OS Demo Video', 24, canvas.height - 52);
+                ctx.font = '16px Segoe UI, sans-serif';
+                ctx.fillStyle = 'rgba(255,255,255,0.86)';
+                ctx.fillText('本地生成 · 无需联网', 24, canvas.height - 26);
+
+                const bx = 24;
+                const by = 34;
+                const bw = canvas.width - 48;
+                const bh = 14;
+                ctx.fillStyle = 'rgba(255,255,255,0.18)';
+                ctx.fillRect(bx, by, bw, bh);
+                ctx.fillStyle = 'rgba(255,255,255,0.76)';
+                ctx.fillRect(bx, by, Math.max(6, bw * p), bh);
+
+                const cx = bx + bw * p;
+                ctx.beginPath();
+                ctx.arc(cx, by + bh / 2, 8, 0, Math.PI * 2);
+                ctx.fillStyle = 'rgba(255,255,255,0.92)';
+                ctx.fill();
+
+                if (p < 1) {
+                    raf = requestAnimationFrame(draw);
+                } else {
+                    recorder.stop();
+                }
+            };
+
+            recorder.start(200);
+            raf = requestAnimationFrame(draw);
+
+            await new Promise((resolve) => {
+                recorder.onstop = () => resolve(true);
+            });
+            cancelAnimationFrame(raf);
+
+            const blob = new Blob(chunks, { type: recorder.mimeType || 'video/webm' });
+            if (!blob.size) return null;
+            return URL.createObjectURL(blob);
+        }
+
+        async function initVideoPlayer() {
+            if (videoInitialized) return;
+            videoInitialized = true;
+            videoPlayer.controls = false;
+            if (!demoVideoUrl) demoVideoUrl = await createDemoVideoUrl();
+            if (demoVideoUrl) {
+                videoPlayer.src = demoVideoUrl;
+                videoPlayer.load();
+            } else {
+                ui.toast('无法生成本地示例视频（浏览器不支持录制），可手动输入视频链接。', { title: '视频播放器', type: 'warn', durationMs: 3200 });
+            }
+
+            videoPlayer.addEventListener('error', () => {
+                if (videoPlayer.src && videoPlayer.src.includes('commondatastorage.googleapis.com')) {
+                    if (demoVideoUrl) {
+                        videoPlayer.src = demoVideoUrl;
+                        videoPlayer.load();
+                        ui.toast('在线示例加载失败，已切回本地示例。', { title: '视频播放器', type: 'warn', durationMs: 2800 });
+                    } else {
+                        ui.toast('在线示例加载失败。', { title: '视频播放器', type: 'warn', durationMs: 2800 });
+                    }
+                }
+            }, { passive: true });
+        }
+
+        document.getElementById('video-play').addEventListener('click', () => {
+            if (!videoInitialized) initVideoPlayer();
+            videoPlayer.play();
+        });
+
+        document.getElementById('video-pause').addEventListener('click', () => {
+            videoPlayer.pause();
+        });
+
+        document.getElementById('video-online-demo').addEventListener('click', async () => {
+            if (!videoInitialized) await initVideoPlayer();
+            videoPlayer.src = ONLINE_DEMO_MP4;
+            videoPlayer.load();
+            videoPlayer.play();
+            ui.toast('正在尝试加载在线示例（无网络会自动回退）。', { title: '视频播放器', durationMs: 2400 });
+        });
+
+        videoPlayer.addEventListener('timeupdate', () => {
+            const progress = (videoPlayer.currentTime / videoPlayer.duration) * 100;
+            videoProgressBar.style.width = progress + '%';
+
+            const currentMin = Math.floor(videoPlayer.currentTime / 60);
+            const currentSec = Math.floor(videoPlayer.currentTime % 60);
+            const durationMin = Math.floor(videoPlayer.duration / 60);
+            const durationSec = Math.floor(videoPlayer.duration % 60);
+
+            videoTime.textContent = `${String(currentMin).padStart(2, '0')}:${String(currentSec).padStart(2, '0')} / ${String(durationMin).padStart(2, '0')}:${String(durationSec).padStart(2, '0')}`;
+        });
+
+        document.getElementById('video-progress').addEventListener('click', (e) => {
+            const rect = e.target.getBoundingClientRect();
+            const percent = (e.clientX - rect.left) / rect.width;
+            if (Number.isFinite(videoPlayer.duration) && videoPlayer.duration > 0) {
+                videoPlayer.currentTime = percent * videoPlayer.duration;
+            }
+        });
+
+        // Photos
+        const imageExtRe = /\.(png|jpg|jpeg|gif|webp|bmp)$/i;
+        let photosCurrentFolder = 'C:\\Pictures';
+        let photosItems = [];
+        let photosActiveIndex = -1;
+
+        function splitPath(path) {
+            const parts = path.split('\\').filter(Boolean);
+            if (parts.length <= 1) return { dir: 'C:', base: path };
+            const base = parts.pop();
+            const dir = parts.length === 1 ? 'C:' : parts.join('\\');
+            return { dir, base };
+        }
+
+        function listImagesInFolder(folderPath) {
+            const folder = fileSystem.getNode(folderPath);
+            if (!folder || folder.type !== 'folder') return [];
+            return Object.values(folder.children)
+                .filter(n => n.type === 'file' && imageExtRe.test(n.name))
+                .map(n => ({ name: n.name, path: `${folderPath}\\${n.name}`, url: n.content || '' }))
+                .sort((a, b) => a.name.localeCompare(b.name, 'zh-CN'));
+        }
+
+        function renderPhotos() {
+            document.getElementById('photos-path').value = photosCurrentFolder;
+            const grid = document.getElementById('photos-grid');
+            grid.innerHTML = '';
+            photosItems.forEach((item, idx) => {
+                const el = document.createElement('div');
+                el.className = 'photo-thumb' + (idx === photosActiveIndex ? ' active' : '');
+                el.innerHTML = `<img alt=""><div class="label">${item.name}</div>`;
+                const img = el.querySelector('img');
+                img.src = item.url || 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="600" height="400"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#667eea" offset="0"/><stop stop-color="#764ba2" offset="1"/></linearGradient></defs><rect width="100%" height="100%" fill="url(#g)"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="white" font-size="28" font-family="Segoe UI">Image</text></svg>`);
+                el.addEventListener('click', () => openPhotoAt(idx));
+                grid.appendChild(el);
+            });
+        }
+
+        function openPhotoAt(idx) {
+            if (idx < 0 || idx >= photosItems.length) return;
+            photosActiveIndex = idx;
+            const item = photosItems[idx];
+            const img = document.getElementById('photos-image');
+            img.src = item.url || '';
+            document.getElementById('photos-title').textContent = item.name;
+            renderPhotos();
+        }
+
+        function initPhotos() {
+            photosItems = listImagesInFolder(photosCurrentFolder);
+            if (!photosItems.length) {
+                document.getElementById('photos-title').textContent = '当前文件夹没有图片';
+                document.getElementById('photos-image').removeAttribute('src');
+                renderPhotos();
+                return;
+            }
+            if (photosActiveIndex < 0 || photosActiveIndex >= photosItems.length) photosActiveIndex = 0;
+            renderPhotos();
+            openPhotoAt(photosActiveIndex);
+        }
+
+        function openPhotoByPath(fullPath) {
+            const { dir, base } = splitPath(fullPath);
+            photosCurrentFolder = dir;
+            openWindow('photos');
+            photosItems = listImagesInFolder(photosCurrentFolder);
+            const idx = photosItems.findIndex(it => it.name === base);
+            photosActiveIndex = idx >= 0 ? idx : 0;
+            renderPhotos();
+            if (photosItems.length) openPhotoAt(photosActiveIndex);
+        }
+
+        document.getElementById('photos-refresh').addEventListener('click', () => initPhotos());
+        document.getElementById('photos-prev').addEventListener('click', () => {
+            if (!photosItems.length) return;
+            openPhotoAt((photosActiveIndex - 1 + photosItems.length) % photosItems.length);
+        });
+        document.getElementById('photos-next').addEventListener('click', () => {
+            if (!photosItems.length) return;
+            openPhotoAt((photosActiveIndex + 1) % photosItems.length);
+        });
+
+        // Browser
+        const browser = {
+            initialized: false,
+            history: [],
+            index: -1
+        };
+
+        const BROWSER_DEMO_HTML = `<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Web OS Demo Page</title>
+  <style>
+    body{margin:0;font-family:Segoe UI,system-ui,-apple-system,sans-serif;background:linear-gradient(135deg,#0f1115 0%,#1b1f2a 100%);color:#fff}
+    .hero{padding:28px 22px}
+    .card{max-width:860px;margin:0 auto;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:16px;overflow:hidden;box-shadow:0 16px 50px rgba(0,0,0,.35)}
+    .top{padding:16px 18px;background:linear-gradient(135deg,rgba(102,126,234,.9),rgba(118,75,162,.9))}
+    .top h1{margin:0;font-size:18px}
+    .body{padding:18px;line-height:1.65}
+    .pill{display:inline-flex;gap:8px;align-items:center;padding:8px 10px;border-radius:999px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);margin:8px 8px 0 0}
+    code{background:rgba(0,0,0,.25);padding:2px 6px;border-radius:8px}
+    a{color:#9bb3ff}
+  </style>
+</head>
+<body>
+  <div class="hero">
+    <div class="card">
+      <div class="top">
+        <h1>Web OS 内置示例页面（about:demo）</h1>
+      </div>
+      <div class="body">
+        <div class="pill">✅ 无需联网</div>
+        <div class="pill">🧠 适合作为浏览器 Demo</div>
+        <div class="pill">⌨️ 支持地址栏输入</div>
+        <p>你可以在地址栏输入：</p>
+        <ul>
+          <li><code>about:demo</code>：显示本页面</li>
+          <li>任意 <code>https://</code> 链接：尝试加载外部网页（若环境无网络会失败）</li>
+        </ul>
+        <p>建议：在无网络环境下，将需要的网页内容放到本地后再加载。</p>
+      </div>
+    </div>
+  </div>
+</body>
+</html>`;
+
+        function normalizeUrl(raw) {
+            const v = String(raw || '').trim();
+            if (!v) return 'about:demo';
+            if (v.startsWith('about:')) return v;
+            if (v.startsWith('http://') || v.startsWith('https://')) return v;
+            return 'https://' + v;
+        }
+
+        function setIframeUrl(url) {
+            const iframe = document.getElementById('browser-iframe');
+            if (url === 'about:demo') {
+                iframe.removeAttribute('src');
+                iframe.srcdoc = BROWSER_DEMO_HTML;
+                return;
+            }
+            iframe.srcdoc = '';
+            iframe.src = url;
+        }
+
+        function navigate(url, { push = true } = {}) {
+            const normalized = normalizeUrl(url);
+            document.getElementById('browser-url').value = normalized;
+            setIframeUrl(normalized);
+            if (!push) return;
+            if (browser.index >= 0 && browser.history[browser.index] === normalized) return;
+            browser.history = browser.history.slice(0, browser.index + 1);
+            browser.history.push(normalized);
+            browser.index = browser.history.length - 1;
+        }
+
+        function initBrowser() {
+            if (browser.initialized) return;
+            browser.initialized = true;
+            navigate(document.getElementById('browser-url').value, { push: true });
+
+            document.getElementById('browser-go').addEventListener('click', () => {
+                navigate(document.getElementById('browser-url').value, { push: true });
+            });
+
+            document.getElementById('browser-url').addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    navigate(e.target.value, { push: true });
+                }
+            });
+
+            document.getElementById('browser-refresh').addEventListener('click', () => {
+                if (browser.index >= 0) navigate(browser.history[browser.index], { push: false });
+            });
+
+            document.getElementById('browser-back').addEventListener('click', () => {
+                if (browser.index > 0) {
+                    browser.index--;
+                    navigate(browser.history[browser.index], { push: false });
+                } else {
+                    ui.toast('没有上一页', { title: '浏览器', type: 'warn' });
+                }
+            });
+
+            document.getElementById('browser-forward').addEventListener('click', () => {
+                if (browser.index < browser.history.length - 1) {
+                    browser.index++;
+                    navigate(browser.history[browser.index], { push: false });
+                } else {
+                    ui.toast('没有下一页', { title: '浏览器', type: 'warn' });
+                }
+            });
+        }
+
+        // Clock
+        function updateClock() {
+            const now = new Date();
+            const timeStr = now.toLocaleTimeString('zh-CN', { hour12: false });
+            const dateStr = now.toLocaleDateString('zh-CN', { 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric',
+                weekday: 'long'
+            });
+
+            document.getElementById('clock-time').textContent = timeStr;
+            document.getElementById('clock-date').textContent = dateStr;
+        }
+
+        let calendarInitialized = false;
+        const calendarState = {
+            year: new Date().getFullYear(),
+            month: new Date().getMonth(),
+            selectedDay: new Date().getDate()
+        };
+
+        function initCalendar() {
+            if (calendarInitialized) return;
+            calendarInitialized = true;
+
+            const yearSelect = document.getElementById('calendar-year');
+            const monthSelect = document.getElementById('calendar-month');
+
+            for (let y = 1900; y <= 2099; y++) {
+                const opt = document.createElement('option');
+                opt.value = String(y);
+                opt.textContent = `${y}年`;
+                yearSelect.appendChild(opt);
+            }
+            for (let m = 1; m <= 12; m++) {
+                const opt = document.createElement('option');
+                opt.value = String(m - 1);
+                opt.textContent = `${m}月`;
+                monthSelect.appendChild(opt);
+            }
+
+            yearSelect.value = String(calendarState.year);
+            monthSelect.value = String(calendarState.month);
+
+            yearSelect.addEventListener('change', () => {
+                calendarState.year = Number(yearSelect.value);
+                calendarState.selectedDay = 1;
+                updateCalendar();
+            });
+            monthSelect.addEventListener('change', () => {
+                calendarState.month = Number(monthSelect.value);
+                calendarState.selectedDay = 1;
+                updateCalendar();
+            });
+        }
+
+        function setSelectedDateText() {
+            const y = calendarState.year;
+            const m = calendarState.month;
+            const d = calendarState.selectedDay;
+            const date = new Date(y, m, d);
+            const weekday = date.toLocaleDateString('zh-CN', { weekday: 'long' });
+            document.getElementById('calendar-selected').textContent = `${y}年${m + 1}月${d}日 ${weekday}`;
+        }
+
+        function updateCalendar() {
+            const year = calendarState.year;
+            const month = calendarState.month;
+            const selectedDay = calendarState.selectedDay;
+            const today = new Date();
+
+            const firstDay = new Date(year, month, 1).getDay();
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+            calendarState.selectedDay = Math.max(1, Math.min(daysInMonth, selectedDay));
+
+            const calendarGrid = document.getElementById('calendar-grid');
+            calendarGrid.innerHTML = '';
+
+            const weekDays = ['日', '一', '二', '三', '四', '五', '六'];
+            weekDays.forEach(day => {
+                const dayElement = document.createElement('div');
+                dayElement.className = 'calendar-day header';
+                dayElement.textContent = day;
+                calendarGrid.appendChild(dayElement);
+            });
+
+            for (let i = 0; i < firstDay; i++) {
+                const emptyDay = document.createElement('div');
+                emptyDay.className = 'calendar-day';
+                calendarGrid.appendChild(emptyDay);
+            }
+
+            for (let day = 1; day <= daysInMonth; day++) {
+                const dayElement = document.createElement('div');
+                dayElement.className = 'calendar-day selectable';
+                if (year === today.getFullYear() && month === today.getMonth() && day === today.getDate()) {
+                    dayElement.classList.add('today');
+                }
+                if (day === calendarState.selectedDay) {
+                    dayElement.classList.add('selected');
+                }
+                dayElement.textContent = day;
+                dayElement.addEventListener('click', () => {
+                    calendarState.selectedDay = day;
+                    updateCalendar();
+                });
+                calendarGrid.appendChild(dayElement);
+            }
+
+            const yearSelect = document.getElementById('calendar-year');
+            const monthSelect = document.getElementById('calendar-month');
+            if (yearSelect && monthSelect) {
+                yearSelect.value = String(year);
+                monthSelect.value = String(month);
+            }
+            setSelectedDateText();
+        }
+
+        setInterval(() => {
+            if (document.getElementById('window-clock').classList.contains('active')) {
+                updateClock();
+            }
+        }, 1000);
+
+        // Settings
+        const themes = {
+            purple: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+            blue: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
+            green: 'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)',
+            orange: 'linear-gradient(135deg, #fa709a 0%, #fee140 100%)',
+            dark: 'linear-gradient(135deg, #2c3e50 0%, #34495e 100%)',
+            sunset: 'linear-gradient(135deg, #ff6b6b 0%, #feca57 100%)'
+        };
+
+        document.querySelectorAll('.theme-option').forEach(option => {
+            option.addEventListener('click', () => {
+                const theme = option.dataset.theme;
+                document.body.style.background = themes[theme];
+                document.getElementById('desktop').style.background = themes[theme];
+
+                document.querySelectorAll('.theme-option').forEach(opt => {
+                    opt.classList.remove('active');
+                });
+                option.classList.add('active');
+
+                localStorage.setItem('webos-theme', theme);
+            });
+        });
+
+        // Load saved theme
+        const savedTheme = localStorage.getItem('webos-theme');
+        if (savedTheme && themes[savedTheme]) {
+            document.body.style.background = themes[savedTheme];
+            document.getElementById('desktop').style.background = themes[savedTheme];
+            document.querySelector(`[data-theme="${savedTheme}"]`).classList.add('active');
+        }
+
+        // Event Listeners
+        document.getElementById('start-button').addEventListener('click', () => {
+            const startMenu = document.getElementById('start-menu');
+            startMenu.classList.toggle('active');
+        });
+
+        document.addEventListener('click', (e) => {
+            const startMenu = document.getElementById('start-menu');
+            const startButton = document.getElementById('start-button');
+            if (!startMenu.contains(e.target) && !startButton.contains(e.target)) {
+                startMenu.classList.remove('active');
+            }
+        });
+
+        document.querySelectorAll('.desktop-icon, .start-menu-item').forEach(item => {
+            item.addEventListener('click', () => {
+                const appName = item.dataset.app;
+                if (appName) {
+                    openWindow(appName);
+                    document.getElementById('start-menu').classList.remove('active');
+                }
+            });
+        });
+
+        document.querySelectorAll('.window').forEach(window => {
+            const header = window.querySelector('.window-header');
+            const closeBtn = window.querySelector('.close');
+            const minimizeBtn = window.querySelector('.minimize');
+            const maximizeBtn = window.querySelector('.maximize');
+
+            header.addEventListener('mousedown', (e) => {
+                const state = windowStates.get(window);
+                if (state && state.maximized) return;
+                if (e.target === header || e.target.classList.contains('window-title')) {
+                    draggedWindow = window;
+                    const rect = window.getBoundingClientRect();
+                    dragOffset.x = e.clientX - rect.left;
+                    dragOffset.y = e.clientY - rect.top;
+                    setActiveWindow(window);
+                }
+            });
+
+            closeBtn.addEventListener('click', () => closeWindow(window));
+            minimizeBtn.addEventListener('click', () => minimizeWindow(window));
+            if (maximizeBtn) {
+                maximizeBtn.addEventListener('click', () => toggleMaximizeWindow(window));
+            }
+
+            header.addEventListener('dblclick', (e) => {
+                if (e.target === header || e.target.classList.contains('window-title')) {
+                    toggleMaximizeWindow(window);
+                }
+            });
+
+            window.addEventListener('mousedown', () => setActiveWindow(window));
+        });
+
+        document.addEventListener('mousemove', (e) => {
+            if (draggedWindow) {
+                const x = e.clientX - dragOffset.x;
+                const y = e.clientY - dragOffset.y;
+                draggedWindow.style.left = Math.max(0, Math.min(x, window.innerWidth - 120)) + 'px';
+                draggedWindow.style.top = Math.max(0, Math.min(y, window.innerHeight - 72)) + 'px';
+            }
+        });
+
+        document.addEventListener('mouseup', () => {
+            draggedWindow = null;
+        });
+
+        // Update clock in taskbar
+        function updateTaskbarClock() {
+            const now = new Date();
+            const timeStr = now.toLocaleTimeString('zh-CN', { hour12: false, hour: '2-digit', minute: '2-digit' });
+            const dateStr = now.toLocaleDateString('zh-CN', { month: '2-digit', day: '2-digit' });
+            document.getElementById('clock').innerHTML = `${timeStr}<br>${dateStr}`;
+        }
+
+        updateTaskbarClock();
+        setInterval(updateTaskbarClock, 1000);
+
+        // System Tray
+        const trayState = {
+            networkOnline: true,
+            battery: Number(localStorage.getItem('webos-battery') || '100')
+        };
+
+        function renderTray() {
+            const dot = document.getElementById('tray-network-dot');
+            const text = document.getElementById('tray-network-text');
+            if (trayState.networkOnline) {
+                dot.classList.remove('offline');
+                text.textContent = 'Wi‑Fi';
+            } else {
+                dot.classList.add('offline');
+                text.textContent = '离线';
+            }
+
+            const batteryText = document.getElementById('tray-battery-text');
+            const batteryIcon = document.getElementById('tray-battery-icon');
+            const pct = Math.max(1, Math.min(100, trayState.battery));
+            batteryText.textContent = `${pct}%`;
+            batteryIcon.textContent = pct <= 20 ? '🪫' : '🔋';
+        }
+
+        document.getElementById('tray-network').addEventListener('click', () => {
+            trayState.networkOnline = !trayState.networkOnline;
+            renderTray();
+        });
+
+        document.getElementById('tray-battery').addEventListener('click', () => {
+            trayState.battery = trayState.battery <= 10 ? 100 : trayState.battery - 10;
+            localStorage.setItem('webos-battery', String(trayState.battery));
+            renderTray();
+        });
+
+        renderTray();
+
+        // Initialize
+        console.log('Web OS initialized');
+    </script>
+</body>
+</html>

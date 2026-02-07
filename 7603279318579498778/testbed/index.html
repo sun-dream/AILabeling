@@ -67,15 +67,16 @@
 </head>
 
 <body class="bg-ink-900 text-white font-system antialiased selection:bg-white/20">
-  <!-- OS Root -->
-  <div id="os" class="min-h-dvh w-full overflow-hidden">
-    <!-- Wallpaper -->
-    <div id="wallpaper" class="fixed inset-0 -z-20"></div>
-    <div class="fixed inset-0 -z-10 bg-gradient-to-b from-black/15 via-black/35 to-black/55"></div>
+  <div id="device-stage" class="min-h-dvh w-full flex items-center justify-center p-0">
+    <div id="device-shell" class="device-shell">
+      <div class="device-punch" aria-hidden="true"></div>
+      <div id="os" class="device-screen">
+        <div id="wallpaper" class="absolute inset-0 -z-20"></div>
+        <div class="absolute inset-0 -z-10 bg-gradient-to-b from-black/15 via-black/35 to-black/55"></div>
 
     <!-- Status Bar -->
     <header
-      class="fixed top-0 left-0 right-0 z-40 px-[max(14px,env(safe-area-inset-left))] pr-[max(14px,env(safe-area-inset-right))] pt-[max(10px,env(safe-area-inset-top))]">
+      class="absolute top-0 left-0 right-0 z-40 px-[max(14px,env(safe-area-inset-left))] pr-[max(14px,env(safe-area-inset-right))] pt-[max(10px,env(safe-area-inset-top))]">
       <div class="mx-auto max-w-[520px] rounded-2xl border border-white/10 bg-white/6 backdrop-blur-xl shadow-glass">
         <div class="flex items-center justify-between px-4 py-2">
           <div class="flex items-center gap-2">
@@ -100,9 +101,9 @@
       </div>
     </header>
 
-    <!-- Desktop Area -->
-    <main id="desktop"
-      class="relative pt-[calc(env(safe-area-inset-top)+70px)] pb-[calc(env(safe-area-inset-bottom)+110px)] overflow-hidden">
+    <section id="HomeScreen">
+      <main id="desktop"
+        class="relative pt-[calc(env(safe-area-inset-top)+70px)] pb-[calc(env(safe-area-inset-bottom)+110px)] overflow-hidden">
       <div class="mx-auto max-w-[520px] px-4">
         <!-- Search / Widget -->
         <section class="rounded-3xl border border-white/10 bg-white/6 backdrop-blur-xl shadow-glass overflow-hidden">
@@ -171,10 +172,11 @@
           <div id="app-grid" class="mt-3 grid grid-cols-4 gap-3" aria-label="应用网格"></div>
         </section>
       </div>
-    </main>
+      </main>
+    </section>
 
     <!-- Dock -->
-    <nav class="fixed bottom-0 left-0 right-0 z-50 pb-[max(12px,env(safe-area-inset-bottom))]" aria-label="Dock">
+    <nav class="absolute bottom-0 left-0 right-0 z-50 pb-[max(12px,env(safe-area-inset-bottom))]" aria-label="Dock">
       <div class="mx-auto max-w-[520px] px-4">
         <div class="relative rounded-[26px] border border-white/12 bg-white/8 backdrop-blur-2xl shadow-float">
           <div
@@ -187,7 +189,7 @@
     </nav>
 
     <!-- System Panels -->
-    <section id="panels" class="fixed inset-0 z-[55] pointer-events-none">
+    <section id="ControlPanel" class="absolute inset-0 z-[55] pointer-events-none">
       <!-- Scrim -->
       <div id="panel-scrim"
         class="absolute inset-0 bg-black/40 backdrop-blur-[2px] opacity-0 pointer-events-none transition-opacity duration-200">
@@ -258,10 +260,11 @@
         </div>
       </div>
 
-      <!-- Lock Screen -->
-      <div id="panel-lock" class="absolute inset-0 opacity-0 pointer-events-none transition-opacity duration-200"
-        aria-hidden="true">
-        <div class="absolute inset-0 bg-gradient-to-b from-black/20 via-black/45 to-black/70"></div>
+      <div id="LockScreen">
+        <div id="panel-lock" class="absolute inset-0 opacity-0 pointer-events-none transition-opacity duration-200"
+          aria-hidden="true">
+      <div class="absolute inset-0 bg-black/55"></div>
+      <div class="absolute inset-0 bg-gradient-to-b from-black/55 via-black/75 to-black/90"></div>
         <div
           class="relative pt-[max(20px,env(safe-area-inset-top))] pb-[max(18px,env(safe-area-inset-bottom))] px-4 h-full">
           <div class="mx-auto max-w-[520px] h-full flex flex-col">
@@ -324,19 +327,25 @@
             </div>
           </div>
         </div>
+        </div>
+        </div>
       </div>
     </section>
 
     <!-- Windows Layer -->
-    <section id="windows" class="fixed inset-0 z-30 pointer-events-none"></section>
+    <section id="AppContainer" class="absolute inset-0 z-30 pointer-events-none">
+      <section id="windows" class="absolute inset-0 pointer-events-none"></section>
+    </section>
 
     <!-- Toast -->
     <div id="toast"
-      class="fixed left-1/2 z-[60] -translate-x-1/2 bottom-[calc(env(safe-area-inset-bottom)+96px)] hidden"
+      class="absolute left-1/2 z-[60] -translate-x-1/2 bottom-[calc(env(safe-area-inset-bottom)+96px)] hidden"
       role="status" aria-live="polite">
       <div
         class="rounded-2xl border border-white/10 bg-black/50 backdrop-blur-xl px-4 py-2 text-[13px] text-white/85 shadow-glass">
         <span id="toast-text">—</span>
+      </div>
+    </div>
       </div>
     </div>
   </div>

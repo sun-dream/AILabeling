@@ -1,0 +1,1 @@
+请基于 HTML+Tailwind CSS+JS 开发高还原 Android 移动端的 WebOS 仿真系统，实现全局统一文件系统及多款核心移动应用，输出单个可直接运行的 CDN 版 HTML 文件。

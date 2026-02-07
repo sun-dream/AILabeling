@@ -1,0 +1,3329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cloud OS 11</title>
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Python Environment -->
+    <script src="https://cdn.jsdelivr.net/pyodide/v0.23.4/full/pyodide.js"></script>
+    <!-- Code Editor (Monaco) Loader -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.36.1/min/vs/loader.min.js"></script>
+    
+    <style>
+        :root {
+            --bg-color: #f3f3f3;
+            --taskbar-bg: rgba(243, 243, 243, 0.85);
+            --window-bg: rgba(255, 255, 255, 0.95);
+            --accent-color: #0078d4;
+            --text-color: #333;
+            --border-radius: 8px;
+            --shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: url('https://images.unsplash.com/photo-1579546929518-9e396f3cc809?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') no-repeat center center fixed;
+            background-size: cover;
+            user-select: none;
+            height: 100vh;
+            width: 100vw;
+        }
+
+        /* Desktop */
+        #desktop {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 48px; /* Taskbar height */
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            flex-wrap: wrap;
+            align-content: flex-start;
+            z-index: 1;
+        }
+
+        .desktop-icon {
+            width: 80px;
+            height: 90px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 5px;
+            border-radius: 5px;
+            cursor: pointer;
+            color: white;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.8);
+            transition: background 0.2s;
+        }
+
+        .desktop-icon:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .desktop-icon i {
+            font-size: 32px;
+            margin-bottom: 5px;
+        }
+
+        .desktop-icon span {
+            font-size: 12px;
+            text-align: center;
+            word-wrap: break-word;
+            max-width: 100%;
+        }
+
+        /* Taskbar */
+        #taskbar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 48px;
+            background: var(--taskbar-bg);
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 10px;
+            z-index: 10000;
+            border-top: 1px solid rgba(255,255,255,0.3);
+        }
+
+        .start-btn {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .start-btn:hover {
+            background: rgba(0,0,0,0.05);
+        }
+
+        .start-btn i {
+            font-size: 24px;
+            color: #0078d4;
+        }
+
+        #taskbar-apps {
+            flex: 1;
+            display: flex;
+            justify-content: center; /* Windows 11 style */
+            height: 100%;
+            align-items: center;
+        }
+
+        .taskbar-item {
+            width: 40px;
+            height: 40px;
+            margin: 0 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.2s;
+        }
+
+        .taskbar-item:hover {
+            background: rgba(255,255,255,0.5);
+        }
+
+        .taskbar-item.active {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .taskbar-item.active::after {
+            content: '';
+            position: absolute;
+            bottom: 2px;
+            width: 16px;
+            height: 3px;
+            background: var(--accent-color);
+            border-radius: 2px;
+        }
+
+        .taskbar-item i {
+            font-size: 20px;
+            color: #444;
+        }
+
+        #clock {
+            font-size: 12px;
+            color: #333;
+            text-align: right;
+            padding: 0 10px;
+            cursor: default;
+        }
+        #taskbar-tray {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .tray-icons {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px;
+            border-radius: 8px;
+            background: rgba(255,255,255,0.25);
+            border: 1px solid rgba(255,255,255,0.25);
+        }
+        .tray-icon {
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.15s, transform 0.05s;
+            color: #2f2f2f;
+        }
+        .tray-icon:hover { background: rgba(255,255,255,0.55); }
+        .tray-icon:active { transform: translateY(1px); }
+        .tray-icon i { font-size: 14px; }
+
+        /* Start Menu */
+        #start-menu {
+            position: absolute;
+            bottom: 58px; /* Taskbar + margin */
+            left: 50%;
+            transform: translateX(-50%) translateY(20px);
+            width: 600px;
+            height: 500px;
+            background: rgba(243, 243, 243, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.2);
+            display: none;
+            flex-direction: column;
+            padding: 20px;
+            z-index: 9999;
+            opacity: 0;
+            transition: all 0.2s ease;
+            border: 1px solid rgba(255,255,255,0.4);
+        }
+
+        #start-menu.open {
+            display: flex;
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        .start-search {
+            width: 100%;
+            padding: 10px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        .app-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 15px;
+            overflow-y: auto;
+        }
+
+        .app-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            padding: 10px;
+            border-radius: 4px;
+        }
+
+        .app-item:hover {
+            background: rgba(255,255,255,0.5);
+        }
+
+        .app-item i {
+            font-size: 28px;
+            margin-bottom: 8px;
+            color: #444;
+        }
+
+        .app-item span {
+            font-size: 11px;
+            text-align: center;
+        }
+
+        /* Windows */
+        .window {
+            position: absolute;
+            background: var(--window-bg);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            min-width: 300px;
+            min-height: 200px;
+            border: 1px solid rgba(0,0,0,0.1);
+            animation: popIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes popIn {
+            from { transform: scale(0.95); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .title-bar {
+            height: 32px;
+            background: #e9e9e9;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 10px;
+            user-select: none;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .title-bar-text {
+            font-size: 12px;
+            font-weight: 600;
+            color: #444;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .window-controls {
+            display: flex;
+            height: 100%;
+            margin-right: -10px;
+        }
+
+        .control-btn {
+            width: 46px;
+            height: 32px;
+            border: none;
+            background: transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: #2b2b2b;
+            font-size: 12px;
+            padding: 0;
+            user-select: none;
+        }
+
+        .control-btn:hover { background: rgba(0,0,0,0.08); }
+        .control-btn:active { background: rgba(0,0,0,0.12); }
+        .control-btn:focus { outline: none; }
+        .control-btn.btn-close:hover { background: #e81123; color: #fff; }
+        .control-btn.btn-close:active { background: #c50f1f; color: #fff; }
+
+        .window-content {
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+            background: #fff;
+        }
+
+        .resize-handle {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            bottom: 0;
+            right: 0;
+            cursor: se-resize;
+            z-index: 10;
+        }
+
+        /* Apps Specific Styles */
+        /* Explorer */
+        .explorer-layout {
+            display: flex;
+            height: 100%;
+            flex-direction: column;
+        }
+        .explorer-toolbar {
+            padding: 8px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            gap: 10px;
+            background: #f9f9f9;
+        }
+        .explorer-btn {
+            border: 1px solid rgba(0,0,0,0.12);
+            background: rgba(255,255,255,0.9);
+            border-radius: 6px;
+            padding: 6px 10px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: transform 0.05s, background 0.15s, box-shadow 0.15s;
+            box-shadow: 0 1px 0 rgba(0,0,0,0.05);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .explorer-btn:hover { background: rgba(255,255,255,1); box-shadow: 0 6px 18px rgba(0,0,0,0.08); }
+        .explorer-btn:active { transform: translateY(1px); }
+        .explorer-btn.danger { background: rgba(255, 235, 235, 0.95); border-color: rgba(255,0,0,0.18); }
+        .explorer-btn.danger:hover { background: rgba(255, 226, 226, 1); }
+        .explorer-path {
+            flex: 1;
+            padding: 4px 8px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            background: #fff;
+            font-size: 13px;
+            outline: none;
+            transition: box-shadow 0.15s, border-color 0.15s;
+        }
+        .explorer-path:focus { border-color: rgba(0, 120, 212, 0.6); box-shadow: 0 0 0 3px rgba(0,120,212,0.15); }
+        .explorer-main {
+            flex: 1;
+            display: flex;
+        }
+        .explorer-sidebar {
+            width: 150px;
+            background: #f3f3f3;
+            border-right: 1px solid #eee;
+            padding: 10px;
+        }
+        .explorer-side-item {
+            padding: 8px 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #2f2f2f;
+            font-size: 13px;
+            transition: background 0.15s, transform 0.05s;
+        }
+        .explorer-side-item:hover { background: rgba(255,255,255,0.7); }
+        .explorer-side-item:active { transform: translateY(1px); }
+        .explorer-files {
+            flex: 1;
+            padding: 10px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            grid-auto-rows: 90px;
+            gap: 10px;
+            overflow-y: auto;
+        }
+        .file-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 8px;
+            transition: background 0.12s, transform 0.05s, box-shadow 0.15s;
+            border: 1px solid transparent;
+        }
+        .file-item:hover { background: rgba(0, 120, 212, 0.10); box-shadow: 0 10px 22px rgba(0,0,0,0.06); }
+        .file-item:active { transform: translateY(1px); }
+        .file-item.selected { background: rgba(0, 120, 212, 0.18); border: 1px solid rgba(0, 120, 212, 0.28); }
+        .file-icon { font-size: 32px; margin-bottom: 5px; }
+        .file-name { font-size: 12px; text-align: center; word-break: break-all; }
+
+        /* Terminal */
+        .terminal {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 10px;
+            height: 100%;
+            font-family: 'Consolas', monospace;
+            font-size: 14px;
+            overflow-y: auto;
+        }
+        .terminal-output { white-space: pre-wrap; }
+        .terminal-input-line { display: flex; margin-top: 5px; }
+        .prompt { color: #28c940; margin-right: 8px; }
+        .cmd-input {
+            background: transparent;
+            border: none;
+            color: inherit;
+            flex: 1;
+            outline: none;
+            font-family: inherit;
+            font-size: inherit;
+        }
+
+        /* Notepad */
+        .notepad-area {
+            width: 100%;
+            height: 100%;
+            border: none;
+            padding: 10px;
+            resize: none;
+            outline: none;
+            font-family: 'Consolas', monospace;
+            font-size: 14px;
+        }
+
+        /* Paint */
+        .paint-layout { display: flex; flex-direction: column; height: 100%; }
+        .paint-toolbar {
+            padding: 5px;
+            background: #f0f0f0;
+            border-bottom: 1px solid #ccc;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        .paint-canvas-wrap { flex: 1; overflow: hidden; position: relative; }
+        canvas { display: block; cursor: crosshair; background: #fff; }
+
+        /* Game - Snake */
+        .snake-canvas { background: #000; display: block; margin: 0 auto; }
+        
+        /* Loading Overlay for Pyodide */
+        #loading-overlay {
+            position: absolute;
+            bottom: 60px;
+            right: 20px;
+            background: #333;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 4px;
+            font-size: 12px;
+            display: none;
+            z-index: 20000;
+        }
+
+        /* Context Menu */
+        #context-menu {
+            position: absolute;
+            background: white;
+            border: 1px solid #ccc;
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+            width: 150px;
+            display: none;
+            z-index: 10001;
+        }
+        #context-menu div {
+            padding: 8px 12px;
+            cursor: pointer;
+            font-size: 13px;
+        }
+        #context-menu div:hover { background: #eee; }
+
+        /* Modal + File Picker */
+        #modal-overlay {
+            position: absolute;
+            inset: 0;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0,0,0,0.35);
+            backdrop-filter: blur(6px);
+            z-index: 20001;
+        }
+        #modal-overlay.open { display: flex; }
+        .modal {
+            width: min(720px, calc(100vw - 40px));
+            max-height: min(560px, calc(100vh - 120px));
+            background: rgba(250, 250, 250, 0.92);
+            border: 1px solid rgba(255,255,255,0.6);
+            border-radius: 12px;
+            box-shadow: 0 30px 80px rgba(0,0,0,0.35);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        .modal-header {
+            padding: 10px 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(243, 243, 243, 0.9);
+            border-bottom: 1px solid rgba(0,0,0,0.08);
+        }
+        .modal-title { font-weight: 700; font-size: 13px; color: #333; }
+        .modal-body { padding: 12px; overflow: auto; }
+        .modal-footer {
+            padding: 10px 12px;
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            border-top: 1px solid rgba(0,0,0,0.08);
+            background: rgba(243, 243, 243, 0.9);
+        }
+        .picker-top {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .picker-btn {
+            border: 1px solid rgba(0,0,0,0.12);
+            background: rgba(255,255,255,0.9);
+            border-radius: 8px;
+            padding: 8px 10px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: transform 0.05s, background 0.15s, box-shadow 0.15s;
+            box-shadow: 0 1px 0 rgba(0,0,0,0.05);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .picker-btn:hover { background: rgba(255,255,255,1); box-shadow: 0 10px 28px rgba(0,0,0,0.10); }
+        .picker-btn:active { transform: translateY(1px); }
+        .picker-btn.primary { background: rgba(0, 120, 212, 0.95); color: white; border-color: rgba(0, 120, 212, 0.55); }
+        .picker-btn.primary:hover { background: rgba(0, 120, 212, 1); }
+        .picker-btn.danger { background: rgba(232, 17, 35, 0.95); color: white; border-color: rgba(232, 17, 35, 0.55); }
+        .picker-btn.danger:hover { background: rgba(232, 17, 35, 1); }
+        .picker-path {
+            flex: 1;
+            padding: 8px 10px;
+            border-radius: 8px;
+            border: 1px solid rgba(0,0,0,0.12);
+            outline: none;
+            font-size: 13px;
+        }
+        .picker-path:focus { border-color: rgba(0, 120, 212, 0.6); box-shadow: 0 0 0 3px rgba(0,120,212,0.15); }
+        .dialog-input {
+            width: 100%;
+            padding: 10px 12px;
+            border-radius: 10px;
+            border: 1px solid rgba(0,0,0,0.12);
+            outline: none;
+            font-size: 13px;
+            background: rgba(255,255,255,0.95);
+            box-sizing: border-box;
+        }
+        .dialog-input:focus { border-color: rgba(0, 120, 212, 0.6); box-shadow: 0 0 0 3px rgba(0,120,212,0.15); }
+
+        #toast-container {
+            position: absolute;
+            left: 50%;
+            bottom: 64px;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            z-index: 20002;
+            pointer-events: none;
+            max-width: min(520px, calc(100vw - 24px));
+        }
+        .toast {
+            background: rgba(32, 32, 32, 0.92);
+            color: #fff;
+            padding: 10px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            box-shadow: 0 18px 40px rgba(0,0,0,0.35);
+            border: 1px solid rgba(255,255,255,0.12);
+            backdrop-filter: blur(12px);
+            white-space: pre-wrap;
+        }
+        .picker-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 10px;
+        }
+        .picker-item {
+            border: 1px solid rgba(0,0,0,0.10);
+            background: rgba(255,255,255,0.85);
+            border-radius: 10px;
+            padding: 10px;
+            cursor: pointer;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            transition: transform 0.05s, box-shadow 0.15s, background 0.15s;
+            user-select: none;
+        }
+        .picker-item:hover { box-shadow: 0 14px 30px rgba(0,0,0,0.10); background: rgba(255,255,255,1); }
+        .picker-item:active { transform: translateY(1px); }
+        .picker-item.selected { outline: 3px solid rgba(0,120,212,0.22); border-color: rgba(0,120,212,0.32); }
+        .picker-meta { display:flex; flex-direction:column; gap:2px; min-width:0; }
+        .picker-name { font-size: 13px; font-weight: 700; color: #222; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+        .picker-type { font-size: 11px; color: #666; }
+        .picker-save {
+            margin-top: 12px;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        .picker-save input {
+            flex: 1;
+            padding: 8px 10px;
+            border-radius: 8px;
+            border: 1px solid rgba(0,0,0,0.12);
+            outline: none;
+            font-size: 13px;
+        }
+        .picker-save input:focus { border-color: rgba(0, 120, 212, 0.6); box-shadow: 0 0 0 3px rgba(0,120,212,0.15); }
+
+        /* Notepad */
+        .np-toolbar {
+            padding: 6px;
+            background: rgba(243, 243, 243, 0.95);
+            border-bottom: 1px solid rgba(0,0,0,0.10);
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+        .np-btn {
+            border: 1px solid rgba(0,0,0,0.12);
+            background: rgba(255,255,255,0.9);
+            border-radius: 8px;
+            padding: 7px 10px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: transform 0.05s, background 0.15s, box-shadow 0.15s;
+            box-shadow: 0 1px 0 rgba(0,0,0,0.05);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .np-btn:hover { background: rgba(255,255,255,1); box-shadow: 0 10px 28px rgba(0,0,0,0.10); }
+        .np-btn:active { transform: translateY(1px); }
+        .np-status {
+            height: 26px;
+            padding: 0 10px;
+            display: flex;
+            align-items: center;
+            font-size: 12px;
+            color: #555;
+            background: rgba(243, 243, 243, 0.95);
+            border-top: 1px solid rgba(0,0,0,0.10);
+        }
+
+        /* Calendar */
+        .cal-select {
+            padding: 8px 10px;
+            border-radius: 8px;
+            border: 1px solid rgba(0,0,0,0.12);
+            background: rgba(255,255,255,0.9);
+            outline: none;
+            font-size: 13px;
+        }
+        .cal-select:focus { border-color: rgba(0, 120, 212, 0.6); box-shadow: 0 0 0 3px rgba(0,120,212,0.15); }
+        .cal-weekdays {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            background: rgba(243,243,243,0.85);
+            border-bottom: 1px solid rgba(0,0,0,0.08);
+        }
+        .cal-weekdays > div {
+            padding: 10px 0;
+            text-align: center;
+            font-size: 12px;
+            font-weight: 800;
+            color: #333;
+        }
+        .cal-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            grid-auto-rows: 64px;
+        }
+        .cal-cell {
+            border-right: 1px solid rgba(0,0,0,0.06);
+            border-bottom: 1px solid rgba(0,0,0,0.06);
+            display: flex;
+            align-items: flex-start;
+            justify-content: flex-end;
+            padding: 8px;
+            font-size: 13px;
+            color: #222;
+            cursor: pointer;
+            transition: background 0.15s, box-shadow 0.15s, transform 0.05s;
+            user-select: none;
+        }
+        .cal-cell:hover { background: rgba(0,120,212,0.08); }
+        .cal-cell:active { transform: translateY(1px); }
+        .cal-cell.muted { color: rgba(0,0,0,0.35); cursor: default; background: rgba(0,0,0,0.03); }
+        .cal-cell.selected { background: rgba(0,120,212,0.18); box-shadow: inset 0 0 0 2px rgba(0,120,212,0.25); }
+        .cal-cell.today { box-shadow: inset 0 0 0 2px rgba(255, 160, 0, 0.35); }
+
+        /* Settings */
+        .set-nav {
+            padding: 10px 10px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 13px;
+            color: #333;
+            transition: background 0.15s, transform 0.05s;
+            user-select: none;
+        }
+        .set-nav:hover { background: rgba(255,255,255,0.7); }
+        .set-nav:active { transform: translateY(1px); }
+        .set-nav.active { background: rgba(0,120,212,0.14); box-shadow: inset 0 0 0 2px rgba(0,120,212,0.18); font-weight: 800; }
+        .set-wallpapers {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 12px;
+        }
+        .set-wallpaper {
+            border: 1px solid rgba(0,0,0,0.10);
+            border-radius: 12px;
+            background: rgba(255,255,255,0.70);
+            padding: 10px;
+            cursor: pointer;
+            transition: transform 0.05s, box-shadow 0.15s;
+            user-select: none;
+        }
+        .set-wallpaper:hover { box-shadow: 0 16px 36px rgba(0,0,0,0.12); }
+        .set-wallpaper:active { transform: translateY(1px); }
+        .set-wallpaper.selected { outline: 3px solid rgba(0,120,212,0.22); border-color: rgba(0,120,212,0.32); }
+        .set-wallpaper-thumb { height: 90px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.6); }
+        .set-wallpaper-name { margin-top: 8px; font-size: 13px; font-weight: 800; color: #222; }
+
+        /* Code Studio */
+        .code-layout { display:flex; flex-direction:column; height:100%; background:#1e1e1e; }
+        .code-toolbar {
+            padding: 8px;
+            background: #252526;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .code-btn {
+            border: 1px solid rgba(255,255,255,0.10);
+            border-radius: 8px;
+            padding: 8px 10px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: transform 0.05s, filter 0.15s, box-shadow 0.15s;
+            color: white;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .code-btn:hover { filter: brightness(1.05); box-shadow: 0 10px 24px rgba(0,0,0,0.35); }
+        .code-btn:active { transform: translateY(1px); }
+        .code-btn.run { background: #16a34a; }
+        .code-btn.save { background: var(--accent-color); }
+        .code-hint { color: rgba(255,255,255,0.55); font-size: 12px; margin-left: 6px; }
+        .code-editor { flex: 1; position: relative; }
+        .code-monaco { position:absolute; inset:0; }
+        .code-fallback {
+            position:absolute;
+            inset:0;
+            width:100%;
+            height:100%;
+            resize:none;
+            border:none;
+            outline:none;
+            padding: 12px;
+            font-family: Consolas, monospace;
+            font-size: 14px;
+            background: #1e1e1e;
+            color: #d4d4d4;
+            display: none;
+        }
+        .code-console {
+            height: 120px;
+            overflow: auto;
+            padding: 10px;
+            border-top: 1px solid rgba(255,255,255,0.08);
+            background: #0f172a;
+            color: #cbd5e1;
+            font-family: Consolas, monospace;
+            font-size: 13px;
+            white-space: pre-wrap;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div id="desktop"></div>
+
+    <div id="start-menu">
+        <input type="text" class="start-search" placeholder="Type here to search...">
+        <div class="app-grid" id="start-menu-grid">
+            <!-- Apps injected via JS -->
+        </div>
+    </div>
+
+    <div id="taskbar">
+        <div class="start-btn" onclick="System.toggleStartMenu()">
+            <i class="fab fa-windows"></i>
+        </div>
+        <div id="taskbar-apps"></div>
+        <div id="taskbar-tray">
+            <div class="tray-icons" title="System tray" onclick="wm.createWindow(APPS.settings)">
+                <div class="tray-icon" title="Wi‑Fi"><i class="fas fa-wifi"></i></div>
+                <div class="tray-icon" title="Volume"><i class="fas fa-volume-high"></i></div>
+                <div class="tray-icon" title="Battery"><i class="fas fa-battery-three-quarters"></i></div>
+            </div>
+            <div id="clock">12:00 PM<br>1/1/2023</div>
+        </div>
+    </div>
+
+    <div id="loading-overlay">Initializing Python Environment...</div>
+    <div id="context-menu"></div>
+    <div id="modal-overlay"><div class="modal" role="dialog" aria-modal="true"></div></div>
+
+<script>
+/**
+ * ------------------------------------------------------------------
+ * Virtual File System (VFS)
+ * ------------------------------------------------------------------
+ */
+class FileSystem {
+    constructor() {
+        this.storageKey = 'webos_fs';
+        this.root = this.load() || {
+            type: 'dir',
+            children: {
+                'Desktop': { type: 'dir', children: {} },
+                '.Trash': { type: 'dir', children: {} },
+                'Documents': {
+                    type: 'dir',
+                    children: {
+                        'Welcome.txt': { type: 'file', content: 'Welcome to Cloud OS!\n\nThis is a fully functional virtual environment.\nTry opening the Terminal and typing "python" to start coding.' },
+                        'Project.py': { type: 'file', content: 'print("Hello from the virtual file system!")\nfor i in range(5):\n    print(f"Count: {i}")' }
+                    }
+                },
+                'Pictures': {
+                    type: 'dir',
+                    children: {
+                        'Sample.jpg': { type: 'file', content: 'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1400&q=60', mime: 'image/url' }
+                    }
+                },
+                'Videos': {
+                    type: 'dir',
+                    children: {
+                        'BigBuckBunny.mp4': { type: 'file', content: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4', mime: 'video/url' }
+                    }
+                }
+            }
+        };
+    }
+
+    save() {
+        localStorage.setItem(this.storageKey, JSON.stringify(this.root));
+    }
+
+    load() {
+        const data = localStorage.getItem(this.storageKey);
+        return data ? JSON.parse(data) : null;
+    }
+
+    normalize(path) {
+        if (!path) return '/';
+        let p = String(path).replace(/\\/g, '/').trim();
+        if (!p.startsWith('/')) p = '/' + p;
+        p = p.replace(/\/+/g, '/');
+        if (p.length > 1 && p.endsWith('/')) p = p.slice(0, -1);
+        const parts = [];
+        for (const part of p.split('/')) {
+            if (!part || part === '.') continue;
+            if (part === '..') parts.pop();
+            else parts.push(part);
+        }
+        return '/' + parts.join('/');
+    }
+
+    resolve(path) {
+        const p = this.normalize(path);
+        if (p === '/') return this.root;
+        const parts = p.split('/').filter(Boolean);
+        let current = this.root;
+        for (let part of parts) {
+            if (current.type === 'dir' && current.children[part]) {
+                current = current.children[part];
+            } else {
+                return null;
+            }
+        }
+        return current;
+    }
+
+    getParent(path) {
+        const p = this.normalize(path);
+        if (p === '/') return null;
+        const parts = p.split('/').filter(Boolean);
+        parts.pop();
+        return this.resolve('/' + parts.join('/'));
+    }
+
+    exists(path) {
+        return this.resolve(path) !== null;
+    }
+
+    mkdir(path) {
+        const p = this.normalize(path);
+        if (this.exists(p)) return false;
+        const parent = this.getParent(p);
+        const name = p.split('/').pop();
+        if (parent && parent.type === 'dir') {
+            parent.children[name] = { type: 'dir', children: {} };
+            this.save();
+            return true;
+        }
+        return false;
+    }
+
+    writeFile(path, content, meta = {}) {
+        const p = this.normalize(path);
+        const parent = this.getParent(p);
+        const name = p.split('/').pop();
+        if (parent && parent.type === 'dir') {
+            parent.children[name] = { type: 'file', content: content ?? '', ...meta };
+            this.save();
+            return true;
+        }
+        return false;
+    }
+
+    readFile(path) {
+        const node = this.resolve(path);
+        return (node && node.type === 'file') ? (node.content ?? '') : null;
+    }
+
+    delete(path) {
+        const p = this.normalize(path);
+        const permanent = !!arguments?.[1]?.permanent;
+        if (p === '/') return false;
+        if (!permanent && !p.startsWith('/.Trash/')) return this.moveToTrash(p);
+
+        const parent = this.getParent(p);
+        const name = p.split('/').pop();
+        if (parent && parent.children[name]) {
+            delete parent.children[name];
+            this.save();
+            return true;
+        }
+        return false;
+    }
+
+    list(path) {
+        const p = this.normalize(path);
+        const node = this.resolve(p);
+        if (node && node.type === 'dir') {
+            const names = Object.keys(node.children).filter(n => !(p === '/' && n === '.Trash'));
+            names.sort((a, b) => {
+                const ta = node.children[a]?.type === 'dir' ? 0 : 1;
+                const tb = node.children[b]?.type === 'dir' ? 0 : 1;
+                if (ta !== tb) return ta - tb;
+                return a.localeCompare(b);
+            });
+            return names.map(name => ({
+                name,
+                type: node.children[name].type
+            }));
+        }
+        return [];
+    }
+
+    ensureTrash() {
+        if (!this.root?.children?.['.Trash']) this.root.children['.Trash'] = { type: 'dir', children: {} };
+        if (!this.root.children['.Trash'].children) this.root.children['.Trash'].children = {};
+        return this.root.children['.Trash'];
+    }
+
+    cloneNode(node) {
+        return JSON.parse(JSON.stringify(node));
+    }
+
+    moveToTrash(path) {
+        const p = this.normalize(path);
+        if (p === '/' || p === '/.Trash' || p.startsWith('/.Trash/')) return false;
+        const node = this.resolve(p);
+        if (!node) return false;
+        const parent = this.getParent(p);
+        const name = p.split('/').pop();
+        if (!parent || parent.type !== 'dir' || !parent.children[name]) return false;
+
+        const trash = this.ensureTrash();
+        const stamp = Date.now();
+        let key = `${name}__${stamp}`;
+        while (trash.children[key]) key = `${name}__${stamp}__${Math.floor(Math.random() * 1e6)}`;
+
+        const moved = this.cloneNode(node);
+        moved.originalPath = p;
+        moved.deletedAt = stamp;
+        trash.children[key] = moved;
+
+        delete parent.children[name];
+        this.save();
+        return true;
+    }
+
+    restoreFromTrash(key) {
+        const trash = this.ensureTrash();
+        const item = trash.children[key];
+        if (!item) return false;
+
+        const originalPath = this.normalize(item.originalPath || '/');
+        const originalName = originalPath.split('/').filter(Boolean).pop() || 'restored';
+        const originalParentPath = '/' + originalPath.split('/').filter(Boolean).slice(0, -1).join('/');
+
+        let parent = this.resolve(originalParentPath);
+        if (!parent || parent.type !== 'dir') parent = this.root;
+
+        let name = originalName;
+        if (parent.children[name]) {
+            const base = originalName.includes('.') ? originalName.slice(0, originalName.lastIndexOf('.')) : originalName;
+            const ext = originalName.includes('.') ? originalName.slice(originalName.lastIndexOf('.')) : '';
+            name = `${base} (restored)${ext}`;
+            let i = 2;
+            while (parent.children[name]) {
+                name = `${base} (restored ${i})${ext}`;
+                i++;
+            }
+        }
+
+        const restored = this.cloneNode(item);
+        delete restored.originalPath;
+        delete restored.deletedAt;
+        parent.children[name] = restored;
+        delete trash.children[key];
+        this.save();
+        return true;
+    }
+
+    emptyTrash() {
+        const trash = this.ensureTrash();
+        trash.children = {};
+        this.save();
+        return true;
+    }
+}
+
+const fs = new FileSystem();
+
+/**
+ * ------------------------------------------------------------------
+ * Window Manager
+ * ------------------------------------------------------------------
+ */
+class WindowManager {
+    constructor() {
+        this.windows = [];
+        this.activeWindowId = null;
+        this.zIndexCounter = 100;
+        this.desktop = document.getElementById('desktop');
+        this.taskbarApps = document.getElementById('taskbar-apps');
+    }
+
+    createWindow(app) {
+        const id = 'win-' + Date.now();
+        const win = document.createElement('div');
+        win.className = 'window';
+        win.id = id;
+        win.style.left = (50 + (this.windows.length * 20)) + 'px';
+        win.style.top = (50 + (this.windows.length * 20)) + 'px';
+        win.style.width = app.width || '600px';
+        win.style.height = app.height || '400px';
+        win.style.zIndex = ++this.zIndexCounter;
+
+        const title = app.title || 'Application';
+        const icon = app.icon || 'fa-window-maximize';
+
+        win.innerHTML = `
+            <div class="title-bar" onmousedown="wm.startDrag(event, '${id}')">
+                <div class="title-bar-text"><i class="fas ${icon}"></i> ${title}</div>
+                <div class="window-controls">
+                    <button class="control-btn btn-minimize" aria-label="Minimize" onclick="wm.minimize('${id}')"><i class="fas fa-minus"></i></button>
+                    <button class="control-btn btn-maximize" aria-label="Maximize" onclick="wm.maximize('${id}')"><i class="fa-regular fa-square"></i></button>
+                    <button class="control-btn btn-close" aria-label="Close" onclick="wm.close('${id}')"><i class="fas fa-xmark"></i></button>
+                </div>
+            </div>
+            <div class="window-content" id="${id}-content"></div>
+            <div class="resize-handle" onmousedown="wm.startResize(event, '${id}')"></div>
+        `;
+
+        this.desktop.appendChild(win);
+        
+        // Taskbar item
+        const taskItem = document.createElement('div');
+        taskItem.className = 'taskbar-item active';
+        taskItem.id = `task-${id}`;
+        taskItem.onclick = () => wm.restoreOrFocus(id);
+        taskItem.innerHTML = `<i class="fas ${icon}"></i>`;
+        this.taskbarApps.appendChild(taskItem);
+
+        // App Content Init
+        const contentEl = document.getElementById(`${id}-content`);
+        app.init(contentEl, id);
+
+        this.windows.push({ id, app, state: 'normal' });
+        this.focus(id);
+        
+        // Window click focus
+        win.addEventListener('mousedown', () => this.focus(id));
+
+        return id;
+    }
+
+    focus(id) {
+        const win = document.getElementById(id);
+        if (win) {
+            win.style.zIndex = ++this.zIndexCounter;
+            this.activeWindowId = id;
+            
+            // Update taskbar
+            document.querySelectorAll('.taskbar-item').forEach(el => el.classList.remove('active'));
+            const task = document.getElementById(`task-${id}`);
+            if (task) task.classList.add('active');
+        }
+    }
+
+    close(id) {
+        const win = document.getElementById(id);
+        if (win) win.remove();
+        
+        const task = document.getElementById(`task-${id}`);
+        if (task) task.remove();
+
+        this.windows = this.windows.filter(w => w.id !== id);
+    }
+
+    minimize(id) {
+        const win = document.getElementById(id);
+        if (win) {
+            win.style.display = 'none';
+            const task = document.getElementById(`task-${id}`);
+            if (task) task.classList.remove('active');
+        }
+    }
+
+    restoreOrFocus(id) {
+        const win = document.getElementById(id);
+        if (win) {
+            if (win.style.display === 'none') {
+                win.style.display = 'flex';
+                this.focus(id);
+            } else {
+                if (this.activeWindowId === id) {
+                    this.minimize(id);
+                } else {
+                    this.focus(id);
+                }
+            }
+        }
+    }
+
+    maximize(id) {
+        const win = document.getElementById(id);
+        const wObj = this.windows.find(w => w.id === id);
+        if (!win || !wObj) return;
+        const maxIcon = win.querySelector('.btn-maximize i');
+
+        if (wObj.state === 'maximized') {
+            win.style.top = wObj.preTop;
+            win.style.left = wObj.preLeft;
+            win.style.width = wObj.preWidth;
+            win.style.height = wObj.preHeight;
+            wObj.state = 'normal';
+            if (maxIcon) maxIcon.className = 'fa-regular fa-square';
+        } else {
+            wObj.preTop = win.style.top;
+            wObj.preLeft = win.style.left;
+            wObj.preWidth = win.style.width;
+            wObj.preHeight = win.style.height;
+            
+            win.style.top = '0';
+            win.style.left = '0';
+            win.style.width = '100%';
+            win.style.height = 'calc(100% - 48px)';
+            wObj.state = 'maximized';
+            if (maxIcon) maxIcon.className = 'fa-regular fa-window-restore';
+        }
+    }
+
+    // Drag Logic
+    startDrag(e, id) {
+        if (e.target.closest('.window-controls')) return; // Don't drag if clicking controls
+        const win = document.getElementById(id);
+        const wObj = this.windows.find(w => w.id === id);
+        if(wObj.state === 'maximized') return;
+
+        this.focus(id);
+        
+        let shiftX = e.clientX - win.getBoundingClientRect().left;
+        let shiftY = e.clientY - win.getBoundingClientRect().top;
+
+        function moveAt(pageX, pageY) {
+            let top = pageY - shiftY;
+            let left = pageX - shiftX;
+            // Boundaries
+            if (top < 0) top = 0;
+            if (top > window.innerHeight - 48 - 30) top = window.innerHeight - 48 - 30;
+            
+            win.style.left = left + 'px';
+            win.style.top = top + 'px';
+        }
+
+        function onMouseMove(event) {
+            moveAt(event.pageX, event.pageY);
+        }
+
+        document.addEventListener('mousemove', onMouseMove);
+
+        document.onmouseup = function() {
+            document.removeEventListener('mousemove', onMouseMove);
+            document.onmouseup = null;
+        };
+    }
+
+    startResize(e, id) {
+        e.stopPropagation();
+        const win = document.getElementById(id);
+        
+        function onMouseMove(event) {
+            let width = event.pageX - win.getBoundingClientRect().left;
+            let height = event.pageY - win.getBoundingClientRect().top;
+            
+            if (width > 200) win.style.width = width + 'px';
+            if (height > 150) win.style.height = height + 'px';
+        }
+
+        document.addEventListener('mousemove', onMouseMove);
+        document.onmouseup = function() {
+            document.removeEventListener('mousemove', onMouseMove);
+            document.onmouseup = null;
+        };
+    }
+}
+
+const wm = new WindowManager();
+
+/**
+ * ------------------------------------------------------------------
+ * Applications
+ * ------------------------------------------------------------------
+ */
+
+const APPS = {
+    'explorer': {
+        title: 'File Explorer',
+        icon: 'fa-folder-open',
+        width: '760px',
+        height: '520px',
+        init: (el, winId) => {
+            el.dataset.currentPath = fs.normalize(el.dataset.currentPath || '/');
+            el.dataset.selectedName = '';
+
+            el.innerHTML = `
+                <div class="explorer-layout" tabindex="0" onkeydown="APPS.explorer.onKeyDown(event, '${winId}')">
+                    <div class="explorer-toolbar">
+                        <button class="explorer-btn" title="Up" onclick="APPS.explorer.goUp('${winId}')"><i class="fas fa-arrow-up"></i></button>
+                        <button class="explorer-btn" title="Refresh" onclick="APPS.explorer.render('${winId}')"><i class="fas fa-rotate"></i></button>
+                        <input class="explorer-path" id="path-${winId}" value="/" spellcheck="false"
+                               onkeydown="if(event.key==='Enter'){APPS.explorer.goPath('${winId}', this.value)}">
+                        <button class="explorer-btn" onclick="APPS.explorer.promptNewFolder('${winId}')"><i class="fas fa-folder-plus"></i> Folder</button>
+                        <button class="explorer-btn" onclick="APPS.explorer.promptNewFile('${winId}')"><i class="fas fa-file-circle-plus"></i> File</button>
+                        <button class="explorer-btn danger" title="Delete selected" onclick="APPS.explorer.deleteSelected('${winId}')"><i class="fas fa-trash"></i></button>
+                    </div>
+                    <div class="explorer-main">
+                        <div class="explorer-sidebar">
+                            <div class="explorer-side-item" onclick="APPS.explorer.goPath('${winId}', '/')"><i class="fas fa-hdd"></i> This PC</div>
+                            <div class="explorer-side-item" onclick="APPS.explorer.goPath('${winId}', '/Desktop')"><i class="fas fa-desktop"></i> Desktop</div>
+                            <div class="explorer-side-item" onclick="APPS.explorer.goPath('${winId}', '/Documents')"><i class="fas fa-file-lines"></i> Documents</div>
+                            <div class="explorer-side-item" onclick="APPS.explorer.goPath('${winId}', '/Pictures')"><i class="fas fa-images"></i> Pictures</div>
+                            <div class="explorer-side-item" onclick="APPS.explorer.goPath('${winId}', '/Videos')"><i class="fas fa-film"></i> Videos</div>
+                        </div>
+                        <div class="explorer-files" id="files-${winId}"></div>
+                    </div>
+                </div>
+            `;
+
+            APPS.explorer.render(winId);
+        },
+        getStateEl: (winId) => document.getElementById(`${winId}-content`),
+        getCurrentPath: (winId) => fs.normalize(APPS.explorer.getStateEl(winId)?.dataset.currentPath || '/'),
+        setCurrentPath: (winId, path) => {
+            const el = APPS.explorer.getStateEl(winId);
+            if (!el) return;
+            el.dataset.currentPath = fs.normalize(path);
+            el.dataset.selectedName = '';
+        },
+        pickIcon: (name, type) => {
+            if (type === 'dir') return { icon: 'fa-folder', color: '#f2c14e' };
+            const lower = String(name).toLowerCase();
+            if (lower.endsWith('.py')) return { icon: 'fa-python', color: '#3776ab' };
+            if (lower.match(/\.(png|jpg|jpeg|gif|webp)$/)) return { icon: 'fa-image', color: '#6f9ce6' };
+            if (lower.match(/\.(mp4|webm|mov)$/)) return { icon: 'fa-film', color: '#b26bf2' };
+            if (lower.endsWith('.md')) return { icon: 'fa-file-lines', color: '#4b5563' };
+            if (lower.endsWith('.json')) return { icon: 'fa-brackets-curly', color: '#a16207' };
+            if (lower.endsWith('.txt')) return { icon: 'fa-file-alt', color: '#475569' };
+            return { icon: 'fa-file', color: '#475569' };
+        },
+        render: (winId) => {
+            const stateEl = APPS.explorer.getStateEl(winId);
+            if (!stateEl) return;
+            const path = APPS.explorer.getCurrentPath(winId);
+            const node = fs.resolve(path);
+            if (!node || node.type !== 'dir') {
+                APPS.explorer.setCurrentPath(winId, '/');
+                return APPS.explorer.render(winId);
+            }
+
+            const pathInput = document.getElementById(`path-${winId}`);
+            if (pathInput) pathInput.value = path;
+
+            const items = fs.list(path);
+            const container = document.getElementById(`files-${winId}`);
+            if (!container) return;
+            const selectedName = stateEl.dataset.selectedName || '';
+
+            container.innerHTML = items.map(item => {
+                const { icon, color } = APPS.explorer.pickIcon(item.name, item.type);
+                const isSelected = selectedName === item.name;
+                return `
+                    <div class="file-item ${isSelected ? 'selected' : ''}" data-name="${item.name}" data-type="${item.type}"
+                         onclick="APPS.explorer.select('${winId}', '${item.name}')"
+                         ondblclick="APPS.explorer.open('${winId}', '${item.name}', '${item.type}')"
+                         oncontextmenu="APPS.explorer.contextMenu(event, '${winId}', '${item.name}', '${item.type}')">
+                        <i class="fas ${icon} file-icon" style="color:${color}"></i>
+                        <div class="file-name" title="${item.name}">${item.name}</div>
+                    </div>
+                `;
+            }).join('') || `<div style="color:#666; padding:16px;">This folder is empty.</div>`;
+        },
+        goPath: (winId, rawPath) => {
+            const p = fs.normalize(rawPath);
+            if (!fs.exists(p) || fs.resolve(p).type !== 'dir') {
+                System.toast('Folder not found: ' + p);
+                APPS.explorer.render(winId);
+                return;
+            }
+            APPS.explorer.setCurrentPath(winId, p);
+            APPS.explorer.render(winId);
+        },
+        goUp: (winId) => {
+            const cur = APPS.explorer.getCurrentPath(winId);
+            if (cur === '/') return;
+            const parts = cur.split('/').filter(Boolean);
+            parts.pop();
+            const parent = '/' + parts.join('/');
+            APPS.explorer.goPath(winId, parent || '/');
+        },
+        select: (winId, name) => {
+            const stateEl = APPS.explorer.getStateEl(winId);
+            if (!stateEl) return;
+            stateEl.dataset.selectedName = name;
+            APPS.explorer.render(winId);
+        },
+        open: (winId, name, type) => {
+            const cur = APPS.explorer.getCurrentPath(winId);
+            const fullPath = fs.normalize(cur === '/' ? `/${name}` : `${cur}/${name}`);
+            if (type === 'dir') {
+                APPS.explorer.goPath(winId, fullPath);
+                return;
+            }
+            System.openPath(fullPath);
+        },
+        promptNewFolder: async (winId) => {
+            const name = await System.prompt({ title: 'New Folder', message: 'Folder name', defaultValue: '' });
+            if (!name) return;
+            const cur = APPS.explorer.getCurrentPath(winId);
+            const safe = String(name).trim();
+            if (!safe) return;
+            const path = fs.normalize(cur === '/' ? `/${safe}` : `${cur}/${safe}`);
+            if (!fs.mkdir(path)) System.toast('Cannot create folder: ' + path);
+            APPS.explorer.render(winId);
+        },
+        promptNewFile: async (winId) => {
+            const name = await System.prompt({ title: 'New File', message: 'File name (e.g. note.txt)', defaultValue: '' });
+            if (!name) return;
+            const cur = APPS.explorer.getCurrentPath(winId);
+            const safe = String(name).trim();
+            if (!safe) return;
+            const path = fs.normalize(cur === '/' ? `/${safe}` : `${cur}/${safe}`);
+            if (!fs.writeFile(path, '')) System.toast('Cannot create file: ' + path);
+            APPS.explorer.render(winId);
+        },
+        deleteSelected: async (winId) => {
+            const stateEl = APPS.explorer.getStateEl(winId);
+            if (!stateEl) return;
+            const name = stateEl.dataset.selectedName || '';
+            if (!name) return;
+            const cur = APPS.explorer.getCurrentPath(winId);
+            const path = fs.normalize(cur === '/' ? `/${name}` : `${cur}/${name}`);
+            const ok = await System.confirm({ title: 'Delete', message: 'Delete ' + name + ' ?' });
+            if (!ok) return;
+            fs.delete(path);
+            stateEl.dataset.selectedName = '';
+            APPS.explorer.render(winId);
+        },
+        contextMenu: (e, winId, fileName) => {
+            e.preventDefault();
+            const current = APPS.explorer.getCurrentPath(winId);
+            const path = fs.normalize(current === '/' ? `/${fileName}` : `${current}/${fileName}`);
+
+            const menu = document.getElementById('context-menu');
+            menu.style.display = 'block';
+            menu.style.left = e.pageX + 'px';
+            menu.style.top = e.pageY + 'px';
+            
+            menu.innerHTML = `
+                <div onclick="document.getElementById('context-menu').style.display='none'; System.openPath('${path}')">Open</div>
+                <div onclick="fs.delete('${path}'); document.getElementById('context-menu').style.display='none'; APPS.explorer.render('${winId}')">Delete</div>
+            `;
+            
+            document.onclick = () => menu.style.display = 'none';
+        },
+        onKeyDown: (e, winId) => {
+            if (e.key === 'Delete') {
+                e.preventDefault();
+                void APPS.explorer.deleteSelected(winId);
+            }
+        }
+    },
+    'recycleBin': {
+        title: 'Recycle Bin',
+        icon: 'fa-trash',
+        width: '720px',
+        height: '520px',
+        init: (el, winId) => {
+            el.dataset.selectedKey = '';
+            el.innerHTML = `
+                <div style="display:flex; flex-direction:column; height:100%;">
+                    <div class="explorer-toolbar">
+                        <button class="explorer-btn" onclick="APPS.recycleBin.restoreSelected('${winId}')"><i class="fas fa-rotate-left"></i> Restore</button>
+                        <button class="explorer-btn danger" onclick="APPS.recycleBin.deleteSelected('${winId}')"><i class="fas fa-trash"></i> Delete</button>
+                        <div style="flex:1"></div>
+                        <button class="explorer-btn danger" onclick="APPS.recycleBin.empty('${winId}')"><i class="fas fa-broom"></i> Empty</button>
+                    </div>
+                    <div style="flex:1; overflow:auto; padding:12px;">
+                        <div id="rb-list-${winId}" class="picker-list" style="grid-template-columns: 1fr;"></div>
+                    </div>
+                </div>
+            `;
+            APPS.recycleBin.render(winId);
+        },
+        getStateEl: (winId) => document.getElementById(`${winId}-content`),
+        render: (winId) => {
+            const el = APPS.recycleBin.getStateEl(winId);
+            const container = document.getElementById(`rb-list-${winId}`);
+            if (!el || !container) return;
+            const trash = fs.resolve('/.Trash') || { type: 'dir', children: {} };
+            const selectedKey = el.dataset.selectedKey || '';
+            const items = Object.entries(trash.children || {}).map(([key, node]) => ({ key, node }));
+            items.sort((a, b) => (Number(b.node?.deletedAt || 0) - Number(a.node?.deletedAt || 0)));
+
+            if (items.length === 0) {
+                container.innerHTML = `<div style="color:#666; padding:16px;">Recycle Bin is empty.</div>`;
+                return;
+            }
+
+            container.innerHTML = items.map(({ key, node }) => {
+                const isSelected = key === selectedKey;
+                const baseName = String(key).split('__')[0] || 'Item';
+                const type = node?.type === 'dir' ? 'Folder' : 'File';
+                const icon = node?.type === 'dir' ? 'fa-folder' : 'fa-file';
+                const originalPath = node?.originalPath ? String(node.originalPath) : '';
+                const when = node?.deletedAt ? new Date(Number(node.deletedAt)).toLocaleString() : '';
+                return `
+                    <div class="picker-item ${isSelected ? 'selected' : ''}" data-key="${System.escapeHtml(key)}" style="align-items:flex-start;">
+                        <i class="fas ${icon}" style="font-size:20px; color:${node?.type === 'dir' ? '#f2c14e' : '#4b5563'}; margin-top:2px;"></i>
+                        <div class="picker-meta" style="gap:3px; min-width:0;">
+                            <div class="picker-name" title="${System.escapeHtml(baseName)}">${System.escapeHtml(baseName)}</div>
+                            <div class="picker-type" style="display:flex; gap:10px; flex-wrap:wrap;">
+                                <span>${System.escapeHtml(type)}</span>
+                                ${originalPath ? `<span title="${System.escapeHtml(originalPath)}">${System.escapeHtml(originalPath)}</span>` : ''}
+                                ${when ? `<span>${System.escapeHtml(when)}</span>` : ''}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            container.querySelectorAll('.picker-item').forEach((it) => {
+                it.addEventListener('click', () => {
+                    el.dataset.selectedKey = it.dataset.key || '';
+                    APPS.recycleBin.render(winId);
+                });
+                it.addEventListener('dblclick', () => {
+                    el.dataset.selectedKey = it.dataset.key || '';
+                    void APPS.recycleBin.restoreSelected(winId);
+                });
+            });
+        },
+        restoreSelected: async (winId) => {
+            const el = APPS.recycleBin.getStateEl(winId);
+            if (!el) return;
+            const key = el.dataset.selectedKey || '';
+            if (!key) return System.toast('Select an item to restore.');
+            const ok = fs.restoreFromTrash(key);
+            if (!ok) System.toast('Restore failed.');
+            else System.toast('Restored.');
+            el.dataset.selectedKey = '';
+            APPS.recycleBin.render(winId);
+        },
+        deleteSelected: async (winId) => {
+            const el = APPS.recycleBin.getStateEl(winId);
+            if (!el) return;
+            const key = el.dataset.selectedKey || '';
+            if (!key) return System.toast('Select an item to delete.');
+            const ok = await System.confirm({ title: 'Delete permanently', message: 'This item will be removed permanently.' });
+            if (!ok) return;
+            const removed = fs.delete(`/.Trash/${key}`, { permanent: true });
+            if (!removed) System.toast('Delete failed.');
+            else System.toast('Deleted.');
+            el.dataset.selectedKey = '';
+            APPS.recycleBin.render(winId);
+        },
+        empty: async (winId) => {
+            const ok = await System.confirm({ title: 'Empty Recycle Bin', message: 'Remove all items permanently?' });
+            if (!ok) return;
+            fs.emptyTrash();
+            System.toast('Recycle Bin emptied.');
+            APPS.recycleBin.render(winId);
+        }
+    },
+    'notepad': {
+        title: 'Notepad',
+        icon: 'fa-file-alt',
+        init: (el, winId) => {
+            el.innerHTML = `
+                <div style="display:flex; flex-direction:column; height:100%;">
+                    <div class="np-toolbar">
+                        <button class="np-btn" onclick="APPS.notepad.newFile('${winId}')"><i class="fas fa-file-circle-plus"></i> New</button>
+                        <button class="np-btn" onclick="APPS.notepad.open('${winId}')"><i class="fas fa-folder-open"></i> Open</button>
+                        <div style="flex:1"></div>
+                        <button class="np-btn" onclick="APPS.notepad.save('${winId}')"><i class="fas fa-save"></i> Save</button>
+                        <button class="np-btn" onclick="APPS.notepad.saveAs('${winId}')"><i class="fas fa-floppy-disk"></i> Save As</button>
+                    </div>
+                    <textarea class="notepad-area" id="editor-${winId}"></textarea>
+                    <div class="np-status" id="np-status-${winId}"></div>
+                </div>
+            `;
+            el.dataset.filePath = '';
+            el.dataset.dirty = '0';
+
+            const textarea = document.getElementById(`editor-${winId}`);
+            textarea.addEventListener('input', () => {
+                el.dataset.dirty = '1';
+                APPS.notepad.updateTitle(winId);
+                APPS.notepad.updateStatus(winId);
+            });
+            textarea.addEventListener('keydown', (e) => {
+                if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 's') {
+                    e.preventDefault();
+                    APPS.notepad.save(winId);
+                }
+            });
+            APPS.notepad.updateTitle(winId);
+            APPS.notepad.updateStatus(winId);
+        },
+        updateTitle: (winId) => {
+            const el = document.getElementById(`${winId}-content`);
+            if (!el) return;
+            const path = el.dataset.filePath || 'Untitled';
+            const dirty = el.dataset.dirty === '1' ? '*' : '';
+            const win = document.getElementById(winId);
+            if (win) win.querySelector('.title-bar-text').innerHTML = `<i class="fas fa-file-alt"></i> Notepad - ${path}${dirty}`;
+        },
+        updateStatus: (winId) => {
+            const el = document.getElementById(`${winId}-content`);
+            const textarea = document.getElementById(`editor-${winId}`);
+            const status = document.getElementById(`np-status-${winId}`);
+            if (!el || !textarea || !status) return;
+            const text = textarea.value || '';
+            const lines = text.split('\n').length;
+            const cols = (text.split('\n').pop() || '').length + 1;
+            const path = el.dataset.filePath || 'Untitled';
+            status.textContent = `${path}   Ln ${lines}, Col ${cols}`;
+        },
+        newFile: async (winId) => {
+            const el = document.getElementById(`${winId}-content`);
+            const textarea = document.getElementById(`editor-${winId}`);
+            if (!el || !textarea) return;
+            if (el.dataset.dirty === '1') {
+                const ok = await System.confirm({ title: 'Notepad', message: 'Discard unsaved changes?' });
+                if (!ok) return;
+            }
+            textarea.value = '';
+            el.dataset.filePath = '';
+            el.dataset.dirty = '0';
+            APPS.notepad.updateTitle(winId);
+            APPS.notepad.updateStatus(winId);
+        },
+        loadFile: (winId, path) => {
+            const el = document.getElementById(`${winId}-content`);
+            const textarea = document.getElementById(`editor-${winId}`);
+            const p = fs.normalize(path);
+            const content = fs.readFile(p);
+            textarea.value = content ?? '';
+            el.dataset.filePath = p;
+            el.dataset.dirty = '0';
+            APPS.notepad.updateTitle(winId);
+            APPS.notepad.updateStatus(winId);
+        },
+        open: async (winId) => {
+            const el = document.getElementById(`${winId}-content`);
+            if (!el) return;
+            if (el.dataset.dirty === '1') {
+                const ok = await System.confirm({ title: 'Notepad', message: 'Discard unsaved changes?' });
+                if (!ok) return;
+            }
+            System.showFilePicker({
+                title: 'Open',
+                mode: 'openFile',
+                initialPath: '/Documents',
+                acceptExt: ['txt', 'md', 'json', 'log'],
+                onConfirm: (path) => APPS.notepad.loadFile(winId, path)
+            });
+        },
+        save: (winId) => {
+            const el = document.getElementById(`${winId}-content`);
+            const textarea = document.getElementById(`editor-${winId}`);
+            let path = el.dataset.filePath;
+            
+            if (!path) {
+                APPS.notepad.saveAs(winId);
+                return;
+            }
+            
+            fs.writeFile(path, textarea.value ?? '');
+            el.dataset.dirty = '0';
+            APPS.notepad.updateTitle(winId);
+            APPS.notepad.updateStatus(winId);
+        }
+        ,
+        saveAs: (winId) => {
+            const el = document.getElementById(`${winId}-content`);
+            const textarea = document.getElementById(`editor-${winId}`);
+            if (!el || !textarea) return;
+            const currentName = (el.dataset.filePath || '').split('/').pop() || 'note.txt';
+            System.showFilePicker({
+                title: 'Save As',
+                mode: 'saveFile',
+                initialPath: '/Documents',
+                defaultName: currentName,
+                onConfirm: (path) => {
+                    const p = fs.normalize(path);
+                    fs.writeFile(p, textarea.value ?? '');
+                    el.dataset.filePath = p;
+                    el.dataset.dirty = '0';
+                    APPS.notepad.updateTitle(winId);
+                    APPS.notepad.updateStatus(winId);
+                }
+            });
+        }
+    },
+    'terminal': {
+        title: 'Terminal',
+        icon: 'fa-terminal',
+        init: (el, winId) => {
+            el.innerHTML = `
+                <div class="terminal" id="term-${winId}" onclick="document.getElementById('in-${winId}').focus()">
+                    <div class="terminal-output" id="out-${winId}"></div>
+                    <div class="terminal-input-line">
+                        <span class="prompt" id="prompt-${winId}"></span>
+                        <input class="cmd-input" id="in-${winId}" type="text" autocomplete="off">
+                    </div>
+                </div>
+            `;
+            
+            const input = document.getElementById(`in-${winId}`);
+            const output = document.getElementById(`out-${winId}`);
+            let cwd = '/';
+            let mode = 'shell';
+            let pyBuffer = [];
+
+            const history = [];
+            let histIndex = -1;
+            const pyHistory = [];
+            let pyHistIndex = -1;
+
+            const setPrompt = () => {
+                const promptEl = document.getElementById(`prompt-${winId}`);
+                if (!promptEl) return;
+                if (mode === 'python') promptEl.textContent = (pyBuffer.length > 0) ? '... ' : '>>> ';
+                else promptEl.textContent = `${cwd} $`;
+            };
+
+            const writeLine = (text = '') => {
+                const line = document.createElement('div');
+                line.textContent = text;
+                output.appendChild(line);
+                const term = document.getElementById(`term-${winId}`);
+                if (term) term.scrollTop = term.scrollHeight;
+            };
+
+            const writePromptLine = (promptText, commandText) => {
+                const line = document.createElement('div');
+                const p = document.createElement('span');
+                p.style.color = '#28c940';
+                p.textContent = promptText;
+                const c = document.createElement('span');
+                c.textContent = ' ' + commandText;
+                line.appendChild(p);
+                line.appendChild(c);
+                output.appendChild(line);
+                const term = document.getElementById(`term-${winId}`);
+                if (term) term.scrollTop = term.scrollHeight;
+            };
+
+            const parseArgs = (s) => {
+                const out = [];
+                let cur = '';
+                let quote = null;
+                for (let i = 0; i < s.length; i++) {
+                    const ch = s[i];
+                    if (quote) {
+                        if (ch === quote) quote = null;
+                        else if (ch === '\\\\' && i + 1 < s.length) {
+                            i++;
+                            cur += s[i];
+                        } else cur += ch;
+                        continue;
+                    }
+                    if (ch === '"' || ch === "'") {
+                        quote = ch;
+                        continue;
+                    }
+                    if (/\s/.test(ch)) {
+                        if (cur.length) out.push(cur), cur = '';
+                        continue;
+                    }
+                    cur += ch;
+                }
+                if (cur.length) out.push(cur);
+                return out;
+            };
+
+            const resolvePath = (p) => {
+                if (!p || p === '.') return cwd;
+                if (p === '~') return '/';
+                if (p === '..') {
+                    if (cwd === '/') return '/';
+                    const parts = cwd.split('/').filter(Boolean);
+                    parts.pop();
+                    return '/' + parts.join('/');
+                }
+                return fs.normalize(p.startsWith('/') ? p : (cwd === '/' ? `/${p}` : `${cwd}/${p}`));
+            };
+
+            const cmdHelp = () => {
+                writeLine('Commands: ls [dir], cd <dir>, pwd, cat <file>, mkdir <dir>, rm <path>, touch <file>, echo <text> [> file|>> file], open <path>, clear, python [file.py|-c code], help');
+            };
+
+            const runShell = async (raw) => {
+                const trimmed = raw.trim();
+                if (!trimmed) return;
+                const args = parseArgs(trimmed);
+                const command = (args[0] || '').toLowerCase();
+
+                if (command === 'help') return cmdHelp();
+                if (command === 'clear') { output.innerHTML = ''; return; }
+                if (command === 'pwd') return writeLine(cwd);
+
+                if (command === 'ls') {
+                    const target = resolvePath(args[1] || cwd);
+                    const node = fs.resolve(target);
+                    if (!node || node.type !== 'dir') return writeLine(`ls: cannot access '${args[1] || ''}': Not a directory`);
+                    const items = fs.list(target);
+                    writeLine(items.map(i => i.name + (i.type === 'dir' ? '/' : '')).join('  '));
+                    return;
+                }
+
+                if (command === 'cd') {
+                    const target = resolvePath(args[1] || '/');
+                    const node = fs.resolve(target);
+                    if (node && node.type === 'dir') {
+                        cwd = target;
+                        setPrompt();
+                    } else {
+                        writeLine(`cd: ${args[1] || ''}: No such directory`);
+                    }
+                    return;
+                }
+
+                if (command === 'cat') {
+                    const file = args[1];
+                    if (!file) return writeLine('cat: missing file operand');
+                    const p = resolvePath(file);
+                    const node = fs.resolve(p);
+                    if (!node || node.type !== 'file') return writeLine(`cat: ${file}: No such file`);
+                    writeLine(fs.readFile(p) ?? '');
+                    return;
+                }
+
+                if (command === 'mkdir') {
+                    const dir = args[1];
+                    if (!dir) return writeLine('mkdir: missing operand');
+                    const p = resolvePath(dir);
+                    if (!fs.mkdir(p)) return writeLine(`mkdir: cannot create directory '${dir}'`);
+                    return;
+                }
+
+                if (command === 'rm') {
+                    const target = args[1];
+                    if (!target) return writeLine('rm: missing operand');
+                    const p = resolvePath(target);
+                    if (!fs.delete(p)) return writeLine(`rm: cannot remove '${target}'`);
+                    return;
+                }
+
+                if (command === 'touch') {
+                    const file = args[1];
+                    if (!file) return writeLine('touch: missing file operand');
+                    const p = resolvePath(file);
+                    const node = fs.resolve(p);
+                    if (node && node.type === 'dir') return writeLine(`touch: cannot create file '${file}': Is a directory`);
+                    fs.writeFile(p, node?.type === 'file' ? (node.content ?? '') : '');
+                    return;
+                }
+
+                if (command === 'open') {
+                    const target = args[1];
+                    if (!target) return writeLine('open: missing operand');
+                    System.openPath(resolvePath(target));
+                    return;
+                }
+
+                if (command === 'echo') {
+                    const rest = trimmed.slice(4).trim();
+                    const m = rest.match(/^(.*?)(?:\s+(>>|>)\s+(.+))?$/);
+                    const text = (m?.[1] ?? '').replace(/^['"]|['"]$/g, '');
+                    const op = m?.[2] || null;
+                    const dest = m?.[3] ? m[3].trim() : null;
+                    if (op && dest) {
+                        const p = resolvePath(parseArgs(dest)[0] || dest);
+                        const prev = fs.readFile(p);
+                        if (prev === null) fs.writeFile(p, '');
+                        const next = (op === '>>' ? (fs.readFile(p) ?? '') : '') + text + '\n';
+                        fs.writeFile(p, next);
+                        return;
+                    }
+                    writeLine(text);
+                    return;
+                }
+
+                if (command === 'python') {
+                    if (args[1] === '-c') {
+                        const code = trimmed.split(/\s+-c\s+/)[1] || '';
+                        await System.runPython(code, (t) => writeLine(String(t).replace(/\n$/, '')));
+                        return;
+                    }
+                    if (args[1]) {
+                        const p = resolvePath(args[1]);
+                        const content = fs.readFile(p);
+                        if (content === null) return writeLine(`python: ${args[1]}: No such file`);
+                        await System.runPython(content, (t) => writeLine(String(t).replace(/\n$/, '')));
+                        return;
+                    }
+                    mode = 'python';
+                    pyBuffer = [];
+                    setPrompt();
+                    writeLine('Python (Pyodide) — type exit() to return to shell.');
+                    return;
+                }
+
+                writeLine(`${command}: command not found`);
+            };
+
+            const runPythonReplLine = async (rawLine) => {
+                const line = rawLine;
+                if (line.trim() === 'exit()' || line.trim() === 'quit()') {
+                    mode = 'shell';
+                    pyBuffer = [];
+                    setPrompt();
+                    return;
+                }
+
+                if (pyBuffer.length === 0 && line.trim().endsWith(':')) {
+                    pyBuffer.push(line);
+                    setPrompt();
+                    return;
+                }
+
+                if (pyBuffer.length > 0) {
+                    if (line.trim() === '') {
+                        const code = pyBuffer.join('\n');
+                        pyBuffer = [];
+                        setPrompt();
+                        await System.runPython(code, (t) => writeLine(String(t).replace(/\n$/, '')));
+                        return;
+                    }
+                    pyBuffer.push(line);
+                    setPrompt();
+                    return;
+                }
+
+                await System.runPython(line, (t) => writeLine(String(t).replace(/\n$/, '')));
+            };
+
+            writeLine('WebOS Terminal');
+            writeLine("Type 'help' to see commands.");
+            setPrompt();
+
+            input.addEventListener('keydown', async (e) => {
+                if (e.key === 'ArrowUp') {
+                    e.preventDefault();
+                    const h = (mode === 'python') ? pyHistory : history;
+                    const idx = (mode === 'python') ? pyHistIndex : histIndex;
+                    if (h.length === 0) return;
+                    const next = Math.min(h.length - 1, idx + 1);
+                    if (mode === 'python') pyHistIndex = next; else histIndex = next;
+                    input.value = h[h.length - 1 - next] || '';
+                    return;
+                }
+                if (e.key === 'ArrowDown') {
+                    e.preventDefault();
+                    const h = (mode === 'python') ? pyHistory : history;
+                    const idx = (mode === 'python') ? pyHistIndex : histIndex;
+                    if (h.length === 0) return;
+                    const next = Math.max(-1, idx - 1);
+                    if (mode === 'python') pyHistIndex = next; else histIndex = next;
+                    input.value = next === -1 ? '' : (h[h.length - 1 - next] || '');
+                    return;
+                }
+                if (e.key === 'Enter') {
+                    const raw = input.value;
+                    input.value = '';
+
+                    if (mode === 'python') {
+                        if (raw.trim()) pyHistory.push(raw);
+                        pyHistIndex = -1;
+                        writePromptLine(pyBuffer.length > 0 ? '... ' : '>>> ', raw);
+                        await runPythonReplLine(raw);
+                        setPrompt();
+                        return;
+                    }
+
+                    const trimmed = raw.trim();
+                    if (trimmed) history.push(trimmed);
+                    histIndex = -1;
+                    writePromptLine(`${cwd} $`, raw);
+                    await runShell(raw);
+                    setPrompt();
+                }
+            });
+        }
+    },
+    'code': {
+        title: 'Code Studio',
+        icon: 'fa-code',
+        width: '800px',
+        height: '500px',
+        init: (el, winId) => {
+            el.innerHTML = `
+                <div class="code-layout">
+                    <div class="code-toolbar">
+                        <button class="code-btn run" onclick="APPS.code.run('${winId}')"><i class="fas fa-play"></i> Run</button>
+                        <button class="code-btn save" onclick="APPS.code.save('${winId}')"><i class="fas fa-save"></i> Save</button>
+                        <div class="code-hint">Ctrl+Enter to run • Monaco loads from CDN (auto fallback)</div>
+                    </div>
+                    <div class="code-editor">
+                        <div id="monaco-${winId}" class="code-monaco"></div>
+                        <textarea id="fallback-${winId}" class="code-fallback" spellcheck="false"></textarea>
+                    </div>
+                    <div id="console-${winId}" class="code-console"></div>
+                </div>
+            `;
+            
+            el.dataset.filePath = '';
+            el.dataset.editorReady = '0';
+            el.dataset.pendingValue = '';
+
+            const fallback = document.getElementById(`fallback-${winId}`);
+            const consoleDiv = document.getElementById(`console-${winId}`);
+            const defaultCode = '# Write Python code here\nprint("Hello World")\n';
+            fallback.value = defaultCode;
+            consoleDiv.textContent = 'Output console...';
+
+            el.getValue = () => (el.editor ? el.editor.getValue() : fallback.value);
+            el.setValue = (value) => {
+                const v = String(value ?? '');
+                if (el.editor) el.editor.setValue(v);
+                else fallback.value = v;
+            };
+
+            fallback.addEventListener('keydown', (e) => {
+                if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+                    e.preventDefault();
+                    APPS.code.run(winId);
+                }
+            });
+
+            const tryInitMonaco = () => {
+                const monacoHost = document.getElementById(`monaco-${winId}`);
+                if (!monacoHost) return;
+                const enableFallback = () => {
+                    monacoHost.style.display = 'none';
+                    fallback.style.display = 'block';
+                    el.dataset.editorReady = '1';
+                    if (el.dataset.pendingValue) {
+                        fallback.value = el.dataset.pendingValue;
+                        el.dataset.pendingValue = '';
+                    }
+                };
+
+                if (!window.require || !window.require.config) return enableFallback();
+
+                try {
+                    require.config({ paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.36.1/min/vs' }});
+                    require(['vs/editor/editor.main'], () => {
+                        try {
+                            fallback.style.display = 'none';
+                            monacoHost.style.display = 'block';
+                            el.editor = monaco.editor.create(monacoHost, {
+                                value: fallback.value || defaultCode,
+                                language: 'python',
+                                theme: 'vs-dark',
+                                automaticLayout: true,
+                                minimap: { enabled: false }
+                            });
+                            try { el.editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.Enter, () => APPS.code.run(winId)); } catch {}
+                            el.dataset.editorReady = '1';
+                            if (el.dataset.pendingValue) {
+                                el.editor.setValue(el.dataset.pendingValue);
+                                el.dataset.pendingValue = '';
+                            }
+                        } catch {
+                            enableFallback();
+                        }
+                    }, () => enableFallback());
+                } catch {
+                    enableFallback();
+                }
+            };
+
+            tryInitMonaco();
+        },
+        loadFile: (winId, path) => {
+            const el = document.getElementById(`${winId}-content`);
+            const p = fs.normalize(path);
+            const content = fs.readFile(p) ?? '';
+            el.dataset.filePath = p;
+            if (el.dataset.editorReady === '1' && typeof el.setValue === 'function') el.setValue(content);
+            else el.dataset.pendingValue = content;
+            document.getElementById(winId).querySelector('.title-bar-text').innerHTML = `<i class="fas fa-code"></i> Code Studio - ${p}`;
+        },
+        save: (winId) => {
+            const el = document.getElementById(`${winId}-content`);
+            let path = el.dataset.filePath;
+            const doSave = (p) => {
+                const code = (typeof el.getValue === 'function') ? el.getValue() : '';
+                fs.writeFile(p, code ?? '');
+                el.dataset.filePath = p;
+                document.getElementById(winId).querySelector('.title-bar-text').innerHTML = `<i class="fas fa-code"></i> Code Studio - ${p}`;
+            };
+
+            if (!path) {
+                System.showFilePicker({
+                    title: 'Save Python File',
+                    mode: 'saveFile',
+                    initialPath: '/Documents',
+                    defaultName: 'script.py',
+                    onConfirm: (p) => doSave(fs.normalize(p))
+                });
+                return;
+            }
+            doSave(fs.normalize(path));
+        },
+        run: async (winId) => {
+            const el = document.getElementById(`${winId}-content`);
+            const consoleDiv = document.getElementById(`console-${winId}`);
+            consoleDiv.textContent = '';
+            const code = (typeof el.getValue === 'function') ? el.getValue() : '';
+            const write = (t) => {
+                const s = String(t ?? '');
+                consoleDiv.textContent += s.endsWith('\n') ? s : (s + '\n');
+                consoleDiv.scrollTop = consoleDiv.scrollHeight;
+            };
+            write('Running...');
+            await System.runPython(code, (text) => write(text));
+        }
+    },
+    'paint': {
+        title: 'Paint',
+        icon: 'fa-paint-brush',
+        init: (el, winId) => {
+            el.innerHTML = `
+                <div class="paint-layout">
+                    <div class="paint-toolbar">
+                        <input type="color" id="color-${winId}" value="#000000">
+                        <input type="range" id="size-${winId}" min="1" max="20" value="5">
+                        <button onclick="APPS.paint.clear('${winId}')">Clear</button>
+                    </div>
+                    <div class="paint-canvas-wrap">
+                        <canvas id="canvas-${winId}"></canvas>
+                    </div>
+                </div>
+            `;
+
+            const canvas = document.getElementById(`canvas-${winId}`);
+            const wrap = canvas?.parentElement;
+            if (!canvas || !wrap) return;
+            canvas.style.touchAction = 'none';
+
+            const ctx = canvas.getContext('2d');
+            let painting = false;
+
+            const resizeCanvas = () => {
+                const rect = wrap.getBoundingClientRect();
+                const nextW = Math.max(1, Math.floor(rect.width));
+                const nextH = Math.max(1, Math.floor(rect.height));
+                if (canvas.width === nextW && canvas.height === nextH) return;
+
+                const snapshot = document.createElement('canvas');
+                snapshot.width = canvas.width || nextW;
+                snapshot.height = canvas.height || nextH;
+                const sctx = snapshot.getContext('2d');
+                if (sctx && canvas.width && canvas.height) sctx.drawImage(canvas, 0, 0);
+
+                canvas.width = nextW;
+                canvas.height = nextH;
+                if (sctx) ctx.drawImage(snapshot, 0, 0, nextW, nextH);
+            };
+
+            const getPos = (e) => {
+                const rect = canvas.getBoundingClientRect();
+                const scaleX = canvas.width / rect.width;
+                const scaleY = canvas.height / rect.height;
+                return {
+                    x: (e.clientX - rect.left) * scaleX,
+                    y: (e.clientY - rect.top) * scaleY,
+                    scale: (scaleX + scaleY) / 2
+                };
+            };
+
+            const startPosition = (e) => {
+                if (e.button !== undefined && e.button !== 0) return;
+                resizeCanvas();
+                painting = true;
+                canvas.setPointerCapture?.(e.pointerId);
+                const { x, y, scale } = getPos(e);
+                ctx.beginPath();
+                ctx.moveTo(x, y);
+                ctx.lineTo(x, y);
+                ctx.lineWidth = Number(document.getElementById(`size-${winId}`)?.value || 5) * scale;
+                ctx.lineCap = 'round';
+                ctx.strokeStyle = document.getElementById(`color-${winId}`)?.value || '#000000';
+                ctx.stroke();
+            };
+
+            const endPosition = () => {
+                painting = false;
+                ctx.beginPath();
+            };
+
+            const draw = (e) => {
+                if (!painting) return;
+                const { x, y, scale } = getPos(e);
+                ctx.lineWidth = Number(document.getElementById(`size-${winId}`)?.value || 5) * scale;
+                ctx.lineCap = 'round';
+                ctx.strokeStyle = document.getElementById(`color-${winId}`)?.value || '#000000';
+                ctx.lineTo(x, y);
+                ctx.stroke();
+                ctx.beginPath();
+                ctx.moveTo(x, y);
+            };
+
+            canvas.addEventListener('pointerdown', startPosition);
+            canvas.addEventListener('pointerup', endPosition);
+            canvas.addEventListener('pointercancel', endPosition);
+            canvas.addEventListener('pointermove', draw);
+
+            if (window.ResizeObserver) {
+                const ro = new ResizeObserver(() => resizeCanvas());
+                ro.observe(wrap);
+            } else {
+                window.addEventListener('resize', () => resizeCanvas());
+            }
+
+            requestAnimationFrame(() => resizeCanvas());
+        },
+        clear: (winId) => {
+            const canvas = document.getElementById(`canvas-${winId}`);
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+    },
+    'browser': {
+        title: 'Web Browser',
+        icon: 'fa-globe',
+        width: '800px',
+        height: '600px',
+        init: (el, winId) => {
+            el.innerHTML = `
+                <div style="display:flex; flex-direction:column; height:100%;">
+                    <div style="padding:5px; background:#f0f0f0; display:flex; gap:5px;">
+                        <input type="text" id="url-${winId}" value="https://www.wikipedia.org" style="flex:1; padding:5px;">
+                        <button onclick="APPS.browser.go('${winId}')">Go</button>
+                    </div>
+                    <iframe id="iframe-${winId}" src="https://www.wikipedia.org" style="flex:1; border:none; background:white;"></iframe>
+                </div>
+            `;
+        },
+        go: (winId) => {
+            const url = document.getElementById(`url-${winId}`).value;
+            const iframe = document.getElementById(`iframe-${winId}`);
+            if(url.startsWith('http')) {
+                iframe.src = url;
+            } else {
+                iframe.src = 'https://' + url;
+            }
+        }
+    },
+    'photos': {
+        title: 'Photos',
+        icon: 'fa-image',
+        width: '860px',
+        height: '600px',
+        init: (el, winId) => {
+            el.dataset.filePath = el.dataset.filePath || '';
+            el.dataset.zoom = el.dataset.zoom || '100';
+            el.dataset.rot = el.dataset.rot || '0';
+
+            el.innerHTML = `
+                <div style="display:flex; flex-direction:column; height:100%;">
+                    <div class="np-toolbar">
+                        <button class="np-btn" onclick="APPS.photos.open('${winId}')"><i class="fas fa-folder-open"></i> Open</button>
+                        <button class="np-btn" onclick="APPS.photos.rotate('${winId}', -90)"><i class="fas fa-rotate-left"></i></button>
+                        <button class="np-btn" onclick="APPS.photos.rotate('${winId}', 90)"><i class="fas fa-rotate-right"></i></button>
+                        <div style="display:flex; align-items:center; gap:10px; margin-left:6px;">
+                            <span style="font-size:12px; color:#444;">Zoom</span>
+                            <input type="range" min="25" max="200" value="${el.dataset.zoom}" id="ph-zoom-${winId}" style="width:160px"
+                                   oninput="APPS.photos.setZoom('${winId}', this.value)">
+                            <span style="font-size:12px; color:#444; width:44px;" id="ph-zoomval-${winId}">${el.dataset.zoom}%</span>
+                        </div>
+                        <div style="flex:1"></div>
+                        <button class="np-btn" onclick="APPS.photos.fit('${winId}')"><i class="fas fa-expand"></i> Fit</button>
+                        <button class="np-btn" onclick="APPS.photos.actual('${winId}')"><i class="fas fa-square"></i> 100%</button>
+                    </div>
+                    <div style="flex:1; background: radial-gradient(circle at 30% 20%, rgba(255,255,255,0.10), rgba(0,0,0,0.55)), #111; display:flex; align-items:center; justify-content:center; overflow:hidden;">
+                        <img id="ph-img-${winId}" alt="" style="max-width:100%; max-height:100%; transform-origin:center; user-select:none; -webkit-user-drag:none;">
+                    </div>
+                    <div class="np-status" id="ph-status-${winId}">No image loaded</div>
+                </div>
+            `;
+
+            if (el.dataset.filePath) APPS.photos.loadFile(winId, el.dataset.filePath);
+            else {
+                const sample = '/Pictures/Sample.jpg';
+                if (fs.exists(sample)) APPS.photos.loadFile(winId, sample);
+            }
+        },
+        open: (winId) => {
+            System.showFilePicker({
+                title: 'Open Image',
+                mode: 'openFile',
+                initialPath: '/Pictures',
+                acceptExt: ['png', 'jpg', 'jpeg', 'gif', 'webp'],
+                onConfirm: (path) => APPS.photos.loadFile(winId, path)
+            });
+        },
+        loadFile: (winId, path) => {
+            const el = document.getElementById(`${winId}-content`);
+            if (!el) return;
+            const p = fs.normalize(path);
+            const node = fs.resolve(p);
+            const img = document.getElementById(`ph-img-${winId}`);
+            const status = document.getElementById(`ph-status-${winId}`);
+            if (!img || !status) return;
+            if (!node || node.type !== 'file') {
+                status.textContent = 'File not found: ' + p;
+                return;
+            }
+            const src = (node.mime === 'image/url') ? node.content : (typeof node.content === 'string' ? node.content : '');
+            el.dataset.filePath = p;
+            img.src = src;
+            status.textContent = p;
+            const win = document.getElementById(winId);
+            if (win) win.querySelector('.title-bar-text').innerHTML = `<i class="fas fa-image"></i> Photos - ${p}`;
+            APPS.photos.applyTransform(winId);
+        },
+        applyTransform: (winId) => {
+            const el = document.getElementById(`${winId}-content`);
+            const img = document.getElementById(`ph-img-${winId}`);
+            const zoomVal = document.getElementById(`ph-zoomval-${winId}`);
+            if (!el || !img) return;
+            const zoom = Number(el.dataset.zoom || '100');
+            const rot = Number(el.dataset.rot || '0');
+            img.style.transform = `rotate(${rot}deg) scale(${zoom / 100})`;
+            if (zoomVal) zoomVal.textContent = `${zoom}%`;
+        },
+        setZoom: (winId, value) => {
+            const el = document.getElementById(`${winId}-content`);
+            if (!el) return;
+            el.dataset.zoom = String(value);
+            APPS.photos.applyTransform(winId);
+        },
+        rotate: (winId, delta) => {
+            const el = document.getElementById(`${winId}-content`);
+            if (!el) return;
+            el.dataset.rot = String((Number(el.dataset.rot || '0') + delta) % 360);
+            APPS.photos.applyTransform(winId);
+        },
+        fit: (winId) => {
+            const el = document.getElementById(`${winId}-content`);
+            if (!el) return;
+            el.dataset.zoom = '100';
+            el.dataset.rot = el.dataset.rot || '0';
+            APPS.photos.applyTransform(winId);
+        },
+        actual: (winId) => {
+            const el = document.getElementById(`${winId}-content`);
+            if (!el) return;
+            el.dataset.zoom = '100';
+            APPS.photos.applyTransform(winId);
+        }
+    },
+    'game': {
+        title: 'Snake Game',
+        icon: 'fa-gamepad',
+        width: '400px',
+        height: '450px',
+        init: (el, winId) => {
+            el.innerHTML = `
+                <div style="background:#333; height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center;">
+                    <canvas id="snake-${winId}" width="300" height="300" class="snake-canvas"></canvas>
+                    <div style="color:white; margin-top:10px;">Score: <span id="score-${winId}">0</span></div>
+                    <button onclick="APPS.game.start('${winId}')" style="margin-top:10px;">Start Game</button>
+                </div>
+            `;
+        },
+        start: (winId) => {
+            const canvas = document.getElementById(`snake-${winId}`);
+            const ctx = canvas.getContext('2d');
+            const scoreEl = document.getElementById(`score-${winId}`);
+            
+            let snake = [{x: 10, y: 10}];
+            let food = {x: 15, y: 15};
+            let dx = 1, dy = 0; // Moving right
+            let score = 0;
+            const gridSize = 15;
+            const tileCount = 20; // 300 / 15
+            
+            // Controls
+            const handleKey = (e) => {
+                if(!document.getElementById(winId)) { // Window closed
+                    document.removeEventListener('keydown', handleKey);
+                    return;
+                }
+                // Only if window is active
+                if(wm.activeWindowId !== winId) return;
+
+                switch(e.key) {
+                    case 'ArrowUp': if(dy!==1) { dx=0; dy=-1; } break;
+                    case 'ArrowDown': if(dy!==-1) { dx=0; dy=1; } break;
+                    case 'ArrowLeft': if(dx!==1) { dx=-1; dy=0; } break;
+                    case 'ArrowRight': if(dx!==-1) { dx=1; dy=0; } break;
+                }
+            };
+            document.addEventListener('keydown', handleKey);
+            
+            if(el[`interval-${winId}`]) clearInterval(el[`interval-${winId}`]);
+            
+            const gameLoop = () => {
+                // Move
+                const head = {x: snake[0].x + dx, y: snake[0].y + dy};
+                
+                // Collision Wall
+                if (head.x < 0 || head.x >= tileCount || head.y < 0 || head.y >= tileCount) {
+                    clearInterval(interval);
+                    System.alert({ title: 'Game Over', message: 'Score: ' + score });
+                    return;
+                }
+                
+                // Collision Self
+                for(let part of snake) {
+                    if (part.x === head.x && part.y === head.y) {
+                        clearInterval(interval);
+                        System.alert({ title: 'Game Over', message: 'Score: ' + score });
+                        return;
+                    }
+                }
+                
+                snake.unshift(head);
+                
+                // Eat Food
+                if(head.x === food.x && head.y === food.y) {
+                    score++;
+                    scoreEl.innerText = score;
+                    food = {
+                        x: Math.floor(Math.random() * tileCount),
+                        y: Math.floor(Math.random() * tileCount)
+                    };
+                } else {
+                    snake.pop();
+                }
+                
+                // Draw
+                ctx.fillStyle = 'black';
+                ctx.fillRect(0,0,canvas.width, canvas.height);
+                
+                ctx.fillStyle = 'lime';
+                for(let part of snake) {
+                    ctx.fillRect(part.x * gridSize, part.y * gridSize, gridSize-2, gridSize-2);
+                }
+                
+                ctx.fillStyle = 'red';
+                ctx.fillRect(food.x * gridSize, food.y * gridSize, gridSize-2, gridSize-2);
+            };
+            
+            const interval = setInterval(gameLoop, 100);
+            const el = document.getElementById(`${winId}-content`); // Store interval on DOM to clear later
+            el[`interval-${winId}`] = interval;
+        }
+    },
+    'video': {
+        title: 'Video Player',
+        icon: 'fa-video',
+        init: (el, winId) => {
+            const node = el.dataset.filePath ? fs.resolve(el.dataset.filePath) : null;
+            const src = (node && node.type === 'file' && node.mime === 'video/url') ? node.content : 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4';
+            el.innerHTML = `
+                <div style="background:black; height:100%; display:flex; align-items:center; justify-content:center;">
+                    <video controls style="width:100%; max-height:100%;" id="vid-${winId}">
+                        <source src="${src}" type="video/mp4">
+                        Your browser does not support HTML video.
+                    </video>
+                </div>
+            `;
+        },
+        loadFile: (winId, path) => {
+            const el = document.getElementById(`${winId}-content`);
+            if (!el) return;
+            el.dataset.filePath = fs.normalize(path);
+            const node = fs.resolve(el.dataset.filePath);
+            const video = document.getElementById(`vid-${winId}`);
+            if (video && node && node.type === 'file' && node.mime === 'video/url') {
+                video.src = node.content;
+                video.load();
+                document.getElementById(winId).querySelector('.title-bar-text').innerHTML = `<i class="fas fa-video"></i> Video Player - ${el.dataset.filePath}`;
+            }
+        }
+    },
+    'calculator': {
+        title: 'Calculator',
+        icon: 'fa-calculator',
+        width: '300px',
+        height: '400px',
+        init: (el, winId) => {
+            el.innerHTML = `
+                <div style="display:flex; flex-direction:column; height:100%; padding:10px;">
+                    <input type="text" id="calc-display-${winId}" style="width:100%; height:50px; font-size:24px; text-align:right; margin-bottom:10px;" readonly>
+                    <div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:5px; flex:1;">
+                        <button onclick="APPS.calculator.add('${winId}', '7')">7</button>
+                        <button onclick="APPS.calculator.add('${winId}', '8')">8</button>
+                        <button onclick="APPS.calculator.add('${winId}', '9')">9</button>
+                        <button onclick="APPS.calculator.op('${winId}', '/')">/</button>
+                        
+                        <button onclick="APPS.calculator.add('${winId}', '4')">4</button>
+                        <button onclick="APPS.calculator.add('${winId}', '5')">5</button>
+                        <button onclick="APPS.calculator.add('${winId}', '6')">6</button>
+                        <button onclick="APPS.calculator.op('${winId}', '*')">*</button>
+                        
+                        <button onclick="APPS.calculator.add('${winId}', '1')">1</button>
+                        <button onclick="APPS.calculator.add('${winId}', '2')">2</button>
+                        <button onclick="APPS.calculator.add('${winId}', '3')">3</button>
+                        <button onclick="APPS.calculator.op('${winId}', '-')">-</button>
+                        
+                        <button onclick="APPS.calculator.add('${winId}', '0')">0</button>
+                        <button onclick="APPS.calculator.clear('${winId}')">C</button>
+                        <button onclick="APPS.calculator.calc('${winId}')">=</button>
+                        <button onclick="APPS.calculator.op('${winId}', '+')">+</button>
+                    </div>
+                </div>
+            `;
+            el.val = '';
+        },
+        add: (winId, v) => {
+            const display = document.getElementById(`calc-display-${winId}`);
+            display.value += v;
+        },
+        op: (winId, v) => {
+            const display = document.getElementById(`calc-display-${winId}`);
+            display.value += v;
+        },
+        clear: (winId) => {
+            const display = document.getElementById(`calc-display-${winId}`);
+            display.value = '';
+        },
+        calc: (winId) => {
+            const display = document.getElementById(`calc-display-${winId}`);
+            try {
+                display.value = eval(display.value);
+            } catch(e) {
+                display.value = 'Error';
+            }
+        }
+    },
+    'calendar': {
+        title: 'Calendar',
+        icon: 'fa-calendar-days',
+        width: '760px',
+        height: '540px',
+        init: (el, winId) => {
+            const now = new Date();
+            el.dataset.year = el.dataset.year || String(now.getFullYear());
+            el.dataset.month = el.dataset.month || String(now.getMonth());
+            el.dataset.day = el.dataset.day || String(now.getDate());
+
+            el.innerHTML = `
+                <div style="display:flex; flex-direction:column; height:100%;">
+                    <div class="np-toolbar">
+                        <button class="np-btn" onclick="APPS.calendar.prev('${winId}')"><i class="fas fa-chevron-left"></i></button>
+                        <button class="np-btn" onclick="APPS.calendar.next('${winId}')"><i class="fas fa-chevron-right"></i></button>
+                        <button class="np-btn" onclick="APPS.calendar.today('${winId}')"><i class="fas fa-bullseye"></i> Today</button>
+                        <div style="flex:1"></div>
+                        <select class="cal-select" id="cal-year-${winId}" onchange="APPS.calendar.setYearMonth('${winId}')"></select>
+                        <select class="cal-select" id="cal-month-${winId}" onchange="APPS.calendar.setYearMonth('${winId}')"></select>
+                    </div>
+                    <div style="flex:1; display:flex; gap:12px; padding:12px; background:linear-gradient(180deg, rgba(255,255,255,0.80), rgba(255,255,255,0.55)); overflow:hidden;">
+                        <div style="flex:1; min-width:420px; border:1px solid rgba(0,0,0,0.08); border-radius:12px; background:rgba(255,255,255,0.75); overflow:hidden;">
+                            <div class="cal-weekdays">
+                                <div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div>
+                            </div>
+                            <div class="cal-grid" id="cal-grid-${winId}"></div>
+                        </div>
+                        <div style="width:260px; border:1px solid rgba(0,0,0,0.08); border-radius:12px; background:rgba(255,255,255,0.75); padding:12px; display:flex; flex-direction:column; gap:10px;">
+                            <div style="font-weight:800; color:#222; font-size:14px;">Selected</div>
+                            <div id="cal-selected-${winId}" style="font-size:13px; color:#333;"></div>
+                            <div style="height:1px; background:rgba(0,0,0,0.08); margin:6px 0;"></div>
+                            <div style="font-weight:800; color:#222; font-size:14px;">Notes</div>
+                            <textarea id="cal-notes-${winId}" style="flex:1; resize:none; border-radius:10px; border:1px solid rgba(0,0,0,0.12); padding:10px; outline:none; font-family:inherit;"
+                                      placeholder="Write something for this day..."></textarea>
+                            <button class="np-btn" onclick="APPS.calendar.saveNotes('${winId}')"><i class="fas fa-save"></i> Save Note</button>
+                        </div>
+                    </div>
+                    <div class="np-status">1900–2099 supported • Weekday computed locally</div>
+                </div>
+            `;
+
+            APPS.calendar.fillSelects(winId);
+            APPS.calendar.render(winId);
+        },
+        keyFor: (y, m, d) => `webos_cal_note_${y}-${String(m + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`,
+        fillSelects: (winId) => {
+            const el = document.getElementById(`${winId}-content`);
+            if (!el) return;
+            const yearSel = document.getElementById(`cal-year-${winId}`);
+            const monthSel = document.getElementById(`cal-month-${winId}`);
+            if (!yearSel || !monthSel) return;
+            yearSel.innerHTML = '';
+            for (let y = 1900; y <= 2099; y++) {
+                const opt = document.createElement('option');
+                opt.value = String(y);
+                opt.textContent = String(y);
+                yearSel.appendChild(opt);
+            }
+            const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+            monthSel.innerHTML = '';
+            months.forEach((m, idx) => {
+                const opt = document.createElement('option');
+                opt.value = String(idx);
+                opt.textContent = m;
+                monthSel.appendChild(opt);
+            });
+            yearSel.value = el.dataset.year;
+            monthSel.value = el.dataset.month;
+        },
+        setYearMonth: (winId) => {
+            const el = document.getElementById(`${winId}-content`);
+            const yearSel = document.getElementById(`cal-year-${winId}`);
+            const monthSel = document.getElementById(`cal-month-${winId}`);
+            if (!el || !yearSel || !monthSel) return;
+            el.dataset.year = yearSel.value;
+            el.dataset.month = monthSel.value;
+            el.dataset.day = '1';
+            APPS.calendar.render(winId);
+        },
+        render: (winId) => {
+            const el = document.getElementById(`${winId}-content`);
+            if (!el) return;
+            const year = Math.max(1900, Math.min(2099, Number(el.dataset.year || '2000')));
+            const month = Math.max(0, Math.min(11, Number(el.dataset.month || '0')));
+            const selectedDay = Math.max(1, Math.min(31, Number(el.dataset.day || '1')));
+
+            const first = new Date(year, month, 1);
+            const startDow = first.getDay();
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+            const prevDays = new Date(year, month, 0).getDate();
+
+            const grid = document.getElementById(`cal-grid-${winId}`);
+            if (!grid) return;
+            grid.innerHTML = '';
+
+            const today = new Date();
+            const isTodayMonth = today.getFullYear() === year && today.getMonth() === month;
+
+            const cells = [];
+            for (let i = 0; i < startDow; i++) cells.push({ day: prevDays - startDow + 1 + i, inMonth: false });
+            for (let d = 1; d <= daysInMonth; d++) cells.push({ day: d, inMonth: true });
+            while (cells.length % 7 !== 0) cells.push({ day: cells.length - (startDow + daysInMonth) + 1, inMonth: false });
+            while (cells.length < 42) cells.push({ day: cells.length - (startDow + daysInMonth) + 1, inMonth: false });
+
+            cells.slice(0, 42).forEach(c => {
+                const div = document.createElement('div');
+                div.className = 'cal-cell' + (c.inMonth ? '' : ' muted');
+                div.textContent = String(c.day);
+                if (c.inMonth && c.day === selectedDay) div.classList.add('selected');
+                if (c.inMonth && isTodayMonth && c.day === today.getDate()) div.classList.add('today');
+                div.onclick = () => {
+                    if (!c.inMonth) return;
+                    el.dataset.day = String(c.day);
+                    APPS.calendar.render(winId);
+                };
+                grid.appendChild(div);
+            });
+
+            el.dataset.year = String(year);
+            el.dataset.month = String(month);
+            document.getElementById(`cal-year-${winId}`).value = String(year);
+            document.getElementById(`cal-month-${winId}`).value = String(month);
+
+            const selectedDate = new Date(year, month, selectedDay);
+            const label = selectedDate.toLocaleDateString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+            const selectedEl = document.getElementById(`cal-selected-${winId}`);
+            if (selectedEl) selectedEl.textContent = label;
+
+            const notes = document.getElementById(`cal-notes-${winId}`);
+            if (notes) notes.value = localStorage.getItem(APPS.calendar.keyFor(year, month, selectedDay)) || '';
+        },
+        saveNotes: (winId) => {
+            const el = document.getElementById(`${winId}-content`);
+            const notes = document.getElementById(`cal-notes-${winId}`);
+            if (!el || !notes) return;
+            const y = Number(el.dataset.year || '2000');
+            const m = Number(el.dataset.month || '0');
+            const d = Number(el.dataset.day || '1');
+            localStorage.setItem(APPS.calendar.keyFor(y, m, d), notes.value || '');
+        },
+        prev: (winId) => {
+            const el = document.getElementById(`${winId}-content`);
+            if (!el) return;
+            let y = Number(el.dataset.year || '2000');
+            let m = Number(el.dataset.month || '0');
+            m -= 1;
+            if (m < 0) { m = 11; y -= 1; }
+            y = Math.max(1900, y);
+            el.dataset.year = String(y);
+            el.dataset.month = String(m);
+            el.dataset.day = '1';
+            APPS.calendar.render(winId);
+        },
+        next: (winId) => {
+            const el = document.getElementById(`${winId}-content`);
+            if (!el) return;
+            let y = Number(el.dataset.year || '2000');
+            let m = Number(el.dataset.month || '0');
+            m += 1;
+            if (m > 11) { m = 0; y += 1; }
+            y = Math.min(2099, y);
+            el.dataset.year = String(y);
+            el.dataset.month = String(m);
+            el.dataset.day = '1';
+            APPS.calendar.render(winId);
+        },
+        today: (winId) => {
+            const el = document.getElementById(`${winId}-content`);
+            if (!el) return;
+            const now = new Date();
+            el.dataset.year = String(now.getFullYear());
+            el.dataset.month = String(now.getMonth());
+            el.dataset.day = String(now.getDate());
+            APPS.calendar.fillSelects(winId);
+            APPS.calendar.render(winId);
+        }
+    },
+    'settings': {
+        title: 'Settings',
+        icon: 'fa-gear',
+        width: '760px',
+        height: '540px',
+        init: (el, winId) => {
+            const current = System.getThemeState();
+            el.innerHTML = `
+                <div style="display:flex; flex-direction:column; height:100%;">
+                    <div class="np-toolbar">
+                        <div style="font-weight:900; color:#222; display:flex; align-items:center; gap:10px;">
+                            <i class="fas fa-gear"></i> Settings
+                        </div>
+                        <div style="flex:1"></div>
+                        <button class="np-btn" onclick="System.applyTheme(System.getThemeState())"><i class="fas fa-rotate"></i> Re-apply</button>
+                    </div>
+                    <div style="flex:1; display:flex; gap:12px; padding:12px; overflow:auto;">
+                        <div style="width:220px; border:1px solid rgba(0,0,0,0.10); border-radius:12px; background:rgba(255,255,255,0.75); padding:10px; display:flex; flex-direction:column; gap:8px;">
+                            <div class="set-nav active">Personalization</div>
+                            <div class="set-nav">System</div>
+                            <div class="set-nav">About</div>
+                        </div>
+                        <div style="flex:1; border:1px solid rgba(0,0,0,0.10); border-radius:12px; background:rgba(255,255,255,0.75); padding:12px; display:flex; flex-direction:column; gap:14px;">
+                            <div style="font-weight:900; color:#222;">Wallpaper</div>
+                            <div class="set-wallpapers">
+                                ${System.THEMES.map(t => `
+                                    <div class="set-wallpaper ${t.id === current.themeId ? 'selected' : ''}" data-theme="${t.id}" onclick="APPS.settings.pickTheme('${winId}', '${t.id}')">
+                                        <div class="set-wallpaper-thumb" style="background:${t.preview};"></div>
+                                        <div class="set-wallpaper-name">${t.name}</div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                            <div style="height:1px; background:rgba(0,0,0,0.08);"></div>
+                            <div style="font-weight:900; color:#222;">Accent Color</div>
+                            <div style="display:flex; gap:12px; align-items:center;">
+                                <input type="color" id="set-accent-${winId}" value="${current.accent}" onchange="APPS.settings.setAccent('${winId}', this.value)">
+                                <div style="font-size:13px; color:#333;">${current.accent}</div>
+                            </div>
+                            <div style="height:1px; background:rgba(0,0,0,0.08);"></div>
+                            <div style="font-weight:900; color:#222;">Quick Actions</div>
+                            <div style="display:flex; gap:10px; flex-wrap:wrap;">
+                                <button class="np-btn" onclick="wm.createWindow(APPS.explorer)"><i class="fas fa-folder-open"></i> Explorer</button>
+                                <button class="np-btn" onclick="wm.createWindow(APPS.terminal)"><i class="fas fa-terminal"></i> Terminal</button>
+                                <button class="np-btn" onclick="wm.createWindow(APPS.calendar)"><i class="fas fa-calendar-days"></i> Calendar</button>
+                                <button class="np-btn" onclick="wm.createWindow(APPS.photos)"><i class="fas fa-image"></i> Photos</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="np-status">Theme & accent persist in localStorage</div>
+                </div>
+            `;
+        },
+        pickTheme: (winId, themeId) => {
+            const state = System.getThemeState();
+            System.setThemeState({ ...state, themeId });
+            System.applyTheme(System.getThemeState());
+            wm.focus(winId);
+            const el = document.getElementById(`${winId}-content`);
+            if (el) APPS.settings.init(el, winId);
+        },
+        setAccent: (winId, color) => {
+            const state = System.getThemeState();
+            System.setThemeState({ ...state, accent: color });
+            System.applyTheme(System.getThemeState());
+            wm.focus(winId);
+        }
+    }
+};
+
+/**
+ * ------------------------------------------------------------------
+ * System Logic
+ * ------------------------------------------------------------------
+ */
+const System = {
+    THEMES: [
+        {
+            id: 'win11-blue',
+            name: 'Win11 Blue',
+            preview: "linear-gradient(135deg, #0ea5e9, #1d4ed8)",
+            background: "url('https://images.unsplash.com/photo-1579546929518-9e396f3cc809?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') no-repeat center center fixed"
+        },
+        {
+            id: 'aurora',
+            name: 'Aurora',
+            preview: "radial-gradient(circle at 30% 20%, rgba(56,189,248,0.9), rgba(99,102,241,0.9), rgba(15,23,42,1))",
+            background: "radial-gradient(circle at 30% 20%, rgba(56,189,248,0.75), rgba(99,102,241,0.65), rgba(15,23,42,1))"
+        },
+        {
+            id: 'sunset-city',
+            name: 'Sunset City',
+            preview: "linear-gradient(135deg, #fb7185, #f59e0b)",
+            background: "url('https://images.unsplash.com/photo-1496307653780-42ee777d4833?auto=format&fit=crop&w=1920&q=80') no-repeat center center fixed"
+        }
+    ],
+
+    getThemeState: () => {
+        const fallback = { themeId: 'win11-blue', accent: '#0078d4' };
+        try {
+            const raw = localStorage.getItem('webos_theme');
+            if (!raw) return fallback;
+            const parsed = JSON.parse(raw);
+            const themeId = typeof parsed.themeId === 'string' ? parsed.themeId : fallback.themeId;
+            const accent = typeof parsed.accent === 'string' ? parsed.accent : fallback.accent;
+            return { themeId, accent };
+        } catch {
+            return fallback;
+        }
+    },
+
+    setThemeState: (state) => {
+        const themeId = state?.themeId || 'win11-blue';
+        const accent = state?.accent || '#0078d4';
+        localStorage.setItem('webos_theme', JSON.stringify({ themeId, accent }));
+    },
+
+    applyTheme: (state) => {
+        const st = state || System.getThemeState();
+        const theme = System.THEMES.find(t => t.id === st.themeId) || System.THEMES[0];
+        document.body.style.background = theme.background;
+        document.body.style.backgroundSize = theme.background.includes('url(') ? 'cover' : 'auto';
+        document.documentElement.style.setProperty('--accent-color', st.accent || '#0078d4');
+    },
+
+    init: async () => {
+        System.applyTheme(System.getThemeState());
+        System.ensureToastContainer();
+        // Desktop Icons
+        const desktop = document.getElementById('desktop');
+        desktop.innerHTML = '';
+        const shortcuts = [
+            { name: 'This PC', icon: 'fa-desktop', action: () => wm.createWindow(APPS.explorer) },
+            { name: 'Recycle Bin', icon: 'fa-trash', action: () => wm.createWindow(APPS.recycleBin) },
+            { name: 'Browser', icon: 'fa-globe', action: () => wm.createWindow(APPS.browser) },
+            { name: 'Terminal', icon: 'fa-terminal', action: () => wm.createWindow(APPS.terminal) },
+            { name: 'Code Studio', icon: 'fa-code', action: () => wm.createWindow(APPS.code) },
+            { name: 'Notepad', icon: 'fa-file-alt', action: () => wm.createWindow(APPS.notepad) },
+            { name: 'Photos', icon: 'fa-image', action: () => wm.createWindow(APPS.photos) },
+            { name: 'Paint', icon: 'fa-paint-brush', action: () => wm.createWindow(APPS.paint) },
+            { name: 'Calculator', icon: 'fa-calculator', action: () => wm.createWindow(APPS.calculator) },
+            { name: 'Calendar', icon: 'fa-calendar-days', action: () => wm.createWindow(APPS.calendar) },
+            { name: 'Video', icon: 'fa-video', action: () => wm.createWindow(APPS.video) },
+            { name: 'Settings', icon: 'fa-gear', action: () => wm.createWindow(APPS.settings) }
+        ];
+
+        shortcuts.forEach(s => {
+            const div = document.createElement('div');
+            div.className = 'desktop-icon';
+            div.innerHTML = `<i class="fas ${s.icon}"></i><span>${s.name}</span>`;
+            div.onclick = s.action;
+            desktop.appendChild(div);
+        });
+
+        // Start Menu Generation
+        const startGrid = document.getElementById('start-menu-grid');
+        startGrid.innerHTML = '';
+        Object.keys(APPS).forEach(key => {
+            const app = APPS[key];
+            const div = document.createElement('div');
+            div.className = 'app-item';
+            div.innerHTML = `<i class="fas ${app.icon}"></i><span>${app.title}</span>`;
+            div.dataset.title = (app.title || '').toLowerCase();
+            div.onclick = () => {
+                wm.createWindow(app);
+                System.toggleStartMenu();
+            };
+            startGrid.appendChild(div);
+        });
+
+        const search = document.querySelector('.start-search');
+        if (search) {
+            search.value = '';
+            search.addEventListener('input', () => {
+                const q = search.value.trim().toLowerCase();
+                const items = startGrid.querySelectorAll('.app-item');
+                items.forEach(it => {
+                    const t = it.dataset.title || '';
+                    it.style.display = (!q || t.includes(q)) ? 'flex' : 'none';
+                });
+            });
+        }
+
+        // Clock
+        setInterval(() => {
+            const now = new Date();
+            document.getElementById('clock').innerHTML = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) + '<br>' + now.toLocaleDateString();
+        }, 1000);
+
+        // Load Pyodide
+        const loader = document.getElementById('loading-overlay');
+        loader.style.display = 'block';
+        try {
+            window.pyodide = await loadPyodide();
+            // Capture Stdout
+            window.pyodide.setStdout({ batched: (str) => { /* handled dynamically in runPython */ } });
+            loader.style.display = 'none';
+        } catch (e) {
+            loader.innerText = 'Failed to load Python (Network Error?)';
+            console.error(e);
+        }
+    },
+
+    toggleStartMenu: () => {
+        document.getElementById('start-menu').classList.toggle('open');
+    },
+
+    showFilePicker: ({ title = 'Select', mode = 'openFile', initialPath = '/', defaultName = '', acceptExt = null, onConfirm }) => {
+        const overlay = document.getElementById('modal-overlay');
+        const modal = overlay?.querySelector('.modal');
+        if (!overlay || !modal) return;
+
+        const state = {
+            path: fs.normalize(initialPath),
+            selected: '',
+            name: defaultName || ''
+        };
+
+        const isAccepted = (fileName) => {
+            if (!acceptExt || !Array.isArray(acceptExt) || acceptExt.length === 0) return true;
+            const lower = String(fileName).toLowerCase();
+            const ext = lower.includes('.') ? lower.split('.').pop() : '';
+            return acceptExt.includes(ext);
+        };
+
+        const close = () => {
+            overlay.classList.remove('open');
+            document.removeEventListener('keydown', onEsc);
+        };
+
+        const onEsc = (e) => {
+            if (e.key === 'Escape') close();
+        };
+
+        const goPath = (p) => {
+            const np = fs.normalize(p);
+            if (fs.exists(np) && fs.resolve(np).type === 'dir') {
+                state.path = np;
+                state.selected = '';
+                render();
+            }
+        };
+
+        const fullOf = (name) => fs.normalize(state.path === '/' ? `/${name}` : `${state.path}/${name}`);
+
+        const render = () => {
+            const items = fs.list(state.path);
+            modal.innerHTML = `
+                <div class="modal-header">
+                    <div class="modal-title">${title}</div>
+                    <button class="picker-btn" id="picker-close"><i class="fas fa-xmark"></i></button>
+                </div>
+                <div class="modal-body">
+                    <div class="picker-top">
+                        <button class="picker-btn" id="picker-up" title="Up"><i class="fas fa-arrow-up"></i></button>
+                        <input class="picker-path" id="picker-path" value="${state.path}" spellcheck="false">
+                    </div>
+                    <div class="picker-list" id="picker-list">
+                        ${items.map(it => {
+                            const selected = state.selected === it.name ? 'selected' : '';
+                            const icon = it.type === 'dir' ? 'fa-folder' : (it.name.toLowerCase().endsWith('.py') ? 'fa-python' : 'fa-file');
+                            const typeLabel = it.type === 'dir' ? 'Folder' : 'File';
+                            const disabled = (mode === 'openFile' && it.type === 'file' && !isAccepted(it.name)) ? 'data-disabled="1"' : '';
+                            return `
+                                <div class="picker-item ${selected}" data-name="${it.name}" data-type="${it.type}" ${disabled}>
+                                    <i class="fas ${icon}" style="font-size:20px; color:${it.type === 'dir' ? '#f2c14e' : '#4b5563'}"></i>
+                                    <div class="picker-meta">
+                                        <div class="picker-name">${it.name}</div>
+                                        <div class="picker-type">${typeLabel}</div>
+                                    </div>
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+                    ${mode === 'saveFile' ? `
+                        <div class="picker-save">
+                            <div style="font-size:12px; color:#444; width:70px;">File</div>
+                            <input id="picker-name" value="${state.name}" spellcheck="false">
+                        </div>
+                    ` : ''}
+                </div>
+                <div class="modal-footer">
+                    <button class="picker-btn" id="picker-cancel">Cancel</button>
+                    <button class="picker-btn primary" id="picker-ok">${mode === 'saveFile' ? 'Save' : 'Open'}</button>
+                </div>
+            `;
+
+            modal.querySelector('#picker-close')?.addEventListener('click', close);
+            modal.querySelector('#picker-cancel')?.addEventListener('click', close);
+            modal.querySelector('#picker-up')?.addEventListener('click', () => {
+                if (state.path === '/') return;
+                const parts = state.path.split('/').filter(Boolean);
+                parts.pop();
+                goPath('/' + parts.join('/'));
+            });
+            modal.querySelector('#picker-path')?.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') goPath(e.target.value);
+            });
+
+            const list = modal.querySelector('#picker-list');
+            list?.addEventListener('click', (e) => {
+                const item = e.target.closest('.picker-item');
+                if (!item) return;
+                if (item.dataset.disabled === '1') return;
+                state.selected = item.dataset.name || '';
+                render();
+            });
+            list?.addEventListener('dblclick', (e) => {
+                const item = e.target.closest('.picker-item');
+                if (!item) return;
+                if (item.dataset.disabled === '1') return;
+                const name = item.dataset.name || '';
+                const type = item.dataset.type || '';
+                if (type === 'dir') {
+                    goPath(fullOf(name));
+                } else {
+                    state.selected = name;
+                    confirmPick();
+                }
+            });
+
+            const confirmPick = () => {
+                if (typeof onConfirm !== 'function') return close();
+                if (mode === 'openFile') {
+                    if (!state.selected) return;
+                    const full = fullOf(state.selected);
+                    const node = fs.resolve(full);
+                    if (!node || node.type !== 'file') return;
+                    if (!isAccepted(state.selected)) return;
+                    close();
+                    onConfirm(full);
+                    return;
+                }
+                if (mode === 'saveFile') {
+                    const name = modal.querySelector('#picker-name')?.value?.trim();
+                    if (!name) return;
+                    const full = fullOf(name);
+                    close();
+                    onConfirm(full);
+                }
+            };
+
+            modal.querySelector('#picker-ok')?.addEventListener('click', confirmPick);
+        };
+
+        overlay.classList.add('open');
+        document.addEventListener('keydown', onEsc);
+        render();
+    },
+
+    escapeHtml: (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])),
+
+    ensureToastContainer: () => {
+        if (document.getElementById('toast-container')) return;
+        const el = document.createElement('div');
+        el.id = 'toast-container';
+        document.body.appendChild(el);
+    },
+
+    toast: (message, { duration = 2200 } = {}) => {
+        System.ensureToastContainer();
+        const host = document.getElementById('toast-container');
+        if (!host) return;
+        const toast = document.createElement('div');
+        toast.className = 'toast';
+        toast.textContent = String(message ?? '');
+        host.appendChild(toast);
+        const t = setTimeout(() => toast.remove(), Math.max(800, Number(duration) || 2200));
+        toast.addEventListener('click', () => {
+            clearTimeout(t);
+            toast.remove();
+        });
+    },
+
+    showDialog: ({ title = '提示', message = '', buttons, input = null, inputPlaceholder = '', defaultValue = '' } = {}) => {
+        const overlay = document.getElementById('modal-overlay');
+        const modal = overlay?.querySelector('.modal');
+        if (!overlay || !modal) return Promise.resolve(null);
+
+        const safeTitle = System.escapeHtml(title);
+        const safeMessage = System.escapeHtml(message);
+        const btns = Array.isArray(buttons) && buttons.length
+            ? buttons
+            : [{ label: 'OK', value: true, kind: 'primary' }];
+
+        const close = (value) => {
+            overlay.classList.remove('open');
+            document.removeEventListener('keydown', onKeyDown);
+            overlay.removeEventListener('mousedown', onOverlayDown);
+            resolve(value);
+        };
+
+        const onOverlayDown = (e) => {
+            if (e.target === overlay) close(null);
+        };
+
+        const onKeyDown = (e) => {
+            if (e.key === 'Escape') close(null);
+            if (e.key === 'Enter' && input) {
+                const primary = modal.querySelector('[data-primary="1"]');
+                primary?.click();
+            }
+        };
+
+        let resolve = null;
+        const p = new Promise((r) => (resolve = r));
+
+        modal.innerHTML = `
+            <div class="modal-header">
+                <div class="modal-title">${safeTitle}</div>
+                <button class="picker-btn" id="dlg-close" aria-label="Close"><i class="fas fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <div style="font-size:13px; color:#333; line-height:1.45; white-space:pre-wrap;">${safeMessage}</div>
+                ${input ? `
+                    <div style="height:10px;"></div>
+                    <input class="dialog-input" id="dlg-input" value="${System.escapeHtml(defaultValue)}" placeholder="${System.escapeHtml(inputPlaceholder)}" spellcheck="false">
+                ` : ''}
+            </div>
+            <div class="modal-footer">
+                ${btns.map((b, i) => {
+                    const kind = b.kind === 'danger' ? 'danger' : (b.kind === 'primary' ? 'primary' : '');
+                    const primary = b.kind === 'primary' || (!btns.some(x => x.kind === 'primary') && i === btns.length - 1);
+                    return `<button class="picker-btn ${kind}" data-idx="${i}" ${primary ? 'data-primary="1"' : ''}>${System.escapeHtml(b.label ?? 'OK')}</button>`;
+                }).join('')}
+            </div>
+        `;
+
+        overlay.classList.add('open');
+        document.addEventListener('keydown', onKeyDown);
+        overlay.addEventListener('mousedown', onOverlayDown);
+
+        modal.querySelector('#dlg-close')?.addEventListener('click', () => close(null));
+        modal.querySelectorAll('button[data-idx]')?.forEach((btn) => {
+            btn.addEventListener('click', () => {
+                const idx = Number(btn.dataset.idx);
+                const picked = btns[idx];
+                if (input) {
+                    const v = modal.querySelector('#dlg-input')?.value ?? '';
+                    close({ value: picked?.value, input: v });
+                } else {
+                    close(picked?.value);
+                }
+            });
+        });
+
+        if (input) {
+            const inputEl = modal.querySelector('#dlg-input');
+            inputEl?.focus();
+            inputEl?.select?.();
+        } else {
+            modal.querySelector('[data-primary="1"]')?.focus();
+        }
+
+        return p;
+    },
+
+    alert: async ({ title = '提示', message = '' } = {}) => {
+        await System.showDialog({ title, message, buttons: [{ label: 'OK', value: true, kind: 'primary' }] });
+    },
+
+    confirm: async ({ title = '确认', message = '' } = {}) => {
+        const v = await System.showDialog({
+            title,
+            message,
+            buttons: [
+                { label: 'Cancel', value: false },
+                { label: 'OK', value: true, kind: 'primary' }
+            ]
+        });
+        return Boolean(v);
+    },
+
+    prompt: async ({ title = '输入', message = '', defaultValue = '', placeholder = '' } = {}) => {
+        const r = await System.showDialog({
+            title,
+            message,
+            input: true,
+            inputPlaceholder: placeholder,
+            defaultValue,
+            buttons: [
+                { label: 'Cancel', value: null },
+                { label: 'OK', value: true, kind: 'primary' }
+            ]
+        });
+        if (!r || r.value === null) return null;
+        return String(r.input ?? '');
+    },
+
+    openPath: (path) => {
+        const p = fs.normalize(path);
+        if (p === '/.Trash') {
+            wm.createWindow(APPS.recycleBin);
+            return;
+        }
+        const node = fs.resolve(p);
+        if (!node) {
+            System.toast('Not found: ' + p);
+            return;
+        }
+        if (node.type === 'dir') {
+            const winId = wm.createWindow(APPS.explorer);
+            const el = document.getElementById(`${winId}-content`);
+            if (el) el.dataset.currentPath = p;
+            if (APPS.explorer.render) APPS.explorer.render(winId);
+            return;
+        }
+
+        const name = p.split('/').pop().toLowerCase();
+        const openNotepad = () => {
+            const winId = wm.createWindow(APPS.notepad);
+            if (APPS.notepad.loadFile) APPS.notepad.loadFile(winId, p);
+        };
+        const openCode = () => {
+            const winId = wm.createWindow(APPS.code);
+            if (APPS.code.loadFile) APPS.code.loadFile(winId, p);
+        };
+
+        if (name.endsWith('.py')) return openCode();
+        if (name.match(/\.(txt|md|json|log)$/)) return openNotepad();
+
+        if (name.match(/\.(png|jpg|jpeg|gif|webp)$/)) {
+            if (APPS.photos) {
+                const winId = wm.createWindow(APPS.photos);
+                if (APPS.photos.loadFile) APPS.photos.loadFile(winId, p);
+                return;
+            }
+            const url = node.mime === 'image/url' ? node.content : null;
+            if (url) {
+                const winId = wm.createWindow(APPS.browser);
+                const input = document.getElementById(`url-${winId}`);
+                if (input) input.value = url;
+                APPS.browser.go(winId);
+                return;
+            }
+        }
+
+        if (name.match(/\.(mp4|webm|mov)$/)) {
+            const winId = wm.createWindow(APPS.video);
+            if (APPS.video.loadFile) APPS.video.loadFile(winId, p);
+            return;
+        }
+
+        openNotepad();
+    },
+
+    runPython: async (code, outputCallback) => {
+        if (!window.pyodide) {
+            outputCallback('Python is still loading or failed to load.');
+            return;
+        }
+        try {
+            // Redirect stdout for this execution
+            window.pyodide.setStdout({ batched: (str) => outputCallback(str) });
+            await window.pyodide.runPythonAsync(code);
+        } catch (err) {
+            outputCallback('Error: ' + err);
+        }
+    }
+};
+
+// Close start menu when clicking outside
+document.addEventListener('click', (e) => {
+    const startMenu = document.getElementById('start-menu');
+    const startBtn = document.querySelector('.start-btn');
+    if (!startMenu.contains(e.target) && !startBtn.contains(e.target) && startMenu.classList.contains('open')) {
+        startMenu.classList.remove('open');
+    }
+});
+
+// Boot
+window.onload = System.init;
+
+(() => {
+    const nativeAlert = window.alert;
+    window.alert = (msg) => {
+        try { void System.alert({ title: '提示', message: String(msg ?? '') }); }
+        catch { nativeAlert(String(msg ?? '')); }
+    };
+    window.confirm = (msg) => {
+        try { System.toast('Blocked native confirm: ' + String(msg ?? '')); } catch {}
+        return false;
+    };
+    window.prompt = (msg) => {
+        try { System.toast('Blocked native prompt: ' + String(msg ?? '')); } catch {}
+        return null;
+    };
+})();
+
+</script>
+</body>
+</html>

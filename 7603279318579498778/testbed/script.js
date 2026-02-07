@@ -12,6 +12,7 @@ const OS = (() => {
       bt: true,
       silent: false,
       airplane: false,
+      share: true,
     },
 
     notifs: [
@@ -60,6 +61,18 @@ const OS = (() => {
     },
     super: {
       connected: {},
+    },
+    media: {
+      playing: false,
+      title: '午后微风',
+      artist: '华为音乐',
+      progress: 0.32,
+    },
+    settings: {
+      page: 'main',
+    },
+    desktop: {
+      widgets: [],
     },
     gesture: {
       edge: null,
@@ -147,6 +160,15 @@ const OS = (() => {
       icon: `<svg class="w-8 h-8 text-white drop-shadow-md" fill="currentColor" viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58a.49.49 0 00.12-.61l-1.92-3.32a.488.488 0 00-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54a.484.484 0 00-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58a.49.49 0 00-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.58 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>`
     },
     {
+      id: "meetime",
+      name: "畅连",
+      subtitle: "高清通话",
+      color: "from-blue-500 to-indigo-600",
+      dock: false,
+      content: renderMeeTime,
+      icon: `<svg class="w-8 h-8 text-white drop-shadow-md" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>`
+    },
+    {
       id: "notes",
       name: "备忘录",
       subtitle: "文本编辑",
@@ -191,6 +213,10 @@ const OS = (() => {
     if (window.OS && window.OS.setBrightness) window.OS.setBrightness(v);
   };
 
+  window.OS_media = (act, v) => {
+    if (window.OS && window.OS.media) window.OS.media(act, v);
+  };
+
   window.OS_unlock = () => {
     if (window.OS && window.OS.unlock) window.OS.unlock();
   };
@@ -230,7 +256,7 @@ const OS = (() => {
     const root = qs('#os') || document.body;
     const el = document.createElement('div');
     el.id = 'os-input-sheet';
-    el.className = 'fixed inset-0 z-[80] hidden';
+    el.className = 'absolute inset-0 z-[80] hidden';
     el.innerHTML = `
       <div class="absolute inset-0 bg-black/60 backdrop-blur-sm"></div>
       <div class="relative h-full flex items-end sm:items-center justify-center px-4 pb-6 sm:pb-0">
@@ -299,7 +325,7 @@ const OS = (() => {
     const root = qs('#os') || document.body;
     const el = document.createElement('div');
     el.id = 'celia-kbd';
-    el.className = 'fixed left-0 right-0 bottom-0 z-[78] hidden pb-[max(10px,env(safe-area-inset-bottom))]';
+    el.className = 'absolute left-0 right-0 bottom-0 z-[78] hidden pb-[max(10px,env(safe-area-inset-bottom))]';
     el.innerHTML = `
       <div class="mx-auto max-w-[520px] px-4">
         <div class="rounded-[26px] border border-white/12 bg-white/85 text-black shadow-float overflow-hidden">
@@ -518,14 +544,66 @@ const OS = (() => {
   }
 
   function renderGallery() {
+    const w = "日一二三四五六";
+    const formatMonth = (d) => `${d.getFullYear()}年${d.getMonth() + 1}月`;
+    const formatDay = (d) => `${d.getMonth() + 1}月${d.getDate()}日 星期${w.charAt(d.getDay())}`;
+    const clamp = (n, a, b) => Math.max(a, Math.min(b, n));
+
+    const photos = [...state.photos]
+      .map((p, i) => ({ ...p, ts: (typeof p.ts === 'number' ? p.ts : (Date.now() - i * 86400000)) }))
+      .sort((a, b) => (b.ts || 0) - (a.ts || 0));
+
+    const byMonth = new Map();
+    for (const p of photos) {
+      const d = new Date(p.ts);
+      const mKey = formatMonth(d);
+      const dayKey = formatDay(d);
+      if (!byMonth.has(mKey)) byMonth.set(mKey, new Map());
+      const byDay = byMonth.get(mKey);
+      if (!byDay.has(dayKey)) byDay.set(dayKey, []);
+      byDay.get(dayKey).push(p);
+    }
+
+    const monthBlocks = Array.from(byMonth.entries()).map(([mKey, dayMap]) => {
+      const dayBlocks = Array.from(dayMap.entries()).map(([dayKey, items]) => {
+        const tiles = items.map((p, idx) => {
+          const span = idx === 0 ? 'col-span-2 row-span-2' : (idx === 1 ? 'col-span-2 row-span-1' : 'col-span-1 row-span-1');
+          const r = idx === 0 ? 'rounded-[22px]' : 'rounded-[16px]';
+          return `
+            <button type="button" class="relative overflow-hidden bg-white/5 border border-white/10 ${r} active:opacity-80 transition ${span}" onclick="OS_previewPhoto('${p.id}')">
+              <img src="${p.src || ''}" alt="photo" class="absolute inset-0 w-full h-full object-cover" />
+            </button>
+          `;
+        }).join('');
+        return `
+          <div class="space-y-2">
+            <div class="px-2 pt-3 text-[13px] font-semibold text-white/90">${dayKey}</div>
+            <div class="grid grid-cols-4 gap-1 auto-rows-[72px] [grid-auto-flow:dense] px-1">
+              ${tiles}
+            </div>
+          </div>
+        `;
+      }).join('');
+      return `
+        <div class="space-y-2">
+          <div class="px-3 pt-4 text-sm font-bold text-white/85">${mKey}</div>
+          ${dayBlocks}
+        </div>
+      `;
+    }).join('');
+
     return `
-      <div class="grid grid-cols-3 gap-2 p-1">
-        ${state.photos.map(p => `
-          <button class="group relative aspect-square rounded-xl overflow-hidden border border-white/10 bg-white/5 hover:bg-white/10 transition active:scale-95" onclick="OS_previewPhoto('${p.id}')">
-            <img src="${p.src || ''}" alt="photo" class="absolute inset-0 w-full h-full object-cover opacity-95 group-hover:opacity-100 transition" />
-            <div class="absolute bottom-1 right-1 px-1.5 py-0.5 rounded-md bg-black/40 text-[10px] text-white/80">${p.time}</div>
-          </button>
-        `).join('')}
+      <div class="h-full flex flex-col bg-black/95">
+        <div class="flex items-center justify-between px-4 py-3 border-b border-white/10">
+          <div class="text-lg font-bold text-white">图库</div>
+          <div class="flex gap-4 text-sm font-medium text-white/60">
+            <span class="text-white">时刻</span>
+            <span>相册</span>
+          </div>
+        </div>
+        <div class="flex-1 overflow-y-auto pb-4">
+          ${monthBlocks || `<div class="p-6 text-center text-white/45 text-sm">暂无照片</div>`}
+        </div>
       </div>
     `;
   }
@@ -550,23 +628,180 @@ const OS = (() => {
   }
 
   function renderSettings() {
+    const switchHtml = (on) => `
+      <span class="inline-flex items-center w-12 h-7 rounded-full border border-white/10 ${on ? 'bg-blue-500/70' : 'bg-white/10'} transition p-1">
+        <span class="w-5 h-5 rounded-full bg-white ${on ? 'translate-x-5' : 'translate-x-0'} transition-transform"></span>
+      </span>
+    `;
+
+    if (state.settings.page === 'about') {
+      return `
+        <div class="h-full flex flex-col" id="settings-app">
+          <div class="flex items-center gap-2 mb-3">
+            <button type="button" class="px-3 py-2 rounded-xl bg-white/10 hover:bg-white/15 active:scale-[0.98] transition text-xs text-white/85" data-settings-nav="main">← 返回</button>
+            <div class="text-sm font-semibold text-white/90">关于手机</div>
+          </div>
+          <div class="rounded-2xl border border-white/10 bg-white/5 overflow-hidden">
+            <div class="p-4 space-y-3">
+              <div class="flex items-center justify-between">
+                <div class="text-sm text-white/70">设备名称</div>
+                <div class="text-sm text-white/90">HUAWEI Phone（示意）</div>
+              </div>
+              <div class="h-px bg-white/10"></div>
+              <div class="flex items-center justify-between">
+                <div class="text-sm text-white/70">HarmonyOS 版本</div>
+                <div class="text-sm text-white/90">4.0.0</div>
+              </div>
+              <div class="h-px bg-white/10"></div>
+              <div class="flex items-center justify-between">
+                <div class="text-sm text-white/70">版本号</div>
+                <div class="text-sm text-white/90">Build 200（示意）</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
     return `
-      <div class="space-y-3">
-        <div class="p-3 rounded-xl bg-white/5 flex items-center gap-3">
-           <div class="w-12 h-12 rounded-full bg-gray-600"></div>
-           <div>
-             <div class="text-white font-medium">Huawei User</div>
+      <div class="h-full flex flex-col space-y-3" id="settings-app">
+        <div class="p-3 rounded-2xl bg-white/5 flex items-center gap-3">
+           <div class="w-14 h-14 rounded-full bg-gradient-to-br from-slate-500 to-slate-800 border border-white/10"></div>
+           <div class="min-w-0">
+             <div class="text-white font-medium truncate">Huawei User</div>
              <div class="text-white/50 text-xs">HarmonyOS 4.0.0</div>
            </div>
         </div>
-        
-        <div class="space-y-1">
-           ${['WLAN', '蓝牙', '移动网络', '更多连接'].map(item => `
-             <div class="p-3 rounded-xl bg-white/5 flex justify-between items-center text-white text-sm hover:bg-white/10 active:bg-white/15 transition">
-               <span>${item}</span>
-               <span class="text-white/30">></span>
-             </div>
-           `).join('')}
+
+        <div class="rounded-2xl border border-white/10 bg-white/5 overflow-hidden">
+          <div class="px-4 py-3 border-b border-white/10 bg-white/5">
+            <div class="text-[13px] font-semibold text-white/90">连接与共享</div>
+          </div>
+          <div class="p-3 space-y-2">
+            <button type="button" class="w-full p-3 rounded-2xl bg-white/5 hover:bg-white/10 active:bg-white/12 transition flex items-center justify-between" data-setting-toggle="wifi">
+              <div class="text-left">
+                <div class="text-sm text-white/90">WLAN</div>
+                <div class="text-xs text-white/50">${state.sys.wifi ? '已连接' : '已关闭'}</div>
+              </div>
+              ${switchHtml(state.sys.wifi)}
+            </button>
+            <button type="button" class="w-full p-3 rounded-2xl bg-white/5 hover:bg-white/10 active:bg-white/12 transition flex items-center justify-between" data-setting-toggle="bt">
+              <div class="text-left">
+                <div class="text-sm text-white/90">蓝牙</div>
+                <div class="text-xs text-white/50">${state.sys.bt ? '已开启' : '已关闭'}</div>
+              </div>
+              ${switchHtml(state.sys.bt)}
+            </button>
+            <button type="button" class="w-full p-3 rounded-2xl bg-white/5 hover:bg-white/10 active:bg-white/12 transition flex items-center justify-between" data-setting-toggle="share">
+              <div class="text-left">
+                <div class="text-sm text-white/90">华为分享</div>
+                <div class="text-xs text-white/50">${state.sys.share ? '可发现' : '已关闭'}</div>
+              </div>
+              ${switchHtml(state.sys.share)}
+            </button>
+          </div>
+        </div>
+
+        <div class="rounded-2xl border border-white/10 bg-white/5 overflow-hidden">
+          <div class="px-4 py-3 border-b border-white/10 bg-white/5 flex items-center justify-between">
+            <div class="text-[13px] font-semibold text-white/90">显示和亮度</div>
+            <div class="text-[12px] text-white/55 tabular-nums">${Math.round(state.sys.brightness)}%</div>
+          </div>
+          <div class="p-4 flex items-center gap-4">
+            <span class="text-white/70 text-sm">🔆</span>
+            <input data-setting-brightness="1" type="range" class="flex-1 accent-white h-1 bg-white/20 rounded-lg appearance-none" min="0" max="100" value="${state.sys.brightness}">
+          </div>
+        </div>
+
+        <button type="button" class="p-4 rounded-2xl bg-white/5 hover:bg-white/10 active:bg-white/12 transition flex items-center justify-between" data-settings-nav="about">
+          <div class="text-sm text-white/90">关于手机</div>
+          <div class="text-white/30 text-sm">›</div>
+        </button>
+      </div>
+    `;
+  }
+
+  function bindSettings(el) {
+    const app = el.querySelector('#settings-app');
+    if (!app || app.dataset.bound === '1') return;
+    app.dataset.bound = '1';
+
+    app.addEventListener('click', (e) => {
+      const nav = e.target.closest('[data-settings-nav]');
+      if (nav) {
+        state.settings.page = nav.getAttribute('data-settings-nav');
+        const body = el.querySelector('[data-window-content]');
+        if (body) {
+          body.innerHTML = renderSettings();
+          bindSettings(el);
+        }
+        return;
+      }
+      const tog = e.target.closest('[data-setting-toggle]');
+      if (tog) {
+        const key = tog.getAttribute('data-setting-toggle');
+        if (key) {
+          state.sys[key] = !state.sys[key];
+          renderControls();
+          const body = el.querySelector('[data-window-content]');
+          if (body) {
+            body.innerHTML = renderSettings();
+            bindSettings(el);
+          }
+        }
+      }
+    });
+
+    const range = app.querySelector('[data-setting-brightness]');
+    if (range && !range.dataset.bound) {
+      range.dataset.bound = '1';
+      range.addEventListener('input', () => {
+        OS_setBrightness(range.value);
+        const body = el.querySelector('[data-window-content]');
+        if (body) {
+          body.innerHTML = renderSettings();
+          bindSettings(el);
+        }
+      });
+    }
+  }
+
+  function renderMeeTime() {
+    return `
+      <div class="h-full flex flex-col relative overflow-hidden bg-gray-900">
+        <div class="absolute inset-0 z-0">
+          <div class="absolute inset-0 bg-gradient-to-b from-black/30 to-black/60 z-10"></div>
+          <div class="w-full h-full bg-indigo-900/50 backdrop-blur-3xl flex items-center justify-center">
+             <div class="w-48 h-48 rounded-full bg-indigo-500/30 blur-3xl"></div>
+          </div>
+        </div>
+
+        <div class="relative z-10 flex-1 flex flex-col items-center pt-20 px-6">
+           <div class="w-24 h-24 rounded-full bg-gradient-to-br from-indigo-400 to-purple-500 shadow-xl border-4 border-white/10 flex items-center justify-center text-3xl text-white font-bold mb-4">
+             妈
+           </div>
+           <div class="text-2xl text-white font-medium mb-1">妈妈</div>
+           <div class="text-sm text-white/60 mb-8">正在加密通话...</div>
+
+           <div class="mt-auto w-full pb-12 flex justify-around items-center">
+             <button class="flex flex-col items-center gap-2 group">
+               <div class="w-14 h-14 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center group-active:bg-white/20 transition">
+                 <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"/></svg>
+               </div>
+               <span class="text-xs text-white/70">静音</span>
+             </button>
+             
+             <button class="w-16 h-16 rounded-full bg-red-500 flex items-center justify-center shadow-lg shadow-red-500/30 active:scale-95 transition" onclick="OS.closeApp('meetime')">
+               <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M21 15.46l-5.27-1.06a1 1 0 00-1.06.53l-1.2 2.1a16.07 16.07 0 01-7.06-7.06l2.1-1.2a1 1 0 00.53-1.06L8.54 3A1 1 0 007.56 2H3a1 1 0 00-1 1c0 10.49 8.51 19 19 19a1 1 0 001-1v-4.56a1 1 0 00-.99-.98z"/></svg>
+             </button>
+
+             <button class="flex flex-col items-center gap-2 group">
+               <div class="w-14 h-14 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center group-active:bg-white/20 transition">
+                 <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+               </div>
+               <span class="text-xs text-white/70">视频</span>
+             </button>
+           </div>
         </div>
       </div>
     `;
@@ -605,6 +840,7 @@ const OS = (() => {
           if (id === 'messages') bindMessages(w.el);
           if (id === 'notes') bindNotes(w.el, opts);
           if (id === 'browser') bindBrowser(w.el);
+          if (id === 'settings') bindSettings(w.el);
         }
       }
       focusWindow(w.el);
@@ -613,7 +849,7 @@ const OS = (() => {
 
 
     const el = document.createElement('div');
-    el.className = `absolute top-12 left-4 right-4 bottom-20 bg-[#1c1c1e] rounded-[24px] overflow-hidden shadow-2xl border border-white/10 flex flex-col animate-pop origin-bottom pointer-events-auto`;
+    el.className = `absolute top-[calc(env(safe-area-inset-top)+78px)] left-4 right-4 bottom-[calc(env(safe-area-inset-bottom)+94px)] bg-[#1c1c1e] rounded-[24px] overflow-hidden shadow-2xl border border-white/10 flex flex-col animate-pop origin-bottom pointer-events-auto`;
     el.style.zIndex = ++state.z;
 
     el.innerHTML = `
@@ -641,6 +877,7 @@ const OS = (() => {
     if (id === 'messages') bindMessages(el);
     if (id === 'notes') bindNotes(el, opts);
     if (id === 'browser') bindBrowser(el);
+    if (id === 'settings') bindSettings(el);
 
     toast(`打开 ${app.name}`);
   }
@@ -773,7 +1010,7 @@ const OS = (() => {
         ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
         src = canvas.toDataURL('image/jpeg', 0.92);
       }
-      const newPhoto = { id: `p_${Date.now()}`, src: src || makePhotoSrc(Date.now()), time: '刚刚' };
+      const newPhoto = { id: `p_${Date.now()}`, src: src || makePhotoSrc(Date.now()), time: '刚刚', ts: Date.now() };
       state.photos.unshift(newPhoto);
       toast("已保存到图库");
     });
@@ -821,6 +1058,7 @@ const OS = (() => {
   function ensureDefaultPhotos() {
     for (let i = 0; i < state.photos.length; i++) {
       if (!state.photos[i].src) state.photos[i].src = makePhotoSrc(i + 1);
+      if (typeof state.photos[i].ts !== 'number') state.photos[i].ts = Date.now() - i * 86400000 - (i % 5) * 3600000;
     }
   }
 
@@ -829,7 +1067,7 @@ const OS = (() => {
     const root = qs('#os') || document.body;
     const wrap = document.createElement('div');
     wrap.id = 'photo-viewer';
-    wrap.className = 'fixed inset-0 z-[70] hidden';
+    wrap.className = 'absolute inset-0 z-[70] hidden';
     wrap.innerHTML = `
       <div class="absolute inset-0 bg-black/70 backdrop-blur-sm"></div>
       <div class="relative h-full flex flex-col items-center justify-center px-4">
@@ -838,8 +1076,9 @@ const OS = (() => {
             <div class="text-sm text-white/85">照片预览</div>
             <button id="photo-close" class="rounded-xl px-3 py-1.5 text-xs text-white/80 hover:bg-white/10 active:scale-[0.98] transition" type="button">关闭</button>
           </div>
-          <div class="p-3">
-            <img id="photo-img" src="" alt="photo" class="w-full max-h-[70vh] object-contain rounded-2xl bg-black/20" />
+          <div id="photo-stage" class="p-3 touch-none">
+            <img id="photo-img" src="" alt="photo" class="w-full max-h-[70vh] object-contain rounded-2xl bg-black/20 touch-none select-none" style="transform:scale(1); transform-origin:center center;" />
+            <div class="mt-2 text-center text-[11px] text-white/45">双指缩放（示意）</div>
           </div>
         </div>
       </div>
@@ -849,6 +1088,47 @@ const OS = (() => {
     wrap.addEventListener('click', (e) => {
       if (e.target === wrap || e.target === wrap.firstElementChild) wrap.classList.add('hidden');
     });
+
+    const stage = qs('#photo-stage', wrap);
+    const img = qs('#photo-img', wrap);
+    const pv = { pointers: new Map(), startDist: 0, startScale: 1, scale: 1 };
+    wrap._pv = pv;
+
+    const dist = (a, b) => Math.hypot(a.x - b.x, a.y - b.y);
+    const apply = () => { img.style.transform = `scale(${pv.scale})`; };
+    const clampScale = (s) => Math.max(1, Math.min(4, s));
+
+    stage.addEventListener('pointerdown', (e) => {
+      if (e.pointerType === 'mouse' && e.button !== 0) return;
+      stage.setPointerCapture(e.pointerId);
+      pv.pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+      if (pv.pointers.size === 2) {
+        const [p1, p2] = Array.from(pv.pointers.values());
+        pv.startDist = dist(p1, p2);
+        pv.startScale = pv.scale;
+      }
+    });
+    stage.addEventListener('pointermove', (e) => {
+      if (!pv.pointers.has(e.pointerId)) return;
+      pv.pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+      if (pv.pointers.size === 2) {
+        const [p1, p2] = Array.from(pv.pointers.values());
+        const d = dist(p1, p2);
+        if (pv.startDist > 0) {
+          pv.scale = clampScale(pv.startScale * (d / pv.startDist));
+          apply();
+        }
+      }
+    });
+    const end = (e) => {
+      if (pv.pointers.has(e.pointerId)) pv.pointers.delete(e.pointerId);
+      if (pv.pointers.size < 2) {
+        pv.startDist = 0;
+        pv.startScale = pv.scale;
+      }
+    };
+    stage.addEventListener('pointerup', end);
+    stage.addEventListener('pointercancel', end);
   }
 
   function openPhoto(id) {
@@ -858,6 +1138,13 @@ const OS = (() => {
     const viewer = qs('#photo-viewer');
     const img = viewer.querySelector('#photo-img');
     img.src = photo.src || '';
+    if (viewer._pv) {
+      viewer._pv.pointers.clear();
+      viewer._pv.scale = 1;
+      viewer._pv.startScale = 1;
+      viewer._pv.startDist = 0;
+      img.style.transform = 'scale(1)';
+    }
     viewer.classList.remove('hidden');
   }
 
@@ -1268,28 +1555,52 @@ const OS = (() => {
   function renderControls() {
     const p = qs('#panel-controls .content');
     if (!p) return;
+    const mediaPct = Math.round((state.media.progress || 0) * 100);
     p.innerHTML = `
       <div class="p-4 space-y-4">
         <div class="flex justify-between items-center text-white mb-2">
            <span class="font-bold text-lg">控制中心</span>
            <span class="text-sm opacity-50">${nowTimeText()}</span>
         </div>
-        
-        <div class="grid grid-cols-2 gap-3">
-           <button class="bg-white/10 rounded-2xl p-3 flex gap-3 items-center hover:bg-white/20 transition ${state.sys.wifi ? 'bg-blue-500/80' : ''}" onclick="OS_toggle('wifi')">
-              <div class="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center">📶</div>
-              <div class="text-left">
-                 <div class="text-white font-medium">WLAN</div>
-                 <div class="text-white/50 text-xs">${state.sys.wifi ? '已连接' : '关闭'}</div>
-              </div>
-           </button>
-           <button class="bg-white/10 rounded-2xl p-3 flex gap-3 items-center hover:bg-white/20 transition ${state.sys.bt ? 'bg-blue-500/80' : ''}" onclick="OS_toggle('bt')">
-              <div class="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center">ᛒ</div>
-              <div class="text-left">
-                 <div class="text-white font-medium">蓝牙</div>
-                 <div class="text-white/50 text-xs">${state.sys.bt ? '开启' : '关闭'}</div>
-              </div>
-           </button>
+        <div class="grid grid-cols-4 gap-3">
+          <button type="button" class="h-16 w-16 rounded-full border border-white/12 ${state.sys.wifi ? 'bg-blue-500/70' : 'bg-white/10'} hover:bg-white/15 active:scale-[0.98] transition flex flex-col items-center justify-center gap-1" onclick="OS_toggle('wifi')">
+            <div class="text-xl">📶</div>
+            <div class="text-[10px] text-white/80">WLAN</div>
+          </button>
+          <button type="button" class="h-16 w-16 rounded-full border border-white/12 ${state.sys.bt ? 'bg-blue-500/70' : 'bg-white/10'} hover:bg-white/15 active:scale-[0.98] transition flex flex-col items-center justify-center gap-1" onclick="OS_toggle('bt')">
+            <div class="text-xl">ᛒ</div>
+            <div class="text-[10px] text-white/80">蓝牙</div>
+          </button>
+          <button type="button" class="h-16 w-16 rounded-full border border-white/12 ${state.sys.silent ? 'bg-blue-500/70' : 'bg-white/10'} hover:bg-white/15 active:scale-[0.98] transition flex flex-col items-center justify-center gap-1" onclick="OS_toggle('silent')">
+            <div class="text-xl">🔕</div>
+            <div class="text-[10px] text-white/80">静音</div>
+          </button>
+          <button type="button" class="h-16 w-16 rounded-full border border-white/12 ${state.sys.airplane ? 'bg-blue-500/70' : 'bg-white/10'} hover:bg-white/15 active:scale-[0.98] transition flex flex-col items-center justify-center gap-1" onclick="OS_toggle('airplane')">
+            <div class="text-xl">✈</div>
+            <div class="text-[10px] text-white/80">飞行</div>
+          </button>
+        </div>
+
+        <div class="rounded-[28px] border border-white/12 bg-white/8 backdrop-blur-2xl shadow-float overflow-hidden">
+          <div class="p-4 flex items-center gap-4">
+            <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-indigo-400 to-sky-500 border border-white/10"></div>
+            <div class="min-w-0 flex-1">
+              <div class="text-sm font-semibold text-white/90 truncate">${escapeHtml(state.media.title)}</div>
+              <div class="text-xs text-white/55 truncate">${escapeHtml(state.media.artist)}</div>
+            </div>
+            <button type="button" class="w-10 h-10 rounded-full bg-white/10 hover:bg-white/15 active:scale-[0.98] transition grid place-items-center" onclick="OS_media('prev')">⏮</button>
+            <button type="button" class="w-12 h-12 rounded-full ${state.media.playing ? 'bg-blue-500/70' : 'bg-white/10'} hover:bg-white/15 active:scale-[0.98] transition grid place-items-center" onclick="OS_media('toggle')">
+              ${state.media.playing ? '⏸' : '▶'}
+            </button>
+            <button type="button" class="w-10 h-10 rounded-full bg-white/10 hover:bg-white/15 active:scale-[0.98] transition grid place-items-center" onclick="OS_media('next')">⏭</button>
+          </div>
+          <div class="px-4 pb-4">
+            <div class="flex items-center gap-3">
+              <div class="text-[11px] text-white/45 tabular-nums w-8 text-right">${Math.floor(mediaPct / 2)}%</div>
+              <input type="range" class="flex-1 accent-white h-1 bg-white/20 rounded-lg appearance-none" min="0" max="100" value="${mediaPct}" oninput="OS_media('seek', this.value)">
+              <div class="text-[11px] text-white/45 tabular-nums w-8">${mediaPct}%</div>
+            </div>
+          </div>
         </div>
 
         ${renderSuperDevice()}
@@ -1305,33 +1616,66 @@ const OS = (() => {
 
   function renderLockScreen() {
     const el = qs('#panel-lock');
+    if (!el) return;
     if (!state.locked) {
       el.classList.add('opacity-0', 'pointer-events-none');
       return;
     }
     el.classList.remove('opacity-0', 'pointer-events-none');
-    el.innerHTML = `
-      <div class="h-full flex flex-col items-center pt-20 pb-10 px-6 text-white bg-black/40 backdrop-blur-xl">
-         <div class="text-6xl font-light tracking-tighter mb-2">${nowTimeText()}</div>
-         <div class="text-lg opacity-80 mb-12">${dateText()}</div>
-         
-         <div class="flex-1 w-full max-w-xs space-y-2">
-            ${state.notifs.map(n => `
-               <div class="bg-white/10 rounded-xl p-3 backdrop-blur-md">
-                  <div class="font-medium text-sm">${n.title}</div>
-                  <div class="text-xs opacity-70">${n.body}</div>
-               </div>
-            `).join('')}
-         </div>
+    if (el.dataset.lockBuilt !== '1') {
+      el.dataset.lockBuilt = '1';
+      el.innerHTML = `
+        <div class="absolute inset-0 bg-black/55"></div>
+        <div class="absolute inset-0 bg-gradient-to-b from-black/55 via-black/75 to-black/90"></div>
+        <div class="relative h-full px-6 pt-[max(20px,env(safe-area-inset-top))] pb-[max(18px,env(safe-area-inset-bottom))] touch-none select-none">
+          <div class="mx-auto max-w-[520px] h-full flex flex-col">
+            <div class="mt-10 text-center">
+              <p id="lock-time-live" class="text-[56px] font-semibold tracking-tight tabular-nums leading-none">--:--</p>
+              <p id="lock-date-live" class="mt-2 text-[13px] text-white/70">—</p>
+            </div>
 
-         <div class="mt-8 flex flex-col items-center gap-4 w-full">
-            <div class="text-sm opacity-50 mb-2">向上滑动解锁</div>
-            <div class="w-12 h-1 bg-white/50 rounded-full"></div>
-         </div>
-         
-         <button class="absolute inset-0 w-full h-full cursor-default z-10" onclick="OS_unlock()"></button>
-      </div>
-    `;
+            <div class="mt-8 rounded-[28px] border border-white/12 bg-white/6 backdrop-blur-2xl shadow-float overflow-hidden">
+              <div class="px-4 py-3 border-b border-white/10 bg-white/5 flex items-center justify-between">
+                <p class="text-[13px] font-semibold text-white/90">锁屏通知</p>
+                <button id="btn-lock-clear" type="button" class="rounded-2xl border border-white/10 bg-white/8 px-3 py-2 text-[13px] text-white/85 hover:bg-white/12 active:scale-[0.98] transition">清除</button>
+              </div>
+              <div id="lock-notifs" class="p-4 space-y-3 max-h-[34vh] overflow-auto"></div>
+            </div>
+
+            <div class="mt-auto pb-8 flex flex-col items-center gap-3">
+              <div class="text-[13px] text-white/60">向上滑动解锁</div>
+              <div class="w-12 h-1 rounded-full bg-white/45"></div>
+            </div>
+          </div>
+
+          <button id="lock-tap-unlock" type="button" class="absolute inset-0 w-full h-full cursor-default z-10 outline-none"></button>
+        </div>
+      `;
+
+      qs('#lock-tap-unlock', el)?.addEventListener('click', unlock);
+      qs('#btn-lock-clear', el)?.addEventListener('click', (e) => {
+        e.preventDefault();
+        state.notifs = [];
+        const list = qs('#lock-notifs', el);
+        if (list) list.innerHTML = '';
+        toast('已清除');
+      });
+    }
+
+    const timeEl = qs('#lock-time-live', el);
+    if (timeEl) timeEl.textContent = nowTimeText();
+    const dateEl = qs('#lock-date-live', el);
+    if (dateEl) dateEl.textContent = dateText();
+    const list = qs('#lock-notifs', el);
+    if (list && list.dataset.built !== '1') {
+      list.dataset.built = '1';
+      list.innerHTML = state.notifs.map(n => `
+        <div class="bg-white/10 rounded-xl p-3 backdrop-blur-md">
+          <div class="font-medium text-sm">${escapeHtml(n.title)}</div>
+          <div class="text-xs opacity-70">${escapeHtml(n.body)}</div>
+        </div>
+      `).join('');
+    }
   }
 
   function unlock() {
@@ -1345,7 +1689,7 @@ const OS = (() => {
     const root = qs('#os') || document.body;
     const el = document.createElement('div');
     el.id = 'service-widget';
-    el.className = 'fixed inset-0 z-[75] hidden';
+    el.className = 'absolute inset-0 z-[75] hidden';
     el.innerHTML = `
       <div class="absolute inset-0 bg-black/50 backdrop-blur-sm"></div>
       <div class="absolute left-0 right-0 bottom-0 pb-[max(12px,env(safe-area-inset-bottom))] px-4">
@@ -1413,7 +1757,7 @@ const OS = (() => {
     `;
   }
 
-  function openServiceWidget(appId) {
+  function openServiceWidget(appId, opts = {}) {
     ensureServiceWidget();
     const el = qs('#service-widget');
     const title = qs('#service-widget-title', el);
@@ -1422,6 +1766,49 @@ const OS = (() => {
     title.textContent = app ? `${app.name} · 服务卡片` : '服务卡片';
     body.innerHTML = widgetHtmlFor(appId);
     el.classList.remove('hidden');
+    const sheet = qs('#service-widget-sheet', el);
+    const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const sourceRect = opts && opts.sourceRect ? opts.sourceRect : null;
+    if (sheet && sourceRect && !reduceMotion) {
+      sheet.style.opacity = '0';
+      requestAnimationFrame(() => {
+        const endRect = sheet.getBoundingClientRect();
+        const scaleX = sourceRect.width / endRect.width;
+        const scaleY = sourceRect.height / endRect.height;
+        const translateX = sourceRect.left - endRect.left;
+        const translateY = sourceRect.top - endRect.top;
+        const morph = document.createElement('div');
+        morph.className = 'fixed z-[76] overflow-hidden';
+        morph.style.left = `${endRect.left}px`;
+        morph.style.top = `${endRect.top}px`;
+        morph.style.width = `${endRect.width}px`;
+        morph.style.height = `${endRect.height}px`;
+        morph.style.borderRadius = '28px';
+        morph.style.background = 'rgba(0,0,0,.45)';
+        morph.style.backdropFilter = 'blur(18px)';
+        morph.style.border = '1px solid rgba(255,255,255,.12)';
+        morph.style.boxShadow = '0 12px 50px rgba(0,0,0,.55), 0 1px 0 rgba(255,255,255,.06) inset';
+        morph.innerHTML = `
+          <div class="px-4 py-3 border-b border-white/10 bg-white/5 flex items-center justify-between">
+            <div class="text-[14px] font-semibold text-white/90">${escapeHtml(app ? `${app.name} · 服务卡片` : '服务卡片')}</div>
+          </div>
+          <div class="p-4">${widgetHtmlFor(appId)}</div>
+        `;
+        document.body.appendChild(morph);
+        morph.animate([
+          { transformOrigin: '0 0', transform: `translate(${translateX}px, ${translateY}px) scale(${scaleX}, ${scaleY})`, opacity: 0.92 },
+          { transformOrigin: '0 0', transform: 'translate(0px, 0px) scale(1, 1)', opacity: 1 }
+        ], { duration: 260, easing: 'cubic-bezier(.2,.8,.2,1)', fill: 'both' }).finished.then(() => {
+          morph.remove();
+          sheet.style.opacity = '1';
+        }).catch(() => {
+          morph.remove();
+          sheet.style.opacity = '1';
+        });
+      });
+    } else if (sheet) {
+      sheet.style.opacity = '1';
+    }
 
     body.querySelectorAll('[data-widget-open]').forEach(btn => {
       btn.addEventListener('click', () => {
@@ -1434,6 +1821,325 @@ const OS = (() => {
         openPhoto(btn.getAttribute('data-widget-photo'));
       });
     });
+  }
+
+  function ensureServiceCenter() {
+    if (qs('#service-center')) return;
+    const root = qs('#os') || document.body;
+    const el = document.createElement('div');
+    el.id = 'service-center';
+    el.className = 'absolute inset-0 z-[58] hidden pointer-events-none';
+    el.innerHTML = `
+      <div id="service-center-scrim" class="absolute inset-0 bg-black/20 backdrop-blur-sm opacity-0 transition-opacity duration-300"></div>
+      <div id="service-center-panel" class="absolute inset-x-0 bottom-0 top-20 bg-[#f2f3f5] rounded-t-[32px] transform translate-y-full transition-transform duration-300 ease-out flex flex-col overflow-hidden pointer-events-auto">
+        <div class="px-6 py-4 flex items-center justify-between bg-white/50 backdrop-blur-xl border-b border-black/5">
+          <div class="text-lg font-bold text-gray-900">服务中心</div>
+          <button id="service-center-close" class="w-8 h-8 rounded-full bg-black/5 flex items-center justify-center text-gray-500 hover:bg-black/10 transition">×</button>
+        </div>
+        <div class="flex-1 overflow-y-auto p-4 space-y-6">
+           <div class="h-32 rounded-2xl bg-gradient-to-r from-blue-500 to-cyan-400 p-4 text-white flex flex-col justify-between shadow-lg shadow-blue-500/20">
+             <div class="font-bold text-lg">发现服务</div>
+             <div class="text-sm opacity-90">添加到桌面，信息直达</div>
+           </div>
+           <div>
+             <div class="text-sm font-semibold text-gray-500 mb-3 px-1">推荐卡片</div>
+             <div class="grid grid-cols-2 gap-3">
+               <div class="bg-white rounded-2xl p-3 shadow-sm border border-black/5 space-y-2">
+                 <div class="flex items-center gap-2">
+                   <div class="w-6 h-6 rounded-lg bg-orange-500 flex items-center justify-center text-white text-xs">☀</div>
+                   <span class="text-sm font-medium text-gray-800">天气</span>
+                 </div>
+                 <div class="text-2xl font-light text-gray-900">26°</div>
+                 <div class="text-xs text-gray-500">晴 · 空气优</div>
+                 <div class="pt-1">
+                   <button type="button" class="w-full px-3 py-2 rounded-xl bg-black/5 text-gray-700 text-xs hover:bg-black/10 active:scale-[0.98] transition" data-service-add="weather">添加到桌面</button>
+                 </div>
+               </div>
+               <div class="bg-white rounded-2xl p-3 shadow-sm border border-black/5 space-y-2">
+                 <div class="flex items-center gap-2">
+                   <div class="w-6 h-6 rounded-lg bg-green-500 flex items-center justify-center text-white text-xs">🏃</div>
+                   <span class="text-sm font-medium text-gray-800">运动健康</span>
+                 </div>
+                 <div class="text-2xl font-light text-gray-900">3,201</div>
+                 <div class="text-xs text-gray-500">步数 · 目标 10,000</div>
+                 <div class="pt-1">
+                   <button type="button" class="w-full px-3 py-2 rounded-xl bg-black/5 text-gray-700 text-xs hover:bg-black/10 active:scale-[0.98] transition" data-service-add="steps">添加到桌面</button>
+                 </div>
+               </div>
+               <div class="bg-white rounded-2xl p-3 shadow-sm border border-black/5 space-y-2">
+                 <div class="flex items-center gap-2">
+                   <div class="w-6 h-6 rounded-lg bg-blue-500 flex items-center justify-center text-white text-xs">📅</div>
+                   <span class="text-sm font-medium text-gray-800">日程</span>
+                 </div>
+                 <div class="text-sm text-gray-900">下午 3:00 会议</div>
+                 <div class="text-xs text-gray-500">还有 1 小时</div>
+                 <div class="pt-1">
+                   <button type="button" class="w-full px-3 py-2 rounded-xl bg-black/5 text-gray-700 text-xs hover:bg-black/10 active:scale-[0.98] transition" data-service-add="calendar">添加到桌面</button>
+                 </div>
+               </div>
+               <button type="button" class="bg-white rounded-2xl p-3 shadow-sm border border-black/5 flex flex-col items-center justify-center gap-2 hover:bg-black/[0.03] active:scale-[0.98] transition" data-system-sheet="earphones">
+                 <div class="w-10 h-10 rounded-2xl bg-black/5 flex items-center justify-center text-lg">🎧</div>
+                 <div class="text-sm font-medium text-gray-800">耳机连接</div>
+                 <div class="text-xs text-gray-500">系统弹窗演示</div>
+               </button>
+             </div>
+           </div>
+           <div>
+             <div class="text-sm font-semibold text-gray-500 mb-3 px-1">系统提示</div>
+             <div class="space-y-2">
+               <button type="button" class="w-full bg-white rounded-2xl p-3 shadow-sm border border-black/5 flex items-center justify-between hover:bg-black/[0.03] active:scale-[0.98] transition" data-system-sheet="lowBattery">
+                 <div class="flex items-center gap-3">
+                   <div class="w-10 h-10 rounded-2xl bg-black/5 flex items-center justify-center text-lg">🪫</div>
+                   <div class="text-left">
+                     <div class="text-sm font-medium text-gray-800">低电量</div>
+                     <div class="text-xs text-gray-500">系统级 Sheet（示意）</div>
+                   </div>
+                 </div>
+                 <div class="text-gray-300 text-sm">›</div>
+               </button>
+             </div>
+           </div>
+        </div>
+      </div>
+    `;
+    root.appendChild(el);
+    
+    const scrim = qs('#service-center-scrim', el);
+    const panel = qs('#service-center-panel', el);
+    const close = qs('#service-center-close', el);
+    
+    const hide = () => {
+       scrim.classList.remove('opacity-100');
+       scrim.classList.add('opacity-0');
+       panel.classList.remove('translate-y-0');
+       panel.classList.add('translate-y-full');
+       setTimeout(() => el.classList.add('hidden'), 300);
+    };
+
+    close.addEventListener('click', hide);
+    scrim.addEventListener('click', hide);
+
+    el.addEventListener('click', (e) => {
+      const add = e.target.closest('[data-service-add]');
+      if (add) {
+        const type = add.getAttribute('data-service-add');
+        if (type) {
+          addDesktopWidget(type);
+          toast('已添加到桌面');
+          hide();
+        }
+        return;
+      }
+      const sys = e.target.closest('[data-system-sheet]');
+      if (sys) {
+        const kind = sys.getAttribute('data-system-sheet');
+        if (kind) openSystemSheet(kind);
+      }
+    });
+  }
+
+  function openServiceCenter() {
+    ensureServiceCenter();
+    const el = qs('#service-center');
+    el.classList.remove('hidden');
+    el.offsetHeight;
+    
+    const scrim = qs('#service-center-scrim', el);
+    const panel = qs('#service-center-panel', el);
+    
+    scrim.classList.remove('opacity-0');
+    scrim.classList.add('opacity-100');
+    panel.classList.remove('translate-y-full');
+    panel.classList.add('translate-y-0');
+  }
+
+  function ensureSystemSheet() {
+    if (qs('#system-sheet')) return;
+    const root = qs('#os') || document.body;
+    const el = document.createElement('div');
+    el.id = 'system-sheet';
+    el.className = 'absolute inset-0 z-[79] hidden';
+    el.innerHTML = `
+      <div id="system-sheet-scrim" class="absolute inset-0 bg-black/50 backdrop-blur-sm opacity-0 transition-opacity duration-200"></div>
+      <div class="absolute left-0 right-0 bottom-0 pb-[max(12px,env(safe-area-inset-bottom))] px-4 pointer-events-none">
+        <div id="system-sheet-panel" class="mx-auto max-w-[520px] rounded-[28px] border border-white/12 bg-black/55 backdrop-blur-2xl shadow-float overflow-hidden translate-y-full transition-transform duration-200 ease-out pointer-events-auto">
+          <div class="px-4 py-3 border-b border-white/10 bg-white/5 flex items-center justify-between">
+            <div id="system-sheet-title" class="text-[14px] font-semibold text-white/90">系统提示</div>
+            <button id="system-sheet-close" type="button" class="rounded-xl px-3 py-1.5 text-xs text-white/80 hover:bg-white/10 active:scale-[0.98] transition">关闭</button>
+          </div>
+          <div id="system-sheet-body" class="p-4"></div>
+        </div>
+      </div>
+    `;
+    root.appendChild(el);
+    const close = () => closeSystemSheet();
+    qs('#system-sheet-close', el)?.addEventListener('click', close);
+    qs('#system-sheet-scrim', el)?.addEventListener('click', close);
+  }
+
+  function closeSystemSheet() {
+    const el = qs('#system-sheet');
+    if (!el) return;
+    const scrim = qs('#system-sheet-scrim', el);
+    const panel = qs('#system-sheet-panel', el);
+    scrim?.classList.remove('opacity-100');
+    panel?.classList.add('translate-y-full');
+    setTimeout(() => el.classList.add('hidden'), 200);
+  }
+
+  function systemSheetPayload(kind) {
+    const k = String(kind || '');
+    if (k === 'earphones') {
+      return {
+        title: '设备连接',
+        body: `
+          <div class="space-y-3">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-2xl bg-white/10 flex items-center justify-center text-lg">🎧</div>
+              <div class="min-w-0">
+                <div class="text-sm text-white/90 font-semibold">FreeBuds 已连接</div>
+                <div class="text-xs text-white/55">支持协同播放（示意）</div>
+              </div>
+            </div>
+            <div class="flex gap-2">
+              <button type="button" class="flex-1 px-3 py-2 rounded-2xl bg-white/10 text-white/85 text-xs hover:bg-white/15 active:scale-[0.98] transition" onclick="OS_toast('已切换音频输出')">切换输出</button>
+              <button type="button" class="flex-1 px-3 py-2 rounded-2xl bg-blue-500/25 text-blue-100 text-xs hover:bg-blue-500/30 active:scale-[0.98] transition" onclick="OS_toast('已打开设备设置')">设备设置</button>
+            </div>
+          </div>
+        `
+      };
+    }
+    return {
+      title: '电量不足',
+      body: `
+        <div class="space-y-3">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-2xl bg-white/10 flex items-center justify-center text-lg">🪫</div>
+            <div class="min-w-0">
+              <div class="text-sm text-white/90 font-semibold">电量低于 20%</div>
+              <div class="text-xs text-white/55">建议开启省电模式或连接充电器</div>
+            </div>
+          </div>
+          <div class="flex gap-2">
+            <button type="button" class="flex-1 px-3 py-2 rounded-2xl bg-white/10 text-white/85 text-xs hover:bg-white/15 active:scale-[0.98] transition" onclick="OS_toast('已开启省电模式（示意）')">省电模式</button>
+            <button type="button" class="flex-1 px-3 py-2 rounded-2xl bg-blue-500/25 text-blue-100 text-xs hover:bg-blue-500/30 active:scale-[0.98] transition" onclick="OS_toast('已开启飞行模式（示意）')">立即优化</button>
+          </div>
+        </div>
+      `
+    };
+  }
+
+  function openSystemSheet(kind) {
+    ensureSystemSheet();
+    const el = qs('#system-sheet');
+    const scrim = qs('#system-sheet-scrim', el);
+    const panel = qs('#system-sheet-panel', el);
+    const title = qs('#system-sheet-title', el);
+    const body = qs('#system-sheet-body', el);
+    const payload = systemSheetPayload(kind);
+    if (title) title.textContent = payload.title;
+    if (body) body.innerHTML = payload.body;
+    el.classList.remove('hidden');
+    el.offsetHeight;
+    scrim?.classList.add('opacity-100');
+    panel?.classList.remove('translate-y-full');
+  }
+
+  function addDesktopWidget(type) {
+    const t = String(type || '');
+    if (!t) return;
+    if (state.desktop.widgets.some(w => w.type === t)) return;
+    state.desktop.widgets.push({ id: `w_${Date.now()}`, type: t });
+    renderDesktop();
+  }
+
+  function desktopWidgetHtml(type) {
+    const t = String(type || '');
+    if (t === 'steps') {
+      return `
+        <div class="col-span-2 row-span-2 rounded-[24px] border border-white/10 bg-white/8 backdrop-blur-2xl shadow-glass p-4 overflow-hidden">
+          <div class="flex items-center justify-between">
+            <div class="text-xs text-white/60">运动健康</div>
+            <div class="text-xs text-white/50">今日</div>
+          </div>
+          <div class="mt-3 text-4xl font-light text-white tabular-nums">3,201</div>
+          <div class="mt-1 text-xs text-white/55">步数 · 目标 10,000</div>
+          <div class="mt-4 h-2 rounded-full bg-white/10 overflow-hidden">
+            <div class="h-full w-[32%] bg-gradient-to-r from-emerald-400 to-green-300"></div>
+          </div>
+        </div>
+      `;
+    }
+    if (t === 'calendar') {
+      const d = new Date();
+      const w = "日一二三四五六".charAt(d.getDay());
+      return `
+        <div class="col-span-2 row-span-2 rounded-[24px] border border-white/10 bg-white/8 backdrop-blur-2xl shadow-glass p-4 overflow-hidden">
+          <div class="flex items-center justify-between">
+            <div class="text-xs text-white/60">日程</div>
+            <div class="text-xs text-white/50">${d.getMonth() + 1}月${d.getDate()}日 星期${w}</div>
+          </div>
+          <div class="mt-4 space-y-2">
+            <div class="rounded-2xl bg-white/10 border border-white/10 p-3">
+              <div class="text-xs text-white/55">15:00</div>
+              <div class="text-sm text-white/90 font-medium">项目例会（示意）</div>
+            </div>
+            <div class="rounded-2xl bg-white/10 border border-white/10 p-3">
+              <div class="text-xs text-white/55">19:00</div>
+              <div class="text-sm text-white/90 font-medium">家庭提醒（示意）</div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+    return '';
+  }
+
+  function renderDesktop() {
+    const grid = qs('#app-grid');
+    if (!grid) return;
+    const getApp = (id) => APPS.find(a => a.id === id);
+    const weatherWidget = `
+      <div class="col-span-2 row-span-2 rounded-[24px] bg-gradient-to-br from-blue-400 to-blue-600 p-4 text-white shadow-lg relative overflow-hidden active:scale-95 transition">
+         <div class="absolute top-3 right-3 text-xs opacity-80">北京市</div>
+         <div class="mt-2 flex flex-col">
+            <span class="text-5xl font-light">26°</span>
+            <span class="text-sm mt-1 opacity-90">晴 · 空气优</span>
+         </div>
+         <div class="absolute bottom-4 left-4 right-4 flex justify-between text-xs opacity-80">
+            <span>28° / 19°</span>
+            <span>湿度 45%</span>
+         </div>
+         <div class="absolute -right-4 -bottom-4 text-[80px] opacity-20">☀</div>
+      </div>
+    `;
+    const folderApps = ['meetime', 'calculator', 'notes', 'settings'];
+    const folderWidget = `
+      <div class="col-span-2 row-span-2 rounded-[24px] bg-white/10 border border-white/5 p-3 backdrop-blur-md shadow-lg">
+         <div class="grid grid-cols-2 gap-2 h-full">
+            ${folderApps.map(id => {
+               const app = getApp(id);
+               if (!app) return '';
+               return `
+                 <button class="flex flex-col items-center justify-center gap-1 w-full h-full rounded-xl hover:bg-white/5 active:scale-90 transition select-none" type="button" data-app-id="${app.id}">
+                    <div class="transform scale-75 origin-center">${appIcon(app, 'sm')}</div>
+                    <span class="text-[10px] text-white/90 truncate max-w-full">${app.name}</span>
+                 </button>
+               `;
+            }).join('')}
+         </div>
+      </div>
+    `;
+    const exclude = new Set(folderApps);
+    const iconApps = APPS.filter(a => !a.dock && !exclude.has(a.id));
+    const iconHtml = iconApps.map(app => `
+      <button class="flex flex-col items-center gap-2 p-2 active:scale-95 transition select-none" type="button" data-app-id="${app.id}" data-app-widget="${app.widget ? '1' : '0'}">
+        ${appIcon(app, 'lg')}
+        <span class="text-xs text-white drop-shadow-md">${app.name}</span>
+      </button>
+    `).join('');
+    const extraWidgets = state.desktop.widgets.map(w => desktopWidgetHtml(w.type)).filter(Boolean).join('');
+    grid.innerHTML = `${weatherWidget}${extraWidgets}${iconHtml}${folderWidget}`;
   }
 
   function bindLauncher() {
@@ -1452,6 +2158,7 @@ const OS = (() => {
           y: e.clientY,
           t: Date.now(),
           pointerId: e.pointerId,
+          rect: btn.getBoundingClientRect(),
         };
       });
 
@@ -1463,7 +2170,7 @@ const OS = (() => {
         const dx = Math.abs(p.x - e.clientX);
         if (p.widget && dy > 45 && dx < 35) {
           state.launcher.suppress = { id: p.id, until: Date.now() + 600 };
-          openServiceWidget(p.id);
+          openServiceWidget(p.id, { sourceRect: p.rect });
         }
       });
 
@@ -1540,6 +2247,27 @@ const OS = (() => {
         state.sys.brightness = v;
         qs('#wallpaper').style.filter = `brightness(${v / 100})`;
       },
+      media: (act, v) => {
+        const action = String(act || '').toLowerCase();
+        if (action === 'toggle') state.media.playing = !state.media.playing;
+        if (action === 'seek') {
+          const n = Math.max(0, Math.min(100, Number(v)));
+          state.media.progress = Number.isFinite(n) ? n / 100 : state.media.progress;
+        }
+        if (action === 'next') {
+          state.media.title = '星河漫游';
+          state.media.artist = '华为音乐';
+          state.media.progress = 0.04;
+          state.media.playing = true;
+        }
+        if (action === 'prev') {
+          state.media.title = '午后微风';
+          state.media.artist = '华为音乐';
+          state.media.progress = 0.12;
+          state.media.playing = true;
+        }
+        renderControls();
+      },
       fileAction: (act) => {
         if (act === 'new') {
           state.files.push({ id: Date.now(), name: '新文件.txt', type: 'file' });
@@ -1560,15 +2288,10 @@ const OS = (() => {
     ensureDefaultPhotos();
     ensurePhotoViewer();
     ensureServiceWidget();
+    ensureServiceCenter();
     bindKeyboard();
 
-    const grid = qs('#app-grid');
-    grid.innerHTML = APPS.filter(a => !a.dock).map(app => `
-      <button class="flex flex-col items-center gap-2 p-2 active:scale-95 transition select-none" type="button" data-app-id="${app.id}" data-app-widget="${app.widget ? '1' : '0'}">
-        ${appIcon(app, 'lg')}
-        <span class="text-xs text-white drop-shadow-md">${app.name}</span>
-      </button>
-    `).join('');
+    renderDesktop();
 
     const dock = qs('#dock');
     dock.innerHTML = APPS.filter(a => a.dock).map(app => `
@@ -1581,9 +2304,13 @@ const OS = (() => {
 
     setInterval(() => {
       qs('#status-time').textContent = nowTimeText();
+      const wd = qs('#widget-date');
+      if (wd) wd.textContent = dateText();
       if (state.locked) renderLockScreen();
     }, 1000);
 
+    const wd = qs('#widget-date');
+    if (wd) wd.textContent = dateText();
     renderLockScreen();
 
     bindGestures();
@@ -1762,7 +2489,9 @@ const OS = (() => {
       header.dataset.bound = '1';
       header.addEventListener('click', (e) => {
         if (state.locked) return;
-        if (e.clientX > window.innerWidth / 2) showControls();
+        const os = qs('#os');
+        const rect = os ? os.getBoundingClientRect() : null;
+        if (rect && e.clientX > rect.left + rect.width / 2) showControls();
         else showNotifications();
       });
     }
@@ -1770,46 +2499,70 @@ const OS = (() => {
     document.addEventListener('pointerdown', (e) => {
       if (state.locked) return;
       if (e.pointerType === 'mouse' && e.button !== 0) return;
-      const w = window.innerWidth;
-      const h = window.innerHeight;
-      if (e.clientY <= 22) {
-        state.gesture.top = { x: e.clientX, y: e.clientY, pointerId: e.pointerId, fired: false };
-      } else if (e.clientX <= 14) {
-        state.gesture.edge = { x: e.clientX, y: e.clientY, pointerId: e.pointerId, fired: false };
-      } else if (e.clientY >= h - 18) {
-        const timer = setTimeout(() => {
-          if (state.gesture.bottom && !state.gesture.bottom.fired) {
-            showRecents();
-            state.gesture.bottom.fired = true;
-          }
-        }, 520);
-        state.gesture.bottom = { x: e.clientX, y: e.clientY, pointerId: e.pointerId, fired: false, timer };
+      const os = qs('#os');
+      if (!os) return;
+      const rect = os.getBoundingClientRect();
+      if (e.clientX < rect.left || e.clientX > rect.right || e.clientY < rect.top || e.clientY > rect.bottom) return;
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      const w = rect.width;
+      const h = rect.height;
+      if (y <= 22) {
+        state.gesture.top = { x, y, pointerId: e.pointerId, fired: false };
+      } else if (x <= 14) {
+        state.gesture.edge = { x, y, pointerId: e.pointerId, fired: false };
+      } else if (y >= h - 24) {
+        if (x < 70 || x > w - 70) {
+           state.gesture.corner = { x, y, pointerId: e.pointerId, fired: false };
+        } else {
+           const timer = setTimeout(() => {
+             if (state.gesture.bottom && !state.gesture.bottom.fired) {
+               showRecents();
+               state.gesture.bottom.fired = true;
+             }
+           }, 520);
+           state.gesture.bottom = { x, y, pointerId: e.pointerId, fired: false, timer };
+        }
       }
     }, { passive: true });
 
     document.addEventListener('pointermove', (e) => {
+      const os = qs('#os');
+      const rect = os ? os.getBoundingClientRect() : null;
+      const x = rect ? (e.clientX - rect.left) : e.clientX;
+      const y = rect ? (e.clientY - rect.top) : e.clientY;
+      const w = rect ? rect.width : window.innerWidth;
       const top = state.gesture.top;
       if (top && top.pointerId === e.pointerId && !top.fired) {
-        const dy = e.clientY - top.y;
+        const dy = y - top.y;
         if (dy > 70) {
           top.fired = true;
-          if (top.x > window.innerWidth / 2) showControls();
+          if (top.x > w / 2) showControls();
           else showNotifications();
         }
       }
       const edge = state.gesture.edge;
       if (edge && edge.pointerId === e.pointerId && !edge.fired) {
-        const dx = e.clientX - edge.x;
-        const dy = Math.abs(e.clientY - edge.y);
+        const dx = x - edge.x;
+        const dy = Math.abs(y - edge.y);
         if (dx > 80 && dy < 60) {
           edge.fired = true;
           goBack();
         }
       }
+      const corner = state.gesture.corner;
+      if (corner && corner.pointerId === e.pointerId && !corner.fired) {
+        const dy = corner.y - y;
+        const dx = Math.abs(x - corner.x);
+        if (dy > 80) {
+          corner.fired = true;
+          openServiceCenter();
+        }
+      }
       const bottom = state.gesture.bottom;
       if (bottom && bottom.pointerId === e.pointerId && !bottom.fired) {
-        const dy = bottom.y - e.clientY;
-        const dx = Math.abs(e.clientX - bottom.x);
+        const dy = bottom.y - y;
+        const dx = Math.abs(x - bottom.x);
         if (dy > 110 && dx < 80) {
           bottom.fired = true;
           clearTimeout(bottom.timer);
@@ -1821,6 +2574,7 @@ const OS = (() => {
     const clearPointer = (pid) => {
       if (state.gesture.top && state.gesture.top.pointerId === pid) state.gesture.top = null;
       if (state.gesture.edge && state.gesture.edge.pointerId === pid) state.gesture.edge = null;
+      if (state.gesture.corner && state.gesture.corner.pointerId === pid) state.gesture.corner = null;
       if (state.gesture.bottom && state.gesture.bottom.pointerId === pid) {
         clearTimeout(state.gesture.bottom.timer);
         state.gesture.bottom = null;
@@ -1831,14 +2585,23 @@ const OS = (() => {
 
     document.addEventListener('pointerdown', (e) => {
       if (!state.locked) return;
-      state.gesture.unlock = { y: e.clientY, pointerId: e.pointerId };
+      const os = qs('#os');
+      if (!os) return;
+      const rect = os.getBoundingClientRect();
+      if (e.clientX < rect.left || e.clientX > rect.right || e.clientY < rect.top || e.clientY > rect.bottom) return;
+      state.gesture.unlock = { y: e.clientY - rect.top, pointerId: e.pointerId };
     }, { passive: true });
-    document.addEventListener('pointerup', (e) => {
+    const onUnlockEnd = (e) => {
       if (!state.locked || !state.gesture.unlock || state.gesture.unlock.pointerId !== e.pointerId) return;
-      const dy = state.gesture.unlock.y - e.clientY;
+      const os = qs('#os');
+      const rect = os ? os.getBoundingClientRect() : null;
+      const y = rect ? (e.clientY - rect.top) : e.clientY;
+      const dy = state.gesture.unlock.y - y;
       state.gesture.unlock = null;
       if (dy > 110) unlock();
-    }, { passive: true });
+    };
+    document.addEventListener('pointerup', onUnlockEnd, { passive: true });
+    document.addEventListener('pointercancel', onUnlockEnd, { passive: true });
   }
 
   return { init };

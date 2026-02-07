@@ -7,6 +7,78 @@ body {
   height: 100%;
 }
 
+#device-stage {
+  background:
+    radial-gradient(100% 100% at 50% 0%, rgba(56, 189, 248, 0.18) 0%, transparent 70%),
+    radial-gradient(80% 80% at 10% 20%, rgba(139, 92, 246, 0.18) 0%, transparent 60%),
+    radial-gradient(60% 60% at 90% 90%, rgba(16, 185, 129, 0.14) 0%, transparent 50%),
+    linear-gradient(180deg, #090c17 0%, #111827 100%);
+}
+
+.device-shell {
+  width: min(390px, 100vw);
+  height: min(844px, 100vh);
+  border-radius: 52px;
+  padding: 10px;
+  background: linear-gradient(180deg, rgba(10, 10, 12, 0.96), rgba(0, 0, 0, 0.96));
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 40px 120px rgba(0, 0, 0, 0.65), 0 2px 0 rgba(255, 255, 255, 0.06) inset;
+  position: relative;
+}
+
+.device-screen {
+  width: 100%;
+  height: 100%;
+  border-radius: 44px;
+  overflow: hidden;
+  position: relative;
+  background: #060814;
+}
+
+.device-punch {
+  position: absolute;
+  left: 50%;
+  top: 10px;
+  transform: translateX(-50%);
+  width: 96px;
+  height: 26px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.92);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.55);
+  z-index: 90;
+  pointer-events: none;
+}
+
+@media (min-width: 560px) and (min-height: 700px) {
+  #device-stage {
+    background: transparent;
+  }
+  .device-shell {
+    width: 100vw;
+    height: 100vh;
+    border-radius: 0;
+    padding: 0;
+    background: transparent;
+    border: 0;
+    box-shadow: none;
+  }
+  .device-screen {
+    border-radius: 0;
+  }
+  .device-punch {
+    display: none;
+  }
+}
+
+#panel-lock {
+  touch-action: none;
+}
+
+#app-grid {
+  grid-auto-rows: 92px;
+}
+
 #wallpaper {
   background:
     radial-gradient(100% 100% at 50% 0%, rgba(56, 189, 248, 0.15) 0%, transparent 70%),
