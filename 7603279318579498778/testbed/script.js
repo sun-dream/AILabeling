@@ -77,6 +77,7 @@ const OS = (() => {
     gesture: {
       edge: null,
       bottom: null,
+      lastActionAt: 0,
     },
     launcher: {
       suppress: null,
@@ -131,6 +132,16 @@ const OS = (() => {
       widget: true,
       content: renderGallery,
       icon: `<svg class="w-8 h-8 text-white drop-shadow-md" fill="currentColor" viewBox="0 0 24 24"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg>`
+    },
+    {
+      id: "weather",
+      name: "天气",
+      subtitle: "城市天气",
+      color: "from-blue-400 to-cyan-500",
+      dock: false,
+      widget: true,
+      content: renderWeather,
+      icon: `<svg class="w-8 h-8 text-white drop-shadow-md" fill="currentColor" viewBox="0 0 24 24"><path d="M6.76 4.84l-1.8-1.8-1.41 1.41 1.8 1.8 1.41-1.41zm10.48 0l1.8-1.8-1.41-1.41-1.8 1.8 1.41 1.41zM12 3h-1v3h1V3zm5 9a5 5 0 10-10 0 5 5 0 0010 0zm6 1h-3v-1h3v1zM3 13H0v-1h3v1zm2.34 7.07l-1.41-1.41 1.8-1.8 1.41 1.41-1.8 1.8zm13.32 0l1.8-1.8-1.41-1.41-1.8 1.8 1.41 1.41zM13 21h-1v-3h1v3z"/></svg>`
     },
     {
       id: "files",
@@ -256,7 +267,7 @@ const OS = (() => {
     const root = qs('#os') || document.body;
     const el = document.createElement('div');
     el.id = 'os-input-sheet';
-    el.className = 'absolute inset-0 z-[80] hidden';
+    el.className = 'absolute inset-0 z-[2100] hidden';
     el.innerHTML = `
       <div class="absolute inset-0 bg-black/60 backdrop-blur-sm"></div>
       <div class="relative h-full flex items-end sm:items-center justify-center px-4 pb-6 sm:pb-0">
@@ -325,7 +336,7 @@ const OS = (() => {
     const root = qs('#os') || document.body;
     const el = document.createElement('div');
     el.id = 'celia-kbd';
-    el.className = 'absolute left-0 right-0 bottom-0 z-[78] hidden pb-[max(10px,env(safe-area-inset-bottom))]';
+    el.className = 'absolute left-0 right-0 bottom-0 z-[2100] hidden pb-[max(10px,env(safe-area-inset-bottom))]';
     el.innerHTML = `
       <div class="mx-auto max-w-[520px] px-4">
         <div class="rounded-[26px] border border-white/12 bg-white/85 text-black shadow-float overflow-hidden">
@@ -405,7 +416,7 @@ const OS = (() => {
         <div class="relative z-10 transform transition-transform duration-300 group-active:scale-90">
           ${app.icon}
         </div>
-        ${hint}
+        ${app.widget ? `<div class="absolute bottom-[-6px] left-1/2 -translate-x-1/2 w-5 h-[3px] rounded-full bg-white/40"></div>` : ``}
       </div>
     `;
   }
@@ -608,6 +619,27 @@ const OS = (() => {
     `;
   }
 
+  function renderWeather() {
+    return `
+      <div class="h-full flex flex-col bg-black/90">
+        <div class="flex items-center justify-between px-4 py-3 border-b border-white/10">
+          <div class="text-lg font-bold text-white">天气</div>
+          <div class="text-sm text-white/60">北京市</div>
+        </div>
+        <div class="flex-1 p-4">
+          <div class="rounded-2xl border border-white/10 bg-gradient-to-br from-blue-500/50 to-cyan-600/50 p-4 text-white shadow-lg">
+            <div class="text-6xl font-light">26°</div>
+            <div class="mt-1 text-sm opacity-90">晴 · 空气优</div>
+            <div class="mt-4 flex justify-between text-xs opacity-90">
+              <span>28° / 19°</span>
+              <span>湿度 45%</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
   function renderBrowser() {
     return `
       <div class="flex flex-col h-full gap-3" id="browser-app">
@@ -656,6 +688,25 @@ const OS = (() => {
               <div class="flex items-center justify-between">
                 <div class="text-sm text-white/70">版本号</div>
                 <div class="text-sm text-white/90">Build 200（示意）</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    if (state.settings.page === 'super') {
+      return `
+        <div class="h-full flex flex-col space-y-3" id="settings-app">
+          <div class="flex items-center gap-2">
+            <button type="button" class="px-3 py-2 rounded-xl bg-white/10 hover:bg-white/15 active:scale-[0.98] transition text-xs text-white/85" data-settings-nav="main">← 返回</button>
+            <div class="text-sm font-semibold text-white/90">超级终端</div>
+          </div>
+          <div class="rounded-2xl border border-white/10 bg-white/5 overflow-hidden">
+            <div class="p-4">
+              ${renderSuperDevice()}
+              <div class="mt-3 text-xs text-white/55 leading-relaxed">
+                拖拽周围设备气泡到中心手机，模拟“协同流转”连接效果（示意）。
               </div>
             </div>
           </div>
@@ -713,6 +764,14 @@ const OS = (() => {
           </div>
         </div>
 
+        <button type="button" class="p-4 rounded-2xl bg-white/5 hover:bg-white/10 active:bg-white/12 transition flex items-center justify-between" data-settings-nav="super">
+          <div>
+            <div class="text-sm text-white/90">超级终端</div>
+            <div class="text-xs text-white/50 mt-0.5">协同流转（示意）</div>
+          </div>
+          <div class="text-white/30 text-sm">›</div>
+        </button>
+
         <button type="button" class="p-4 rounded-2xl bg-white/5 hover:bg-white/10 active:bg-white/12 transition flex items-center justify-between" data-settings-nav="about">
           <div class="text-sm text-white/90">关于手机</div>
           <div class="text-white/30 text-sm">›</div>
@@ -734,6 +793,7 @@ const OS = (() => {
         if (body) {
           body.innerHTML = renderSettings();
           bindSettings(el);
+          if (state.settings.page === 'super') bindSuperDevice(body);
         }
         return;
       }
@@ -884,14 +944,15 @@ const OS = (() => {
 
   function closeApp(id) {
     const w = state.windows.get(id);
-    if (w) {
-      if (id === 'camera') stopCamera();
-      w.el.classList.add('animate-sink');
-      w.el.addEventListener('animationend', () => {
-        w.el.remove();
-        state.windows.delete(id);
-      });
-    }
+    if (!w || w.closing) return;
+    w.closing = true;
+    if (id === 'camera') stopCamera();
+    const el = w.el;
+    state.windows.delete(id);
+    el.classList.add('animate-sink');
+    el.addEventListener('animationend', () => {
+      try { el.remove(); } catch { }
+    }, { once: true });
   }
 
   function focusWindow(el) {
@@ -1013,6 +1074,14 @@ const OS = (() => {
       const newPhoto = { id: `p_${Date.now()}`, src: src || makePhotoSrc(Date.now()), time: '刚刚', ts: Date.now() };
       state.photos.unshift(newPhoto);
       toast("已保存到图库");
+
+      const galleryWin = state.windows.get('gallery');
+      if (galleryWin) {
+        const body = galleryWin.el.querySelector('[data-window-content]');
+        if (body) body.innerHTML = renderGallery();
+      }
+
+      renderDesktop();
     });
   }
 
@@ -1067,7 +1136,7 @@ const OS = (() => {
     const root = qs('#os') || document.body;
     const wrap = document.createElement('div');
     wrap.id = 'photo-viewer';
-    wrap.className = 'absolute inset-0 z-[70] hidden';
+    wrap.className = 'absolute inset-0 z-[2050] hidden';
     wrap.innerHTML = `
       <div class="absolute inset-0 bg-black/70 backdrop-blur-sm"></div>
       <div class="relative h-full flex flex-col items-center justify-center px-4">
@@ -1492,7 +1561,7 @@ const OS = (() => {
             <span class="text-[8px] text-white">${tv}</span>
           </button>
           <button type="button" data-super-bubble="pad" class="super-bubble absolute bottom-8 left-10 w-14 h-14 rounded-full bg-white/10 backdrop-blur-md flex flex-col items-center justify-center border border-white/20">
-            <span class="text-lg">�</span>
+            <span class="text-lg">💻</span>
             <span class="text-[8px] text-white">${pad}</span>
           </button>
           <button type="button" data-super-bubble="buds" class="super-bubble absolute bottom-6 right-8 w-14 h-14 rounded-full bg-white/10 backdrop-blur-md flex flex-col items-center justify-center border border-white/20">
@@ -1689,7 +1758,7 @@ const OS = (() => {
     const root = qs('#os') || document.body;
     const el = document.createElement('div');
     el.id = 'service-widget';
-    el.className = 'absolute inset-0 z-[75] hidden';
+    el.className = 'absolute inset-0 z-[2050] hidden';
     el.innerHTML = `
       <div class="absolute inset-0 bg-black/50 backdrop-blur-sm"></div>
       <div class="absolute left-0 right-0 bottom-0 pb-[max(12px,env(safe-area-inset-bottom))] px-4">
@@ -1715,7 +1784,135 @@ const OS = (() => {
     el.classList.add('hidden');
   }
 
+  function ensureInlineWidget() {
+    if (qs('#inline-widget')) return;
+    const root = qs('#os') || document.body;
+    const el = document.createElement('div');
+    el.id = 'inline-widget';
+    el.className = 'absolute inset-0 z-[2050] hidden';
+    el.innerHTML = `
+      <div id="inline-widget-scrim" class="absolute inset-0 bg-black/30 backdrop-blur-[2px] opacity-0 transition-opacity duration-150"></div>
+      <div id="inline-widget-card" class="absolute rounded-[28px] border border-white/12 bg-black/45 backdrop-blur-2xl shadow-float overflow-hidden"></div>
+    `;
+    root.appendChild(el);
+    const close = () => closeInlineWidget();
+    qs('#inline-widget-scrim', el)?.addEventListener('click', close);
+  }
+
+  function closeInlineWidget() {
+    const el = qs('#inline-widget');
+    if (!el || el.classList.contains('hidden')) return;
+    const scrim = qs('#inline-widget-scrim', el);
+    const card = qs('#inline-widget-card', el);
+    scrim?.classList.remove('opacity-100');
+    scrim?.classList.add('opacity-0');
+    if (card) {
+      card.style.transform = '';
+      card.style.opacity = '';
+    }
+    setTimeout(() => el.classList.add('hidden'), 160);
+  }
+
+  function openInlineWidget(appId, opts = {}) {
+    ensureInlineWidget();
+    const el = qs('#inline-widget');
+    const scrim = qs('#inline-widget-scrim', el);
+    const card = qs('#inline-widget-card', el);
+    const os = qs('#os');
+    const grid = qs('#app-grid');
+    if (!card || !os || !grid) {
+      openServiceWidget(appId, opts);
+      return;
+    }
+
+    const osRect = os.getBoundingClientRect();
+    const gridRect = grid.getBoundingClientRect();
+    const style = getComputedStyle(grid);
+    const cols = 4;
+    const gap = parseFloat(style.columnGap || '12') || 12;
+    const rowGap = parseFloat(style.rowGap || style.columnGap || '12') || 12;
+    const gridW = gridRect.width;
+    const colW = (gridW - gap * (cols - 1)) / cols;
+    const rowH = (() => {
+      const v = parseFloat(style.gridAutoRows || '92');
+      return Number.isFinite(v) && v > 0 ? v : 92;
+    })();
+
+    const size = String(appId) === 'gallery' ? { wCells: 2, hCells: 4 } : { wCells: 2, hCells: 2 };
+    const cardW = colW * size.wCells + gap * (size.wCells - 1);
+    const cardH = rowH * size.hCells + rowGap * (size.hCells - 1);
+
+    const src = opts && opts.sourceRect ? opts.sourceRect : null;
+    const srcLeft = src ? src.left : (gridRect.left + gridRect.width / 2);
+    const srcTop = src ? src.top : (gridRect.top + gridRect.height / 2);
+    const srcW = src ? src.width : colW;
+    const srcH = src ? src.height : rowH;
+
+    let left = (srcLeft - osRect.left) + (srcW - cardW) / 2;
+    let top = (srcTop - osRect.top) + srcH - cardH;
+
+    const pad = 10;
+    left = Math.max(pad, Math.min(osRect.width - cardW - pad, left));
+    top = Math.max(pad, Math.min(osRect.height - cardH - pad, top));
+
+    const app = APPS.find(a => a.id === appId);
+    card.style.left = `${left}px`;
+    card.style.top = `${top}px`;
+    card.style.width = `${cardW}px`;
+    card.style.height = `${cardH}px`;
+    card.innerHTML = `
+      <div class="px-4 py-3 border-b border-white/10 bg-white/5 flex items-center justify-between">
+        <div class="text-[14px] font-semibold text-white/90">${escapeHtml(app ? app.name : '服务卡片')}</div>
+        <button type="button" data-inline-close="1" class="rounded-xl px-3 py-1.5 text-xs text-white/80 hover:bg-white/10 active:scale-[0.98] transition">关闭</button>
+      </div>
+      <div class="p-4 h-[calc(100%-52px)] overflow-auto">${widgetHtmlFor(appId)}</div>
+    `;
+
+    el.classList.remove('hidden');
+    el.offsetHeight;
+    scrim?.classList.remove('opacity-0');
+    scrim?.classList.add('opacity-100');
+
+    const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!reduceMotion && src) {
+      const translateX = (src.left - osRect.left) - left;
+      const translateY = (src.top - osRect.top) - top;
+      const scaleX = src.width / cardW;
+      const scaleY = src.height / cardH;
+      card.animate([
+        { transformOrigin: '0 0', transform: `translate(${translateX}px, ${translateY}px) scale(${scaleX}, ${scaleY})`, opacity: 0.92 },
+        { transformOrigin: '0 0', transform: 'translate(0px, 0px) scale(1, 1)', opacity: 1 }
+      ], { duration: 220, easing: 'cubic-bezier(.2,.8,.2,1)', fill: 'both' });
+    }
+
+    card.querySelector('[data-inline-close]')?.addEventListener('click', closeInlineWidget);
+    card.querySelectorAll('[data-widget-open]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        closeInlineWidget();
+        openApp(btn.getAttribute('data-widget-open'));
+      });
+    });
+    card.querySelectorAll('[data-widget-photo]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        openPhoto(btn.getAttribute('data-widget-photo'));
+      });
+    });
+  }
+
   function widgetHtmlFor(appId) {
+    if (appId === 'weather') {
+      return `
+        <div class="space-y-3">
+          <div class="rounded-2xl border border-white/10 bg-gradient-to-br from-blue-500/40 to-cyan-600/40 p-4 text-white">
+            <div class="text-4xl font-light">26°</div>
+            <div class="mt-1 text-xs opacity-90">北京市 · 晴</div>
+          </div>
+          <div class="flex items-center justify-end">
+            <button type="button" class="px-3 py-2 rounded-2xl bg-white/10 text-white/80 text-xs hover:bg-white/15 active:scale-[0.98] transition" data-widget-open="weather">打开天气</button>
+          </div>
+        </div>
+      `;
+    }
     if (appId === 'gallery') {
       const thumbs = state.photos.slice(0, 4).map(p => `
         <button type="button" class="relative aspect-square rounded-2xl overflow-hidden border border-white/10 bg-white/5 active:scale-[0.98] transition" data-widget-photo="${p.id}">
@@ -1778,7 +1975,7 @@ const OS = (() => {
         const translateX = sourceRect.left - endRect.left;
         const translateY = sourceRect.top - endRect.top;
         const morph = document.createElement('div');
-        morph.className = 'fixed z-[76] overflow-hidden';
+        morph.className = 'fixed z-[2060] overflow-hidden';
         morph.style.left = `${endRect.left}px`;
         morph.style.top = `${endRect.top}px`;
         morph.style.width = `${endRect.width}px`;
@@ -1911,6 +2108,7 @@ const OS = (() => {
     const hide = () => {
        scrim.classList.remove('opacity-100');
        scrim.classList.add('opacity-0');
+       scrim.classList.remove('pointer-events-auto');
        panel.classList.remove('translate-y-0');
        panel.classList.add('translate-y-full');
        setTimeout(() => el.classList.add('hidden'), 300);
@@ -1949,6 +2147,7 @@ const OS = (() => {
     
     scrim.classList.remove('opacity-0');
     scrim.classList.add('opacity-100');
+    scrim.classList.add('pointer-events-auto');
     panel.classList.remove('translate-y-full');
     panel.classList.add('translate-y-0');
   }
@@ -1958,7 +2157,7 @@ const OS = (() => {
     const root = qs('#os') || document.body;
     const el = document.createElement('div');
     el.id = 'system-sheet';
-    el.className = 'absolute inset-0 z-[79] hidden';
+    el.className = 'absolute inset-0 z-[2100] hidden';
     el.innerHTML = `
       <div id="system-sheet-scrim" class="absolute inset-0 bg-black/50 backdrop-blur-sm opacity-0 transition-opacity duration-200"></div>
       <div class="absolute left-0 right-0 bottom-0 pb-[max(12px,env(safe-area-inset-bottom))] px-4 pointer-events-none">
@@ -2133,7 +2332,7 @@ const OS = (() => {
     const exclude = new Set(folderApps);
     const iconApps = APPS.filter(a => !a.dock && !exclude.has(a.id));
     const iconHtml = iconApps.map(app => `
-      <button class="flex flex-col items-center gap-2 p-2 active:scale-95 transition select-none" type="button" data-app-id="${app.id}" data-app-widget="${app.widget ? '1' : '0'}">
+      <button class="os-app-btn flex flex-col items-center gap-2 p-2 active:scale-95 transition select-none" type="button" data-app-id="${app.id}" data-app-widget="${app.widget ? '1' : '0'}">
         ${appIcon(app, 'lg')}
         <span class="text-xs text-white drop-shadow-md">${app.name}</span>
       </button>
@@ -2151,6 +2350,7 @@ const OS = (() => {
       root.addEventListener('pointerdown', (e) => {
         const btn = e.target.closest('[data-app-id]');
         if (!btn) return;
+        try { btn.setPointerCapture(e.pointerId); } catch { }
         state.launcher.pointer = {
           id: btn.getAttribute('data-app-id'),
           widget: btn.getAttribute('data-app-widget') === '1',
@@ -2162,19 +2362,44 @@ const OS = (() => {
         };
       });
 
+      root.addEventListener('pointermove', (e) => {
+        const p = state.launcher.pointer;
+        if (!p || p.pointerId !== e.pointerId) return;
+        if (!p.widget) return;
+        const dy = p.y - e.clientY;
+        const dx = Math.abs(p.x - e.clientX);
+        if (dy > 30 && dx < 50) {
+          state.launcher.pointer = null;
+          state.launcher.suppress = { id: p.id, until: Date.now() + 600 };
+          openInlineWidget(p.id, { sourceRect: p.rect });
+          e.preventDefault();
+        }
+      }, { passive: false });
+
       root.addEventListener('pointerup', (e) => {
         const p = state.launcher.pointer;
         if (!p || p.pointerId !== e.pointerId) return;
         state.launcher.pointer = null;
         const dy = p.y - e.clientY;
         const dx = Math.abs(p.x - e.clientX);
-        if (p.widget && dy > 45 && dx < 35) {
+        if (p.widget && dy > 30 && dx < 50) {
           state.launcher.suppress = { id: p.id, until: Date.now() + 600 };
-          openServiceWidget(p.id, { sourceRect: p.rect });
+          openInlineWidget(p.id, { sourceRect: p.rect });
         }
       });
 
+      root.addEventListener('pointercancel', (e) => {
+        const p = state.launcher.pointer;
+        if (!p || p.pointerId !== e.pointerId) return;
+        state.launcher.pointer = null;
+      });
+
       root.addEventListener('click', (e) => {
+        if (state.gesture && (Date.now() - (state.gesture.lastActionAt || 0)) < 250) {
+          e.preventDefault();
+          e.stopPropagation();
+          return;
+        }
         const btn = e.target.closest('[data-app-id]');
         if (!btn) return;
         const id = btn.getAttribute('data-app-id');
@@ -2288,6 +2513,7 @@ const OS = (() => {
     ensureDefaultPhotos();
     ensurePhotoViewer();
     ensureServiceWidget();
+    ensureInlineWidget();
     ensureServiceCenter();
     bindKeyboard();
 
@@ -2295,7 +2521,7 @@ const OS = (() => {
 
     const dock = qs('#dock');
     dock.innerHTML = APPS.filter(a => a.dock).map(app => `
-      <button class="active:scale-90 transition select-none" type="button" data-app-id="${app.id}" data-app-widget="${app.widget ? '1' : '0'}">
+      <button class="os-app-btn active:scale-90 transition select-none" type="button" data-app-id="${app.id}" data-app-widget="${app.widget ? '1' : '0'}">
         ${appIcon(app, 'sm')}
       </button>
     `).join('');
@@ -2317,16 +2543,27 @@ const OS = (() => {
   }
 
   function hidePanels() {
-    qs('#panel-scrim')?.classList.add('opacity-0', 'pointer-events-none');
+    const scrim = qs('#panel-scrim');
+    if (scrim) {
+      scrim.classList.add('opacity-0', 'pointer-events-none');
+      scrim.classList.remove('pointer-events-auto');
+    }
     qs('#panel-controls')?.classList.add('translate-y-[-102%]');
     qs('#panel-notifications')?.classList.add('translate-y-[-102%]');
     const rec = qs('#panel-recents');
-    if (rec) rec.classList.add('opacity-0', 'pointer-events-none');
+    if (rec) {
+      rec.classList.add('opacity-0', 'pointer-events-none');
+      rec.classList.remove('pointer-events-auto');
+    }
     state.panel = 'none';
   }
 
   function showScrim() {
-    qs('#panel-scrim')?.classList.remove('opacity-0', 'pointer-events-none');
+    const scrim = qs('#panel-scrim');
+    if (scrim) {
+      scrim.classList.remove('opacity-0', 'pointer-events-none');
+      scrim.classList.add('pointer-events-auto');
+    }
   }
 
   function renderNotifications() {
@@ -2378,17 +2615,28 @@ const OS = (() => {
       list.innerHTML = `<div class="text-center text-white/40 text-sm py-10">暂无任务</div>`;
       return;
     }
-    list.innerHTML = items.map(({ id, w }) => `
-      <div class="rounded-2xl border border-white/10 bg-white/5 p-3 flex items-center gap-3">
-        <div class="w-10 h-10 rounded-2xl bg-white/10 border border-white/10 grid place-items-center overflow-hidden">${w.app.icon}</div>
-        <div class="flex-1 min-w-0">
-          <div class="text-sm text-white/90 truncate">${escapeHtml(w.app.name)}</div>
-          <div class="text-xs text-white/45">${w.minimized ? '已挂起' : '运行中'}</div>
-        </div>
-        <button type="button" class="px-3 py-2 rounded-2xl bg-white/10 text-white/80 text-xs hover:bg-white/15 active:scale-[0.98] transition" data-recents-open="${id}">打开</button>
-        <button type="button" class="w-9 h-9 rounded-2xl bg-white/10 text-white/70 hover:bg-red-500 hover:text-white active:scale-[0.98] transition grid place-items-center" data-recents-close="${id}">×</button>
+    list.innerHTML = `
+      <div id="recents-strip" class="flex gap-3 overflow-x-auto snap-x snap-mandatory px-1 pb-2">
+        ${items.map(({ id, w }) => `
+          <div class="snap-center shrink-0 w-[86%] rounded-[28px] border border-white/12 bg-black/35 backdrop-blur-2xl shadow-float overflow-hidden relative" data-recents-card="${id}">
+            <button type="button" class="absolute right-3 top-3 w-9 h-9 rounded-2xl bg-white/10 text-white/70 hover:bg-red-500 hover:text-white active:scale-[0.98] transition grid place-items-center z-10" data-recents-close="${id}">×</button>
+            <button type="button" class="w-full text-left" data-recents-open="${id}">
+              <div class="h-[280px] bg-gradient-to-br from-white/10 via-white/5 to-transparent relative">
+                <div class="absolute inset-0 opacity-70" style="background:radial-gradient(80% 80% at 20% 20%, rgba(56,189,248,.22), transparent 55%), radial-gradient(70% 70% at 80% 40%, rgba(139,92,246,.18), transparent 55%), radial-gradient(60% 60% at 60% 90%, rgba(16,185,129,.16), transparent 55%);"></div>
+                <div class="absolute bottom-4 left-4 right-4 flex items-center gap-3">
+                  <div class="w-12 h-12 rounded-2xl bg-white/10 border border-white/10 grid place-items-center overflow-hidden">${w.app.icon}</div>
+                  <div class="min-w-0 flex-1">
+                    <div class="text-[14px] font-semibold text-white/90 truncate">${escapeHtml(w.app.name)}</div>
+                    <div class="text-[12px] text-white/50">${w.minimized ? '已挂起' : '运行中'}</div>
+                  </div>
+                </div>
+              </div>
+            </button>
+          </div>
+        `).join('')}
       </div>
-    `).join('');
+      <div class="mt-2 text-center text-[11px] text-white/45">左右滑动切换 · 上滑关闭</div>
+    `;
   }
 
   function showRecents() {
@@ -2396,7 +2644,19 @@ const OS = (() => {
     showScrim();
     renderRecents();
     const rec = qs('#panel-recents');
-    if (rec) rec.classList.remove('opacity-0', 'pointer-events-none');
+    if (rec) {
+      rec.classList.remove('opacity-0', 'pointer-events-none');
+      rec.classList.add('pointer-events-auto');
+      const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (!reduceMotion) {
+        try {
+          rec.animate([
+            { transform: 'scale(1.04)' },
+            { transform: 'scale(1)' }
+          ], { duration: 220, easing: 'cubic-bezier(.2,.8,.2,1)', fill: 'both' });
+        } catch { }
+      }
+    }
     const closeBtn = qs('#btn-close-recents');
     if (closeBtn && !closeBtn.dataset.bound) {
       closeBtn.dataset.bound = '1';
@@ -2428,9 +2688,42 @@ const OS = (() => {
         }
       });
     }
+    const strip = qs('#recents-strip');
+    if (strip && !strip.dataset.swipeBound) {
+      strip.dataset.swipeBound = '1';
+      let drag = null;
+      const clear = () => { drag = null; };
+      strip.addEventListener('pointerdown', (e) => {
+        if (e.pointerType === 'mouse' && e.button !== 0) return;
+        const card = e.target.closest('[data-recents-card]');
+        if (!card) return;
+        const closeBtn = e.target.closest('[data-recents-close]');
+        if (closeBtn) return;
+        drag = { card, id: card.getAttribute('data-recents-card'), x: e.clientX, y: e.clientY, pointerId: e.pointerId, fired: false };
+        try { card.setPointerCapture(e.pointerId); } catch { }
+      }, { passive: true });
+      strip.addEventListener('pointermove', (e) => {
+        if (!drag || drag.pointerId !== e.pointerId || drag.fired) return;
+        const dy = drag.y - e.clientY;
+        const dx = Math.abs(drag.x - e.clientX);
+        if (dy > 90 && dx < 90) {
+          drag.fired = true;
+          const el = drag.card;
+          try {
+            el.animate([{ transform: 'translateY(0px)', opacity: 1 }, { transform: 'translateY(-140px)', opacity: 0 }], { duration: 180, easing: 'cubic-bezier(.2,.8,.2,1)', fill: 'both' });
+          } catch { }
+          closeApp(drag.id);
+          setTimeout(renderRecents, 220);
+          clear();
+        }
+      }, { passive: true });
+      strip.addEventListener('pointerup', clear, { passive: true });
+      strip.addEventListener('pointercancel', clear, { passive: true });
+    }
   }
 
   function goHome() {
+    closeInlineWidget();
     closeServiceWidget();
     qs('#photo-viewer')?.classList.add('hidden');
     hidePanels();
@@ -2455,6 +2748,11 @@ const OS = (() => {
   }
 
   function goBack() {
+    const inline = qs('#inline-widget');
+    if (inline && !inline.classList.contains('hidden')) {
+      closeInlineWidget();
+      return;
+    }
     const widget = qs('#service-widget');
     if (widget && !widget.classList.contains('hidden')) {
       closeServiceWidget();
@@ -2478,6 +2776,10 @@ const OS = (() => {
   }
 
   function bindGestures() {
+    const os = qs('#os');
+    if (!os || os.dataset.gestureBound === '1') return;
+    os.dataset.gestureBound = '1';
+
     const scrim = qs('#panel-scrim');
     if (scrim && !scrim.dataset.bound) {
       scrim.dataset.bound = '1';
@@ -2489,87 +2791,18 @@ const OS = (() => {
       header.dataset.bound = '1';
       header.addEventListener('click', (e) => {
         if (state.locked) return;
-        const os = qs('#os');
         const rect = os ? os.getBoundingClientRect() : null;
         if (rect && e.clientX > rect.left + rect.width / 2) showControls();
         else showNotifications();
       });
     }
 
-    document.addEventListener('pointerdown', (e) => {
-      if (state.locked) return;
-      if (e.pointerType === 'mouse' && e.button !== 0) return;
-      const os = qs('#os');
-      if (!os) return;
-      const rect = os.getBoundingClientRect();
-      if (e.clientX < rect.left || e.clientX > rect.right || e.clientY < rect.top || e.clientY > rect.bottom) return;
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
-      const w = rect.width;
-      const h = rect.height;
-      if (y <= 22) {
-        state.gesture.top = { x, y, pointerId: e.pointerId, fired: false };
-      } else if (x <= 14) {
-        state.gesture.edge = { x, y, pointerId: e.pointerId, fired: false };
-      } else if (y >= h - 24) {
-        if (x < 70 || x > w - 70) {
-           state.gesture.corner = { x, y, pointerId: e.pointerId, fired: false };
-        } else {
-           const timer = setTimeout(() => {
-             if (state.gesture.bottom && !state.gesture.bottom.fired) {
-               showRecents();
-               state.gesture.bottom.fired = true;
-             }
-           }, 520);
-           state.gesture.bottom = { x, y, pointerId: e.pointerId, fired: false, timer };
-        }
-      }
-    }, { passive: true });
-
-    document.addEventListener('pointermove', (e) => {
-      const os = qs('#os');
-      const rect = os ? os.getBoundingClientRect() : null;
-      const x = rect ? (e.clientX - rect.left) : e.clientX;
-      const y = rect ? (e.clientY - rect.top) : e.clientY;
-      const w = rect ? rect.width : window.innerWidth;
-      const top = state.gesture.top;
-      if (top && top.pointerId === e.pointerId && !top.fired) {
-        const dy = y - top.y;
-        if (dy > 70) {
-          top.fired = true;
-          if (top.x > w / 2) showControls();
-          else showNotifications();
-        }
-      }
-      const edge = state.gesture.edge;
-      if (edge && edge.pointerId === e.pointerId && !edge.fired) {
-        const dx = x - edge.x;
-        const dy = Math.abs(y - edge.y);
-        if (dx > 80 && dy < 60) {
-          edge.fired = true;
-          goBack();
-        }
-      }
-      const corner = state.gesture.corner;
-      if (corner && corner.pointerId === e.pointerId && !corner.fired) {
-        const dy = corner.y - y;
-        const dx = Math.abs(x - corner.x);
-        if (dy > 80) {
-          corner.fired = true;
-          openServiceCenter();
-        }
-      }
-      const bottom = state.gesture.bottom;
-      if (bottom && bottom.pointerId === e.pointerId && !bottom.fired) {
-        const dy = bottom.y - y;
-        const dx = Math.abs(x - bottom.x);
-        if (dy > 110 && dx < 80) {
-          bottom.fired = true;
-          clearTimeout(bottom.timer);
-          goHome();
-        }
-      }
-    }, { passive: true });
+    const TOP_ZONE_H = 52;
+    const BOTTOM_ZONE_H = 140;
+    const EDGE_ZONE_W = 18;
+    const HOME_DY = 180;
+    const RECENTS_MIN_DY = 0;
+    const HOLD_MS = 450;
 
     const clearPointer = (pid) => {
       if (state.gesture.top && state.gesture.top.pointerId === pid) state.gesture.top = null;
@@ -2579,29 +2812,144 @@ const OS = (() => {
         clearTimeout(state.gesture.bottom.timer);
         state.gesture.bottom = null;
       }
+      if (state.gesture.unlock && state.gesture.unlock.pointerId === pid) state.gesture.unlock = null;
     };
-    document.addEventListener('pointerup', (e) => clearPointer(e.pointerId), { passive: true });
-    document.addEventListener('pointercancel', (e) => clearPointer(e.pointerId), { passive: true });
 
-    document.addEventListener('pointerdown', (e) => {
-      if (!state.locked) return;
-      const os = qs('#os');
-      if (!os) return;
+    os.addEventListener('pointerdown', (e) => {
+      if (e.pointerType === 'mouse' && e.button !== 0) return;
       const rect = os.getBoundingClientRect();
       if (e.clientX < rect.left || e.clientX > rect.right || e.clientY < rect.top || e.clientY > rect.bottom) return;
-      state.gesture.unlock = { y: e.clientY - rect.top, pointerId: e.pointerId };
-    }, { passive: true });
-    const onUnlockEnd = (e) => {
-      if (!state.locked || !state.gesture.unlock || state.gesture.unlock.pointerId !== e.pointerId) return;
-      const os = qs('#os');
-      const rect = os ? os.getBoundingClientRect() : null;
-      const y = rect ? (e.clientY - rect.top) : e.clientY;
-      const dy = state.gesture.unlock.y - y;
-      state.gesture.unlock = null;
-      if (dy > 110) unlock();
-    };
-    document.addEventListener('pointerup', onUnlockEnd, { passive: true });
-    document.addEventListener('pointercancel', onUnlockEnd, { passive: true });
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      const w = rect.width;
+      const h = rect.height;
+      const bottomSideZoneW = w * 0.25;
+
+      if (state.locked) {
+        state.gesture.unlock = { y, pointerId: e.pointerId };
+        try { os.setPointerCapture(e.pointerId); } catch { }
+        return;
+      }
+
+      if (y <= TOP_ZONE_H && x <= 120) {
+        state.gesture.top = { x, y, pointerId: e.pointerId, fired: false, side: 'left' };
+        try { os.setPointerCapture(e.pointerId); } catch { }
+        e.preventDefault();
+        return;
+      }
+      if (y <= TOP_ZONE_H && x >= w - 120) {
+        state.gesture.top = { x, y, pointerId: e.pointerId, fired: false, side: 'right' };
+        try { os.setPointerCapture(e.pointerId); } catch { }
+        e.preventDefault();
+        return;
+      }
+      if (x <= EDGE_ZONE_W) {
+        state.gesture.edge = { x, y, pointerId: e.pointerId, fired: false, side: 'left' };
+        try { os.setPointerCapture(e.pointerId); } catch { }
+        e.preventDefault();
+        return;
+      }
+      if (x >= w - EDGE_ZONE_W) {
+        state.gesture.edge = { x, y, pointerId: e.pointerId, fired: false, side: 'right' };
+        try { os.setPointerCapture(e.pointerId); } catch { }
+        e.preventDefault();
+        return;
+      }
+      if (y >= h - BOTTOM_ZONE_H) {
+        const onIcon = !!(e.target && e.target.closest && e.target.closest('[data-app-id]'));
+        if ((x <= bottomSideZoneW || x >= w - bottomSideZoneW) && !onIcon) {
+          state.gesture.corner = { x, y, pointerId: e.pointerId, fired: false };
+          try { os.setPointerCapture(e.pointerId); } catch { }
+          e.preventDefault();
+          return;
+        }
+        if (onIcon) return;
+        const timer = setTimeout(() => {
+          const bottom = state.gesture.bottom;
+          if (!bottom || bottom.fired) return;
+          const dy = bottom.lastDy || 0;
+          const dx = bottom.lastDx || 0;
+          if (dy >= RECENTS_MIN_DY && dy < HOME_DY && dx < 120) {
+            showRecents();
+            bottom.fired = true;
+              state.gesture.lastActionAt = Date.now();
+          }
+        }, HOLD_MS);
+          state.gesture.bottom = { x, y, pointerId: e.pointerId, fired: false, timer, lastDy: 0, lastDx: 0 };
+        try { os.setPointerCapture(e.pointerId); } catch { }
+        e.preventDefault();
+      }
+    }, { passive: false });
+
+    os.addEventListener('pointermove', (e) => {
+      const rect = os.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+
+      const unlockState = state.gesture.unlock;
+      if (state.locked && unlockState && unlockState.pointerId === e.pointerId) {
+        const dy = unlockState.y - y;
+        if (dy > 120) {
+          clearPointer(e.pointerId);
+          unlock();
+        }
+        return;
+      }
+
+      const top = state.gesture.top;
+      if (top && top.pointerId === e.pointerId && !top.fired) {
+        const dy = y - top.y;
+        if (dy > 70) {
+          top.fired = true;
+          if (top.side === 'right') showControls();
+          else showNotifications();
+          e.preventDefault();
+          return;
+        }
+      }
+
+      const edge = state.gesture.edge;
+      if (edge && edge.pointerId === e.pointerId && !edge.fired) {
+        const dx = Math.abs(x - edge.x);
+        const dy = Math.abs(y - edge.y);
+        const isInward = (edge.side === 'left' && x > edge.x) || (edge.side === 'right' && x < edge.x);
+        if (isInward && dx > 70 && dy < 140) {
+          edge.fired = true;
+          goBack();
+          e.preventDefault();
+          return;
+        }
+      }
+
+      const corner = state.gesture.corner;
+      if (corner && corner.pointerId === e.pointerId && !corner.fired) {
+        const dy = corner.y - y;
+        if (dy > 80) {
+          corner.fired = true;
+          openServiceCenter();
+          e.preventDefault();
+          return;
+        }
+      }
+
+      const bottom = state.gesture.bottom;
+      if (bottom && bottom.pointerId === e.pointerId && !bottom.fired) {
+        const dy = bottom.y - y;
+        const dx = Math.abs(x - bottom.x);
+        bottom.lastDy = dy;
+        bottom.lastDx = dx;
+        if (dy >= HOME_DY && dx < 110) {
+          bottom.fired = true;
+          clearTimeout(bottom.timer);
+          state.gesture.lastActionAt = Date.now();
+          goHome();
+          e.preventDefault();
+        }
+      }
+    }, { passive: false });
+
+    os.addEventListener('pointerup', (e) => clearPointer(e.pointerId), { passive: true });
+    os.addEventListener('pointercancel', (e) => clearPointer(e.pointerId), { passive: true });
   }
 
   return { init };

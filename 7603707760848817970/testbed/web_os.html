@@ -29,6 +29,21 @@
 
     <style>
         body { margin: 0; overflow: hidden; font-family: 'Segoe UI', sans-serif; user-select: none; }
+        input, textarea, [contenteditable="true"] { user-select: text; }
+
+        .win-control-btn {
+            width: 44px;
+            height: 32px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: #111827;
+            border-radius: 6px;
+        }
+        .win-control-btn:hover { background: rgba(15, 23, 42, 0.08); }
+        .win-control-btn:active { background: rgba(15, 23, 42, 0.14); }
+        .win-control-btn.close:hover { background: #e81123; color: white; }
+        .win-control-btn.close:active { background: #c50f1f; color: white; }
         
         /* Custom Scrollbar */
         ::-webkit-scrollbar { width: 8px; height: 8px; }
@@ -177,6 +192,126 @@
         const $$ = (sel) => document.querySelectorAll(sel);
         const uuid = () => Math.random().toString(36).substring(2) + Date.now().toString(36);
 
+        // --- Dialogs (No native alert/confirm/prompt) ---
+        const Dialog = {
+            _ensure() {
+                if ($('#webos-dialog-overlay')) return;
+                const overlay = document.createElement('div');
+                overlay.id = 'webos-dialog-overlay';
+                overlay.className = 'fixed inset-0 hidden items-center justify-center z-[4000]';
+                overlay.innerHTML = `
+                    <div class="absolute inset-0 bg-black/40 backdrop-blur-sm"></div>
+                    <div class="relative w-[520px] max-w-[calc(100vw-32px)] rounded-xl bg-white shadow-2xl border border-gray-200 overflow-hidden">
+                        <div class="h-10 flex items-center justify-between pl-4 pr-2 bg-white/80 backdrop-blur border-b border-gray-200 select-none">
+                            <div class="flex items-center gap-2 text-sm font-semibold text-gray-800">
+                                <i class="fa-brands fa-windows text-blue-600"></i>
+                                <span id="webos-dialog-title">WebOS</span>
+                            </div>
+                            <button class="win-control-btn close" id="webos-dialog-x" aria-label="Close">
+                                <i class="fa-solid fa-xmark text-[14px]"></i>
+                            </button>
+                        </div>
+                        <div class="p-4 text-gray-800">
+                            <div id="webos-dialog-message" class="text-sm leading-relaxed whitespace-pre-wrap"></div>
+                            <div id="webos-dialog-input-wrap" class="mt-3 hidden">
+                                <input id="webos-dialog-input" class="w-full border rounded-lg px-3 py-2 text-sm bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-400" />
+                            </div>
+                        </div>
+                        <div class="p-3 bg-gray-50 border-t border-gray-200 flex justify-end gap-2">
+                            <button id="webos-dialog-cancel" class="px-4 py-2 rounded-lg text-sm border bg-white hover:bg-gray-50 text-gray-800">Cancel</button>
+                            <button id="webos-dialog-ok" class="px-4 py-2 rounded-lg text-sm bg-blue-600 hover:bg-blue-700 text-white">OK</button>
+                        </div>
+                    </div>
+                `;
+                document.body.appendChild(overlay);
+            },
+            _open({ title, message, mode, defaultValue, placeholder, okText, cancelText }) {
+                this._ensure();
+                const overlay = $('#webos-dialog-overlay');
+                const titleEl = $('#webos-dialog-title');
+                const msgEl = $('#webos-dialog-message');
+                const inputWrap = $('#webos-dialog-input-wrap');
+                const inputEl = $('#webos-dialog-input');
+                const okBtn = $('#webos-dialog-ok');
+                const cancelBtn = $('#webos-dialog-cancel');
+                const xBtn = $('#webos-dialog-x');
+
+                titleEl.textContent = title || 'WebOS';
+                msgEl.textContent = message || '';
+                okBtn.textContent = okText || 'OK';
+                cancelBtn.textContent = cancelText || 'Cancel';
+
+                const isPrompt = mode === 'prompt';
+                const isConfirm = mode === 'confirm';
+                const isAlert = mode === 'alert';
+
+                inputWrap.classList.toggle('hidden', !isPrompt);
+                cancelBtn.classList.toggle('hidden', isAlert);
+
+                if (isPrompt) {
+                    inputEl.value = defaultValue ?? '';
+                    inputEl.placeholder = placeholder ?? '';
+                }
+
+                overlay.classList.remove('hidden');
+                overlay.classList.add('flex');
+
+                const cleanup = () => {
+                    overlay.classList.add('hidden');
+                    overlay.classList.remove('flex');
+                    okBtn.onclick = null;
+                    cancelBtn.onclick = null;
+                    xBtn.onclick = null;
+                    overlay.onmousedown = null;
+                    inputEl.onkeydown = null;
+                };
+
+                return new Promise((resolve) => {
+                    const closeAs = (v) => { cleanup(); resolve(v); };
+
+                    okBtn.onclick = () => {
+                        if (isPrompt) return closeAs(String(inputEl.value ?? ''));
+                        if (isConfirm) return closeAs(true);
+                        return closeAs(true);
+                    };
+                    cancelBtn.onclick = () => closeAs(isPrompt ? null : false);
+                    xBtn.onclick = () => closeAs(isPrompt ? null : false);
+
+                    overlay.onmousedown = (e) => {
+                        if (e.target === overlay) closeAs(isPrompt ? null : false);
+                    };
+
+                    inputEl.onkeydown = (e) => {
+                        if (!isPrompt) return;
+                        if (e.key === 'Enter') okBtn.click();
+                        if (e.key === 'Escape') closeAs(null);
+                    };
+
+                    requestAnimationFrame(() => {
+                        if (isPrompt) inputEl.focus();
+                        else okBtn.focus();
+                    });
+                });
+            },
+            alert(message, opts = {}) {
+                return this._open({ title: opts.title, message, mode: 'alert', okText: opts.okText });
+            },
+            confirm(message, opts = {}) {
+                return this._open({ title: opts.title, message, mode: 'confirm', okText: opts.okText, cancelText: opts.cancelText });
+            },
+            prompt(message, opts = {}) {
+                return this._open({
+                    title: opts.title,
+                    message,
+                    mode: 'prompt',
+                    defaultValue: opts.defaultValue,
+                    placeholder: opts.placeholder,
+                    okText: opts.okText,
+                    cancelText: opts.cancelText
+                });
+            }
+        };
+
         // --- File System (VFS) ---
         class VFS {
             constructor() {
@@ -253,21 +388,27 @@
             createFile(path, name, content) {
                 const dir = this.resolve(path);
                 if(dir && dir.type === 'dir') {
+                    if (dir.children[name]) return false;
                     dir.children[name] = { type: 'file', content: content };
                     this.save();
                     if(path === '/Desktop') WindowManager.refreshDesktop();
                     // If current explorer is viewing this path, refresh it? 
                     // Need pub/sub ideally, but simple reload works for desktop
+                    return true;
                 }
+                return false;
             }
             
             createFolder(path, name) {
                 const dir = this.resolve(path);
                 if(dir && dir.type === 'dir') {
+                    if (dir.children[name]) return false;
                     dir.children[name] = { type: 'dir', children: {} };
                     this.save();
                     if(path === '/Desktop') WindowManager.refreshDesktop();
+                    return true;
                 }
+                return false;
             }
 
             mkdir(path) {
@@ -286,6 +427,7 @@
 
             delete(path) {
                 const parts = path.split('/').filter(p => p);
+                if (parts.length === 0) return false;
                 const name = parts.pop();
                 const parent = this.resolve(parts.join('/'));
                 if (parent && parent.children[name]) {
@@ -295,18 +437,30 @@
                 }
                 return false;
             }
+
+            rename(path, newName) {
+                const parts = path.split('/').filter(p => p);
+                if (parts.length === 0) return false;
+                const oldName = parts.pop();
+                const parent = this.resolve(parts.join('/'));
+                if (!parent || parent.type !== 'dir') return false;
+                if (!parent.children[oldName]) return false;
+                if (!newName || typeof newName !== 'string') return false;
+                const trimmed = newName.trim();
+                if (!trimmed || trimmed.includes('/')) return false;
+                if (parent.children[trimmed] && trimmed !== oldName) return false;
+                if (trimmed === oldName) return true;
+                parent.children[trimmed] = parent.children[oldName];
+                delete parent.children[oldName];
+                this.save();
+                return true;
+            }
         }
 
         const FileSystem = new VFS();
 
         // --- App Registry ---
         const Apps = {
-            'explorer': {
-                name: 'File Explorer',
-                icon: 'fa-regular fa-folder-open',
-                color: 'text-yellow-400',
-                render: (win, path = '/Desktop') => new ExplorerApp(win, path)
-            },
             'notepad': {
                 name: 'Notepad',
                 icon: 'fa-regular fa-file-lines',
@@ -401,18 +555,24 @@
 
                 // Header
                 winEl.innerHTML = `
-                    <div class="window-header h-9 bg-gray-100 border-b border-gray-200 flex items-center justify-between px-3 select-none" ondblclick="WindowManager.toggleMaximize('${id}')">
-                        <div class="flex items-center gap-2 text-sm font-medium text-gray-700">
+                    <div class="window-header h-10 bg-white/80 backdrop-blur-md border-b border-gray-200 flex items-center justify-between pl-3 pr-1 select-none" ondblclick="WindowManager.toggleMaximize('${id}')">
+                        <div class="flex items-center gap-2 text-sm font-semibold text-gray-800">
                             <i class="${appConfig.icon} ${appConfig.color}"></i>
                             <span>${appConfig.name}</span>
                         </div>
-                        <div class="flex items-center gap-2">
-                            <button class="w-3 h-3 rounded-full bg-yellow-400 hover:bg-yellow-500" onclick="WindowManager.minimize('${id}')"></button>
-                            <button class="w-3 h-3 rounded-full bg-green-400 hover:bg-green-500" onclick="WindowManager.toggleMaximize('${id}')"></button>
-                            <button class="w-3 h-3 rounded-full bg-red-400 hover:bg-red-500" onclick="WindowManager.close('${id}')"></button>
+                        <div class="flex items-center">
+                            <button class="win-control-btn" onclick="WindowManager.minimize('${id}')" aria-label="Minimize">
+                                <i class="fa-solid fa-window-minimize text-[12px] relative top-[-4px]"></i>
+                            </button>
+                            <button class="win-control-btn" onclick="WindowManager.toggleMaximize('${id}')" aria-label="Maximize or Restore">
+                                <i class="fa-regular fa-square text-[12px]"></i>
+                            </button>
+                            <button class="win-control-btn close" onclick="WindowManager.close('${id}')" aria-label="Close">
+                                <i class="fa-solid fa-xmark text-[14px]"></i>
+                            </button>
                         </div>
                     </div>
-                    <div class="window-content flex-1 bg-white relative overflow-hidden"></div>
+                    <div class="window-content flex-1 bg-white relative overflow-hidden text-gray-900"></div>
                     <div class="resize-handle absolute bottom-0 right-0 w-4 h-4 cursor-se-resize z-50"></div>
                 `;
 
@@ -421,7 +581,15 @@
                 // Initialize App
                 const contentArea = winEl.querySelector('.window-content');
                 contentArea.dataset.winId = id;
-                const appInstance = appConfig.render(contentArea, args);
+                let appInstance = null;
+                try {
+                    const safeArgs = args === null ? undefined : args;
+                    appInstance = safeArgs === undefined ? appConfig.render(contentArea) : appConfig.render(contentArea, safeArgs);
+                } catch (e) {
+                    winEl.remove();
+                    Dialog.alert(String(e?.message || e), { title: `${appConfig?.name || 'App'} Error` });
+                    return;
+                }
 
                 const winObj = { id, appId, element: winEl, app: appInstance, minimized: false, maximized: false };
                 this.windows.push(winObj);
@@ -452,6 +620,7 @@
 
             minimize(id) {
                 const win = this.windows.find(w => w.id === id);
+                if (!win) return;
                 win.minimized = true;
                 win.element.style.display = 'none';
                 this.renderTaskbar();
@@ -459,6 +628,7 @@
 
             restore(id) {
                 const win = this.windows.find(w => w.id === id);
+                if (!win) return;
                 win.minimized = false;
                 win.element.style.display = 'flex';
                 this.focus(id);
@@ -467,8 +637,9 @@
 
             toggleMaximize(id) {
                 const win = this.windows.find(w => w.id === id);
+                if (!win) return;
                 if (win.maximized) {
-                    win.element.style = win.preMaxStyle;
+                    win.element.setAttribute('style', win.preMaxStyle || '');
                     win.maximized = false;
                     win.element.classList.remove('maximizing');
                 } else {
@@ -502,7 +673,7 @@
                 let startX, startY, initialLeft, initialTop;
 
                 header.addEventListener('mousedown', (e) => {
-                    if(e.target.tagName === 'BUTTON') return;
+                    if (e.target.closest && e.target.closest('button')) return;
                     this.focus(id);
                     const win = this.windows.find(w => w.id === id);
                     if (win.maximized) return;
@@ -668,7 +839,7 @@
 
         class ExplorerApp {
             constructor(container, initialPath) {
-                this.path = initialPath;
+                this.path = initialPath ?? '/Desktop';
                 this.container = container;
                 this.selectedName = null;
                 this.render();
@@ -682,13 +853,14 @@
                 this.container.innerHTML = `
                     <div class="h-full flex flex-col">
                         <div class="bg-gray-50 border-b p-2 flex gap-2 items-center text-sm">
-                            <button class="hover:bg-gray-200 p-1 rounded" onclick="this.app.goUp()"><i class="fa-solid fa-arrow-up"></i></button>
+                            <button class="hover:bg-gray-200 p-1 rounded" onclick="this.closest('.window-content').app.goUp()"><i class="fa-solid fa-arrow-up"></i></button>
                             <input type="text" value="${this.path}" class="flex-1 border rounded px-2 py-1 bg-white text-gray-700" readonly>
-                            <button class="hover:bg-gray-200 p-1 rounded" onclick="this.app.refresh()"><i class="fa-solid fa-rotate-right"></i></button>
+                            <button class="hover:bg-gray-200 p-1 rounded" onclick="this.closest('.window-content').app.refresh()"><i class="fa-solid fa-rotate-right"></i></button>
                             <div class="w-px h-5 bg-gray-200 mx-1"></div>
-                            <button class="hover:bg-gray-200 px-2 py-1 rounded" onclick="this.app.createNewFile()"><i class="fa-regular fa-file mr-1"></i>New</button>
-                            <button class="hover:bg-gray-200 px-2 py-1 rounded" onclick="this.app.createNewFolder()"><i class="fa-regular fa-folder mr-1"></i>Folder</button>
-                            <button class="hover:bg-gray-200 px-2 py-1 rounded ${this.selectedName ? '' : 'opacity-40 pointer-events-none'}" onclick="this.app.deleteSelected()"><i class="fa-regular fa-trash-can mr-1"></i>Delete</button>
+                            <button class="hover:bg-gray-200 px-2 py-1 rounded" onclick="this.closest('.window-content').app.createNewFile()"><i class="fa-regular fa-file mr-1"></i>New</button>
+                            <button class="hover:bg-gray-200 px-2 py-1 rounded" onclick="this.closest('.window-content').app.createNewFolder()"><i class="fa-regular fa-folder mr-1"></i>Folder</button>
+                            <button class="hover:bg-gray-200 px-2 py-1 rounded ${this.selectedName ? '' : 'opacity-40 pointer-events-none'}" onclick="this.closest('.window-content').app.renameSelected()"><i class="fa-solid fa-i-cursor mr-1"></i>Rename</button>
+                            <button class="hover:bg-gray-200 px-2 py-1 rounded ${this.selectedName ? '' : 'opacity-40 pointer-events-none'}" onclick="this.closest('.window-content').app.deleteSelected()"><i class="fa-regular fa-trash-can mr-1"></i>Delete</button>
                         </div>
                         <div class="flex-1 overflow-auto p-4 grid grid-cols-[repeat(auto-fill,minmax(80px,1fr))] gap-4 content-start">
                             ${Object.entries(dir.children).map(([name, node]) => {
@@ -701,27 +873,28 @@
                                 
                                 return `
                                 <div class="flex flex-col items-center gap-2 group cursor-pointer p-2 hover:bg-blue-50 rounded ${selectedClass}" 
-                                     onclick="this.closest('.window-content').app.selectItem('${name}')"
+                                     data-name="${name}"
+                                     onclick="this.closest('.window-content').app.selectItem('${name}', this)"
                                      ondblclick="this.closest('.window-content').app.openItem('${name}', '${node.type}')">
                                     <i class="${iconClass} text-4xl group-hover:scale-110 transition-transform"></i>
                                     <span class="text-xs text-center text-gray-700 group-hover:text-blue-700 break-all">${name}</span>
                                 </div>
                             `}).join('')}
-                        </div>
+                        </div
                         <div class="bg-gray-50 border-t p-1 px-2 text-xs text-gray-500 flex justify-between">
                             <span>${Object.keys(dir.children).length} items</span>
                             <span>${this.selectedName ? 'Selected: ' + this.selectedName : ''}</span>
                         </div>
                     </div>
                 `;
-                // Bind app instance to DOM for onclick handlers
-                this.container.querySelector('.flex-1').app = this;
-                this.container.querySelector('.bg-gray-50').app = this;
+                this.container.app = this;
             }
 
-            selectItem(name) {
+            selectItem(name, el) {
                 this.selectedName = name;
-                this.render();
+                this.updateSelectionVisuals(el);
+                const footerSel = this.container.querySelector('.bg-gray-50.border-t span:last-child');
+                if (footerSel) footerSel.textContent = this.selectedName ? 'Selected: ' + this.selectedName : '';
             }
 
             openItem(name, type) {
@@ -738,30 +911,63 @@
                     else WindowManager.open('notepad', fullPath);
                 }
             }
+            
+            updateSelectionVisuals(activeEl) {
+                const cards = this.container.querySelectorAll('[data-name]');
+                cards.forEach(card => {
+                    card.classList.remove('bg-blue-100', 'ring-2', 'ring-blue-300');
+                });
+                if (activeEl) {
+                    activeEl.classList.add('bg-blue-100', 'ring-2', 'ring-blue-300');
+                } else if (this.selectedName) {
+                    const el = this.container.querySelector(`[data-name="${CSS.escape(this.selectedName)}"]`);
+                    if (el) el.classList.add('bg-blue-100', 'ring-2', 'ring-blue-300');
+                }
+            }
 
-            createNewFile() {
+            async createNewFile() {
                 const suggested = this.path === '/Desktop' ? 'New Text Document.txt' : 'new.txt';
-                const name = prompt('New file name:', suggested);
+                const name = await Dialog.prompt('New file name:', { title: 'New File', defaultValue: suggested, okText: 'Create', cancelText: 'Cancel' });
                 if (!name) return;
-                FileSystem.createFile(this.path, name, '');
+                if (!FileSystem.createFile(this.path, name, '')) {
+                    await Dialog.alert('A file or folder with the same name already exists.', { title: 'Cannot Create' });
+                    return;
+                }
                 this.selectedName = name;
                 this.render();
                 WindowManager.refreshDesktop();
             }
 
-            createNewFolder() {
-                const name = prompt('New folder name:', 'New Folder');
+            async createNewFolder() {
+                const name = await Dialog.prompt('New folder name:', { title: 'New Folder', defaultValue: 'New Folder', okText: 'Create', cancelText: 'Cancel' });
                 if (!name) return;
-                FileSystem.createFolder(this.path, name);
+                if (!FileSystem.createFolder(this.path, name)) {
+                    await Dialog.alert('A file or folder with the same name already exists.', { title: 'Cannot Create' });
+                    return;
+                }
                 this.selectedName = name;
                 this.render();
                 WindowManager.refreshDesktop();
             }
 
-            deleteSelected() {
+            async renameSelected() {
+                if (!this.selectedName) return;
+                const next = await Dialog.prompt('Rename to:', { title: 'Rename', defaultValue: this.selectedName, okText: 'Rename', cancelText: 'Cancel' });
+                if (!next) return;
+                const targetPath = this.path === '/' ? '/' + this.selectedName : this.path + '/' + this.selectedName;
+                if (!FileSystem.rename(targetPath, next)) {
+                    await Dialog.alert('Rename failed (duplicate name or invalid).', { title: 'Rename Failed' });
+                    return;
+                }
+                this.selectedName = next;
+                this.render();
+                WindowManager.refreshDesktop();
+            }
+
+            async deleteSelected() {
                 if (!this.selectedName) return;
                 const targetPath = this.path === '/' ? '/' + this.selectedName : this.path + '/' + this.selectedName;
-                const ok = confirm(`Delete "${this.selectedName}"?`);
+                const ok = await Dialog.confirm(`Delete "${this.selectedName}"?`, { title: 'Confirm Delete', okText: 'Delete', cancelText: 'Cancel' });
                 if (!ok) return;
                 FileSystem.delete(targetPath);
                 this.selectedName = null;
@@ -793,35 +999,40 @@
                 this.container.innerHTML = `
                     <div class="h-full flex flex-col">
                         <div class="flex gap-2 p-1 border-b bg-gray-50 text-sm">
-                            <button class="px-2 hover:bg-gray-200 rounded" onclick="this.parentElement.app.save()">Save</button>
-                            <button class="px-2 hover:bg-gray-200 rounded" onclick="this.parentElement.app.saveAs()">Save As</button>
+                            <button class="px-2 hover:bg-gray-200 rounded" onclick="this.closest('.window-content').app.save()">Save</button>
+                            <button class="px-2 hover:bg-gray-200 rounded" onclick="this.closest('.window-content').app.saveAs()">Save As</button>
                         </div>
-                        <textarea class="flex-1 resize-none p-2 focus:outline-none font-mono text-sm" spellcheck="false">${this.content}</textarea>
+                        <textarea class="flex-1 resize-none p-2 focus:outline-none font-mono text-sm bg-white text-gray-900 select-text" spellcheck="false">${this.content}</textarea>
                     </div>
                 `;
-                this.container.querySelector('.flex').app = this;
+                this.container.app = this;
             }
 
-            save() {
+            async save() {
                 const val = this.container.querySelector('textarea').value;
                 if (this.path) {
                     FileSystem.writeFile(this.path, val);
-                    alert('Saved!');
+                    await Dialog.alert('Saved.', { title: 'Notepad' });
                 } else {
-                    this.saveAs();
+                    await this.saveAs();
                 }
             }
 
-            saveAs() {
-                const name = prompt("Enter filename (e.g., /Desktop/new.txt):", this.path || "/Desktop/untitled.txt");
+            async saveAs() {
+                const name = await Dialog.prompt('Enter filename (e.g., /Desktop/new.txt):', {
+                    title: 'Save As',
+                    defaultValue: this.path || '/Desktop/untitled.txt',
+                    okText: 'Save',
+                    cancelText: 'Cancel'
+                });
                 if (name) {
                     const val = this.container.querySelector('textarea').value;
                     if(FileSystem.writeFile(name, val)) {
                         this.path = name;
-                        alert('Saved to ' + name);
+                        await Dialog.alert('Saved to ' + name, { title: 'Save As' });
                         WindowManager.refreshDesktop();
                     } else {
-                        alert('Invalid path or parent directory does not exist.');
+                        await Dialog.alert('Invalid path or parent directory does not exist.', { title: 'Save Failed' });
                     }
                 }
             }
@@ -855,7 +1066,7 @@
             }
 
             render() {
-                this.container.className = "bg-black text-gray-200 font-mono text-sm p-2 h-full overflow-hidden flex flex-col crt";
+                this.container.classList.add('bg-black', 'text-gray-200', 'font-mono', 'text-sm', 'p-2', 'h-full', 'overflow-hidden', 'flex', 'flex-col', 'crt');
                 this.container.innerHTML = `
                     <div id="term-output" class="flex-1 overflow-y-auto mb-2 whitespace-pre-wrap">WebOS Terminal v1.0\nType 'help' for commands.\n</div>
                     <div class="flex">
@@ -1057,6 +1268,9 @@
                 this.container = container;
                 this.color = '#000000';
                 this.size = 2;
+                this._resizeObserver = null;
+                this._canvas = null;
+                this._ctx = null;
                 this.render();
             }
 
@@ -1069,7 +1283,7 @@
                             <button class="bg-white border px-2 rounded hover:bg-gray-50" onclick="this.parentElement.app.clear()">Clear</button>
                         </div>
                         <div class="flex-1 bg-white relative overflow-hidden cursor-crosshair">
-                            <canvas id="paint-canvas"></canvas>
+                            <canvas></canvas>
                         </div>
                     </div>
                 `;
@@ -1084,10 +1298,10 @@
                 const canvas = this.container.querySelector('canvas');
                 const wrapper = canvas.parentElement;
                 
-                canvas.width = wrapper.clientWidth;
-                canvas.height = wrapper.clientHeight;
+                this._canvas = canvas;
+                this._ctx = canvas.getContext('2d');
+                this.resizeCanvasToWrapper();
 
-                const ctx = canvas.getContext('2d');
                 let painting = false;
 
                 const startPos = (e) => {
@@ -1096,29 +1310,56 @@
                 };
                 const endPos = () => {
                     painting = false;
-                    ctx.beginPath();
+                    this._ctx.beginPath();
                 };
                 const draw = (e) => {
                     if (!painting) return;
                     const rect = canvas.getBoundingClientRect();
-                    ctx.lineWidth = this.size;
-                    ctx.lineCap = 'round';
-                    ctx.strokeStyle = this.color;
+                    this._ctx.lineWidth = Number(this.size);
+                    this._ctx.lineCap = 'round';
+                    this._ctx.strokeStyle = this.color;
                     
-                    ctx.lineTo(e.clientX - rect.left, e.clientY - rect.top);
-                    ctx.stroke();
-                    ctx.beginPath();
-                    ctx.moveTo(e.clientX - rect.left, e.clientY - rect.top);
+                    this._ctx.lineTo(e.clientX - rect.left, e.clientY - rect.top);
+                    this._ctx.stroke();
+                    this._ctx.beginPath();
+                    this._ctx.moveTo(e.clientX - rect.left, e.clientY - rect.top);
                 };
 
                 canvas.addEventListener('mousedown', startPos);
                 canvas.addEventListener('mouseup', endPos);
                 canvas.addEventListener('mousemove', draw);
+
+                if (this._resizeObserver) this._resizeObserver.disconnect();
+                this._resizeObserver = new ResizeObserver(() => this.resizeCanvasToWrapper());
+                this._resizeObserver.observe(wrapper);
+            }
+
+            resizeCanvasToWrapper() {
+                const canvas = this._canvas || this.container.querySelector('canvas');
+                if (!canvas) return;
+                const wrapper = canvas.parentElement;
+                if (!wrapper) return;
+                const nextW = Math.max(1, Math.floor(wrapper.clientWidth));
+                const nextH = Math.max(1, Math.floor(wrapper.clientHeight));
+                if (canvas.width === nextW && canvas.height === nextH) return;
+
+                const prev = document.createElement('canvas');
+                prev.width = canvas.width || 1;
+                prev.height = canvas.height || 1;
+                const prevCtx = prev.getContext('2d');
+                prevCtx.drawImage(canvas, 0, 0);
+
+                canvas.width = nextW;
+                canvas.height = nextH;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(prev, 0, 0);
+                this._ctx = ctx;
             }
 
             clear() {
-                const canvas = this.container.querySelector('canvas');
-                const ctx = canvas.getContext('2d');
+                const canvas = this._canvas || this.container.querySelector('canvas');
+                if (!canvas) return;
+                const ctx = this._ctx || canvas.getContext('2d');
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
             }
         }
@@ -1318,18 +1559,103 @@
         class BrowserApp {
             constructor(container) {
                 this.container = container;
+                this.history = [];
+                this.historyIndex = -1;
                 this.render();
+                this.navigate('https://www.wikipedia.org/');
             }
             render() {
                 this.container.innerHTML = `
                     <div class="flex flex-col h-full">
-                        <div class="flex gap-2 p-2 bg-gray-100 border-b">
-                            <input type="text" value="https://www.wikipedia.org" class="flex-1 px-3 py-1 rounded border text-sm bg-white text-gray-800 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-400" id="url-input">
-                            <button class="bg-blue-500 text-white px-3 rounded text-sm" onclick="this.parentElement.nextElementSibling.src = this.previousElementSibling.value">Go</button>
+                        <div class="flex gap-2 p-2 bg-gray-100 border-b items-center">
+                            <button class="px-2 py-1 rounded border bg-white text-gray-800 hover:bg-gray-50 disabled:opacity-40" onclick="this.closest('.window-content').app.back()" id="nav-back">←</button>
+                            <button class="px-2 py-1 rounded border bg-white text-gray-800 hover:bg-gray-50 disabled:opacity-40" onclick="this.closest('.window-content').app.forward()" id="nav-forward">→</button>
+                            <input type="text" value="https://www.wikipedia.org/" class="flex-1 px-3 py-1 rounded border text-sm bg-white text-gray-800 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-400" id="url-input">
+                            <button class="bg-blue-500 text-white px-3 py-1.5 rounded text-sm hover:bg-blue-600" onclick="this.closest('.window-content').app.go()">Go</button>
                         </div>
-                        <iframe src="https://www.wikipedia.org" class="flex-1 border-none bg-white"></iframe>
+                        <div class="flex-1 relative">
+                            <div class="absolute inset-0 hidden items-center justify-center bg-white/70 text-gray-700 text-sm" id="browser-loading">Loading...</div>
+                            <iframe src="about:blank" class="absolute inset-0 w-full h-full border-none bg-white"></iframe>
+                        </div>
                     </div>
                 `;
+                this.container.app = this;
+                const input = this.container.querySelector('#url-input');
+                input.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter') this.go();
+                });
+            }
+
+            normalizeUrl(raw) {
+                const v = String(raw || '').trim();
+                if (!v) return null;
+                if (v.startsWith('http://') || v.startsWith('https://')) return v;
+                return 'https://' + v;
+            }
+
+            setLoading(loading) {
+                const el = this.container.querySelector('#browser-loading');
+                if (!el) return;
+                el.classList.toggle('hidden', !loading);
+                el.classList.toggle('flex', loading);
+            }
+
+            updateNavButtons() {
+                const back = this.container.querySelector('#nav-back');
+                const forward = this.container.querySelector('#nav-forward');
+                if (back) back.disabled = !(this.historyIndex > 0);
+                if (forward) forward.disabled = !(this.historyIndex >= 0 && this.historyIndex < this.history.length - 1);
+            }
+
+            async load(url) {
+                const iframe = this.container.querySelector('iframe');
+                const input = this.container.querySelector('#url-input');
+                if (!iframe || !input) return;
+                input.value = url;
+                this.setLoading(true);
+                try {
+                    const proxy = 'https://api.allorigins.win/raw?url=' + encodeURIComponent(url);
+                    const res = await fetch(proxy, { method: 'GET' });
+                    const html = await res.text();
+                    const withBase = `<base href="${url}">` + html;
+                    iframe.srcdoc = withBase;
+                } catch (e) {
+                    iframe.srcdoc = '';
+                    iframe.src = url;
+                } finally {
+                    this.setLoading(false);
+                    this.updateNavButtons();
+                }
+            }
+
+            navigate(rawUrl) {
+                const url = this.normalizeUrl(rawUrl);
+                if (!url) return;
+                if (this.historyIndex < this.history.length - 1) {
+                    this.history = this.history.slice(0, this.historyIndex + 1);
+                }
+                this.history.push(url);
+                this.historyIndex = this.history.length - 1;
+                this.load(url);
+            }
+
+            go() {
+                const input = this.container.querySelector('#url-input');
+                const url = this.normalizeUrl(input?.value);
+                if (!url) return;
+                this.navigate(url);
+            }
+
+            back() {
+                if (this.historyIndex <= 0) return;
+                this.historyIndex -= 1;
+                this.load(this.history[this.historyIndex]);
+            }
+
+            forward() {
+                if (this.historyIndex >= this.history.length - 1) return;
+                this.historyIndex += 1;
+                this.load(this.history[this.historyIndex]);
             }
         }
 
@@ -1343,8 +1669,8 @@
             }
             render() {
                 this.container.innerHTML = `
-                    <div class="flex flex-col h-full bg-black">
-                        <div class="flex-1 flex items-center justify-center p-3">
+                    <div class="flex flex-col h-full bg-black min-h-0">
+                        <div class="flex-1 min-h-0 flex items-center justify-center p-3">
                             <video controls class="max-h-full max-w-full rounded-lg shadow-2xl" id="video-el">
                                 <source src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4" type="video/mp4">
                                 Your browser does not support the video tag.
@@ -1358,12 +1684,12 @@
                             <div class="grid grid-cols-1 gap-2">
                                 <div class="flex items-center gap-3">
                                     <div class="w-14 text-xs text-gray-300">Start</div>
-                                    <input type="range" min="0" max="0" step="0.1" value="0" class="flex-1" id="start-range">
+                                    <input type="range" min="0" max="0" step="0.1" value="0" class="flex-1 accent-blue-500" id="start-range">
                                     <div class="w-14 text-right text-xs text-gray-300"><span id="start-val">0.0</span>s</div>
                                 </div>
                                 <div class="flex items-center gap-3">
                                     <div class="w-14 text-xs text-gray-300">End</div>
-                                    <input type="range" min="0" max="0" step="0.1" value="0" class="flex-1" id="end-range">
+                                    <input type="range" min="0" max="0" step="0.1" value="0" class="flex-1 accent-blue-500" id="end-range">
                                     <div class="w-14 text-right text-xs text-gray-300"><span id="end-val">0.0</span>s</div>
                                 </div>
                                 <div class="flex items-center gap-2 mt-1">
@@ -1497,20 +1823,20 @@
                         <div class="flex justify-between items-center p-2 bg-[#2d2d2d] border-b border-[#3e3e3e]">
                             <span class="text-gray-300 text-xs">${this.path}</span>
                             <div class="flex gap-2">
-                                <button class="text-xs bg-green-600 hover:bg-green-700 text-white px-2 py-1 rounded" onclick="this.parentElement.parentElement.parentElement.app.run()">Run</button>
-                                <button class="text-xs bg-blue-600 hover:bg-blue-700 text-white px-2 py-1 rounded" onclick="this.parentElement.parentElement.parentElement.app.save()">Save</button>
+                                <button class="text-xs bg-green-600 hover:bg-green-700 text-white px-2 py-1 rounded" onclick="this.closest('.window-content').app.run()">Run</button>
+                                <button class="text-xs bg-blue-600 hover:bg-blue-700 text-white px-2 py-1 rounded" onclick="this.closest('.window-content').app.save()">Save</button>
                             </div>
                         </div>
-                        <textarea class="flex-1 bg-[#1e1e1e] text-[#d4d4d4] p-4 font-mono text-sm resize-none focus:outline-none" spellcheck="false">${this.content}</textarea>
+                        <textarea class="flex-1 bg-[#1e1e1e] text-[#d4d4d4] p-4 font-mono text-sm resize-none focus:outline-none select-text" spellcheck="false">${this.content}</textarea>
                         <div class="h-24 bg-[#1e1e1e] border-t border-[#3e3e3e] p-2 overflow-auto font-mono text-xs text-gray-400" id="code-output">Output will appear here...</div>
                     </div>
                 `;
-                this.container.querySelector('.flex').app = this;
+                this.container.app = this;
             }
-            save() {
+            async save() {
                 const val = this.container.querySelector('textarea').value;
                 FileSystem.writeFile(this.path, val);
-                alert("Saved");
+                await Dialog.alert('Saved.', { title: 'Code Editor' });
             }
             async run() {
                 const code = this.container.querySelector('textarea').value;
@@ -1545,15 +1871,15 @@
             render() {
                 this.container.innerHTML = `
                     <div class="flex flex-col h-full bg-gray-200 p-2 gap-2">
-                        <input type="text" class="w-full h-12 text-right text-2xl px-2 border border-gray-300 bg-white" readonly id="calc-display">
+                        <input type="text" class="w-full h-12 text-right text-2xl px-2 border border-gray-300 bg-white text-gray-900" readonly id="calc-display">
                         <div class="grid grid-cols-4 gap-2 flex-1">
                             ${['7','8','9','/','4','5','6','*','1','2','3','-','0','.','=','+','C'].map(btn => 
-                                `<button class="bg-white rounded shadow hover:bg-gray-100 font-bold ${btn === '=' ? 'col-span-2 bg-blue-500 text-white hover:bg-blue-600' : ''} ${btn === 'C' ? 'bg-red-100 hover:bg-red-200' : ''}" onclick="this.closest('.window-content').app.input('${btn}')">${btn}</button>`
+                                `<button class="bg-white rounded shadow hover:bg-gray-100 font-bold text-gray-900 ${btn === '=' ? 'col-span-2 bg-blue-500 text-white hover:bg-blue-600' : ''} ${btn === 'C' ? 'bg-red-100 hover:bg-red-200' : ''}" onclick="this.closest('.window-content').app.input('${btn}')">${btn}</button>`
                             ).join('')}
                         </div>
                     </div>
                 `;
-                this.container.querySelector('.flex').app = this;
+                this.container.app = this;
             }
             input(val) {
                 const display = this.container.querySelector('#calc-display');
@@ -1668,7 +1994,7 @@
                         </div>
                     </div>
                 `;
-                this.container.querySelector('.flex').app = this;
+                this.container.app = this;
             }
 
             changeMonth(delta) {

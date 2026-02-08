@@ -3,9 +3,9 @@
 
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
   <meta name="theme-color" content="#0b1020" />
-  <title>HarmonyOS WebOS 模拟</title>
+  <title>HarmonyOS 4/Next Simulator</title>
 
   <!-- TailwindCSS v3 (CDN) -->
   <script src="https://cdn.tailwindcss.com/3.4.13"></script>
@@ -101,9 +101,9 @@
       </div>
     </header>
 
-    <section id="HomeScreen">
+    <section id="HomeScreen" class="absolute inset-0 z-10">
       <main id="desktop"
-        class="relative pt-[calc(env(safe-area-inset-top)+70px)] pb-[calc(env(safe-area-inset-bottom)+110px)] overflow-hidden">
+        class="absolute inset-0 pt-[calc(env(safe-area-inset-top)+70px)] pb-[calc(env(safe-area-inset-bottom)+110px)] overflow-y-auto overscroll-contain">
       <div class="mx-auto max-w-[520px] px-4">
         <!-- Search / Widget -->
         <section class="rounded-3xl border border-white/10 bg-white/6 backdrop-blur-xl shadow-glass overflow-hidden">
@@ -189,7 +189,7 @@
     </nav>
 
     <!-- System Panels -->
-    <section id="ControlPanel" class="absolute inset-0 z-[55] pointer-events-none">
+    <section id="ControlPanel" class="absolute inset-0 z-[2000] pointer-events-none">
       <!-- Scrim -->
       <div id="panel-scrim"
         class="absolute inset-0 bg-black/40 backdrop-blur-[2px] opacity-0 pointer-events-none transition-opacity duration-200">
@@ -262,73 +262,7 @@
 
       <div id="LockScreen">
         <div id="panel-lock" class="absolute inset-0 opacity-0 pointer-events-none transition-opacity duration-200"
-          aria-hidden="true">
-      <div class="absolute inset-0 bg-black/55"></div>
-      <div class="absolute inset-0 bg-gradient-to-b from-black/55 via-black/75 to-black/90"></div>
-        <div
-          class="relative pt-[max(20px,env(safe-area-inset-top))] pb-[max(18px,env(safe-area-inset-bottom))] px-4 h-full">
-          <div class="mx-auto max-w-[520px] h-full flex flex-col">
-            <div class="mt-6 text-center">
-              <p id="lock-time" class="text-[56px] font-semibold tracking-tight tabular-nums leading-none">--:--</p>
-              <p id="lock-date" class="mt-2 text-[13px] text-white/70">—</p>
-            </div>
-
-            <div
-              class="mt-6 rounded-[28px] border border-white/12 bg-white/6 backdrop-blur-2xl shadow-float overflow-hidden">
-              <div class="px-4 py-3 border-b border-white/10 bg-white/5 flex items-center justify-between">
-                <p class="text-[13px] font-semibold text-white/90">锁屏通知</p>
-                <button id="btn-lock-clear" type="button"
-                  class="rounded-2xl border border-white/10 bg-white/8 px-3 py-2 text-[13px] text-white/85 hover:bg-white/12 active:scale-[0.98] transition">
-                  清除
-                </button>
-              </div>
-              <div id="lock-notifs" class="p-4 space-y-3 max-h-[34vh] overflow-auto"></div>
-            </div>
-
-            <div class="mt-auto">
-              <div class="mx-auto max-w-[520px]">
-                <div
-                  class="rounded-[28px] border border-white/12 bg-white/6 backdrop-blur-2xl shadow-float overflow-hidden">
-                  <div class="px-4 py-3 border-b border-white/10 bg-white/5 flex items-center justify-between">
-                    <p class="text-[13px] font-semibold text-white/90">上滑解锁</p>
-                    <button id="btn-unlock" type="button"
-                      class="rounded-2xl border border-white/10 bg-white/8 px-3 py-2 text-[13px] text-white/85 hover:bg-white/12 active:scale-[0.98] transition">
-                      解锁
-                    </button>
-                  </div>
-                  <div class="p-4">
-                    <p class="text-[12px] text-white/60">密码（示意）</p>
-                    <div id="pin-dots" class="mt-3 flex justify-center gap-2"></div>
-                    <div class="mt-4 grid grid-cols-3 gap-2">
-                      <button class="pin-key" data-pin="1" type="button">1</button>
-                      <button class="pin-key" data-pin="2" type="button">2</button>
-                      <button class="pin-key" data-pin="3" type="button">3</button>
-                      <button class="pin-key" data-pin="4" type="button">4</button>
-                      <button class="pin-key" data-pin="5" type="button">5</button>
-                      <button class="pin-key" data-pin="6" type="button">6</button>
-                      <button class="pin-key" data-pin="7" type="button">7</button>
-                      <button class="pin-key" data-pin="8" type="button">8</button>
-                      <button class="pin-key" data-pin="9" type="button">9</button>
-                      <button class="pin-key" data-pin="del" type="button">⌫</button>
-                      <button class="pin-key" data-pin="0" type="button">0</button>
-                      <button class="pin-key" data-pin="ok" type="button">确定</button>
-                    </div>
-                    <p id="pin-hint" class="mt-3 text-center text-[12px] text-white/55">默认密码：1234</p>
-                  </div>
-                </div>
-
-                <div class="mt-3 text-center">
-                  <button id="btn-emergency" type="button"
-                    class="rounded-2xl px-4 py-2 text-[12px] text-white/70 hover:text-white hover:bg-white/10 transition">
-                    紧急呼叫（示意）
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        </div>
-        </div>
+          aria-hidden="true"></div>
       </div>
     </section>
 
@@ -339,7 +273,7 @@
 
     <!-- Toast -->
     <div id="toast"
-      class="absolute left-1/2 z-[60] -translate-x-1/2 bottom-[calc(env(safe-area-inset-bottom)+96px)] hidden"
+      class="absolute left-1/2 z-[3000] -translate-x-1/2 bottom-[calc(env(safe-area-inset-bottom)+96px)] hidden"
       role="status" aria-live="polite">
       <div
         class="rounded-2xl border border-white/10 bg-black/50 backdrop-blur-xl px-4 py-2 text-[13px] text-white/85 shadow-glass">
